@@ -213,6 +213,7 @@ p {
   font-weight: 500;
   font-size: 14.5px;
   color: var(--on-navy-muted);
+  white-space: nowrap;
 }
 
 .nav a:hover {
@@ -259,7 +260,13 @@ p {
   font-size: 14px;
 }
 
-@media (max-width:860px) {
+@media (max-width:1060px) {
+  .nav {
+    gap: 20px;
+  }
+}
+
+@media (max-width:960px) {
   .nav a:not(.btn) {
     display: none;
   }
@@ -1254,9 +1261,9 @@ a.proj.big:hover {
 .mail {
   font-family: var(--f-display);
   font-weight: 600;
-  font-size: clamp(17px,2vw,22px);
+  font-size: clamp(16px,1.8vw,20px);
   user-select: all;
-  word-break: break-all;
+  overflow-wrap: anywhere;
 }
 
 .copy {
