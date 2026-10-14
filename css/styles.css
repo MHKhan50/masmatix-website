@@ -1263,7 +1263,8 @@ a.proj.big:hover {
   font-weight: 600;
   font-size: clamp(16px,1.8vw,20px);
   user-select: all;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 
 .copy {
