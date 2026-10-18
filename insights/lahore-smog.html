@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lahore did not have a single clean-air day in the past year | Masmatix Innovations</title>
+  <meta name="description" content="One year of open sensor data from 77 PM2.5 sensors across Lahore: every one of 364 days was above the WHO 24-hour guideline, and the yearly mean was about 21 times the WHO annual guideline.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/lahore-smog.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Lahore did not have a single clean-air day in the past year">
+  <meta property="og:description" content="One year of open sensor data from 77 PM2.5 sensors across Lahore: every one of 364 days was above the WHO 24-hour guideline, and the yearly mean was about 21 times the WHO annual guideline.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/lahore-smog.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/lahore-daily-pm25.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Data analysis · Air quality · Pakistan</p>
+      <h1>Lahore did not have a single clean-air day in the past year</h1>
+      <p class="a-sub">What one year of open sensor data says about the air in Lahore</p>
+      <p class="updated">By Muzammal Hussain · 18 October 2026 · 5 min read</p>
+
+      <p class="a-lede">Every winter, Lahore's smog makes headlines for a few terrible days. I wanted a different question answered: across a whole year, how many days was the air actually safe to breathe by the World Health Organization's standard? The answer, from 77 sensors across the city, was none.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>All 364 days with data were above the WHO 24-hour guideline</b> of 15 µg/m³. Even the cleanest day, 16 March 2026, measured 18.4 µg/m³.</li>
+          <li><b>46% of days were above 75 µg/m³</b>, the WHO's weakest interim target, which is five times the guideline.</li>
+          <li><b>The yearly mean was 103.8 µg/m³</b>, about 21 times the WHO annual guideline of 5 µg/m³.</li>
+          <li><b>Winter is extreme, but summer is not clean.</b> Monthly medians reached about 220 µg/m³ from October to December; the cleanest months, April to August, were still around three times the guideline.</li>
+        </ol>
+      </div>
+
+      <h2>Why PM2.5 matters</h2>
+      <p>PM2.5 are particles smaller than 2.5 micrometres, about thirty times thinner than a human hair. They are small enough to travel deep into the lungs and into the bloodstream. In 2021 the WHO tightened its guidelines to a 24-hour mean of 15 µg/m³ and an annual mean of 5 µg/m³, because the evidence showed harm at lower levels than previously thought.</p>
+
+      <h2>Data and method</h2>
+      <ul>
+        <li><b>Source:</b> OpenAQ, an open platform that collects air-quality data from many providers. I used its API to download daily averages for every fixed PM2.5 sensor within 25 km of central Lahore, from 18 October 2025 to 17 October 2026.</li>
+        <li><b>Sensors:</b> 84 sensors were found and 77 had usable data, about 46 reporting on a typical day, from three networks (AirGradient, Clarity and Hawanama).</li>
+        <li><b>Cleaning:</b> I removed negative values, readings above 1,000 µg/m³, days with less than 75% hourly coverage, and duplicates. 15,739 of 18,660 sensor-days remained.</li>
+        <li><b>City value:</b> for each day, the median across all reporting sensors, so a single faulty sensor cannot drive the result.</li>
+      </ul>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/lahore-daily-pm25.png" alt="Line chart of Lahore daily PM2.5 from October 2025 to October 2026. Values peak above 300 µg/m³ in late October and stay between about 150 and 300 through December, fall to 30 to 70 from April to August, and rise again in October 2026. The WHO guideline line at 15 µg/m³ sits below every point." loading="lazy">
+        <figcaption>Daily PM2.5 (median of sensors). The dashed line is the WHO 24-hour guideline of 15 µg/m³.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Measure</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Days above WHO 24-hour guideline (15 µg/m³)</td><td><b>364 of 364 (100%)</b></td></tr>
+            <tr><td>Days above WHO interim target 1 (75 µg/m³)</td><td>46%</td></tr>
+            <tr><td>Median daily PM2.5</td><td>66.7 µg/m³</td></tr>
+            <tr><td>Mean daily PM2.5</td><td>103.8 µg/m³ (21 × annual guideline)</td></tr>
+            <tr><td>Worst day</td><td>29 Oct 2025: 328 µg/m³ (22 ×)</td></tr>
+            <tr><td>Cleanest day</td><td>16 Mar 2026: 18.4 µg/m³</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="a-fig">
+        <img src="../images/insights/lahore-monthly-median.png" alt="Bar chart of monthly median PM2.5. October to December 2025 are around 220 µg/m³ with 100% of days above 75; January 166 and February 137; March 65; April to August between 41 and 49; September 55; October 2026 78. All bars are above the WHO line at 15." loading="lazy">
+        <figcaption>Monthly median PM2.5. Labels show the share of days above 75 µg/m³.</figcaption>
+      </figure>
+
+      <h2>What the pattern suggests</h2>
+      <p>The shape of the year is clear. From late October to February, daily values sit mostly between 100 and 300 µg/m³, and every day from October to December was above 75 µg/m³. Air improves sharply in March, stays lowest from April to August, and starts climbing again in September. By mid-October 2026, half of the days were already above 75 µg/m³ again.</p>
+      <p>The winter peak lines up with well-known drivers: crop-residue burning in the region, cold-season temperature inversions that trap polluted air close to the ground, and weak winds. This analysis does not measure those causes; it shows when the air is worst, and the causes are the next thing to test with weather and fire data.</p>
+      <p>The more uncomfortable finding is the summer. Even in the cleanest months the typical day was around three times the WHO limit. That points to a year-round baseline, likely from traffic, industry and dust, not only a seasonal smog problem.</p>
+
+      <h2>How far can the sensors be trusted?</h2>
+      <p>None of the locations used is flagged as a reference-grade monitor in OpenAQ. All 77 are low-cost sensors, which are useful for coverage but can read high in humid conditions, so the exact values carry real uncertainty. The headline finding is robust to this: in the cleanest month the median was 41 µg/m³, so the sensors would have to over-read by about 2.7 times for a typical day to fall within the guideline.</p>
+
+      <h2>Limitations</h2>
+      <p>Sensors are not spread evenly across the city, and the set of active sensors changes during the year. A mean of daily values over this window approximates, but is not, an official annual mean. Days with no valid data are missing rather than counted as clean.</p>
+
+      <h2>Next steps</h2>
+      <ul>
+        <li>Calibrate low-cost sensors against a reference monitor on the same days.</li>
+        <li>Add humidity, wind, temperature and satellite fire counts to explain the winter peak.</li>
+        <li>Repeat the analysis for Karachi, Islamabad and Glasgow as a contrast.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/lahore-smog" target="_blank" rel="noopener">Code and data on GitHub →</a>
+      </div>
+      <p class="a-ref">Data: OpenAQ (openaq.org), daily PM2.5 aggregates; the licences of the individual data providers apply. Guideline values: WHO Global Air Quality Guidelines (2021).</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
