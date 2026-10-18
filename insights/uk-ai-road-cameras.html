@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AI road cameras: how many flags are wrong? | Masmatix Innovations</title>
+  <meta name="description" content="UK and Scottish police are trialling AI cameras that spot phone use and missing seatbelts. A simple model built on public figures shows why human review matters more over time, not less.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/uk-ai-road-cameras.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="AI road cameras: when fewer drivers offend, more flags are wrong">
+  <meta property="og:description" content="UK and Scottish police are trialling AI cameras that spot phone use and missing seatbelts. A simple model built on public figures shows why human review matters more over time, not less.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/uk-ai-road-cameras.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/uk-cameras-precision.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Analysis · AI in public services · UK</p>
+      <h1>AI road cameras: how many flags are wrong?</h1>
+      <p class="a-sub">When fewer drivers offend, a larger share of AI flags is wrong</p>
+      <p class="updated">By Muzammal Hussain · 18 October 2026 · 6 min read</p>
+
+      <p class="a-lede">AI cameras that spot drivers holding a phone or not wearing a seatbelt are spreading across the UK. Sussex Police switched them on in April 2026, and Scotland, where I live, has started its own pilot. Trial results are reported as thousands of "offences". But an AI flag is only a candidate offence. I wanted to know how many of those flags could be wrong, and what that means for the people who review them.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>A two-week West Midlands trial produced 19,145 flags</b> at two sites, about 684 per site per day. 90% were seatbelt flags.</li>
+          <li><b>8,024 of those images were checked by people, but the accuracy result has not been published.</b></li>
+          <li><b>Using Scotland's own estimates</b> (3.6% of drivers without a seatbelt, 0.6% using a handheld phone), even a camera that is right about 99.5% of law-abiding drivers would produce roughly one wrong flag for every real one for phone use.</li>
+          <li><b>The deterrence paradox:</b> as cameras reduce offending, the share of wrong flags rises. Human review becomes more important over time, not less.</li>
+        </ol>
+      </div>
+
+      <h2>What the trials report</h2>
+      <ul>
+        <li><b>West Midlands, two weeks in March:</b> 17,225 seatbelt and 1,920 phone flags from initial AI scans at Ladywood and Fallings Park. The cameras were not used for enforcement.</li>
+        <li><b>Sussex:</b> cameras live since 13 April 2026; officers verify each flagged image before any action.</li>
+        <li><b>Scotland:</b> a pilot of the same system, with two cameras rotating across 12 locations and a two-stage human review.</li>
+        <li><b>Athens</b> (leaked figures, a warning sign rather than a UK measure): of about 5,500 reviewed AI citations, only 400 were judged valid. Reported errors included empty seats flagged for no seatbelt and dark shirts mistaken for a missing belt.</li>
+      </ul>
+      <p>For context, a handheld phone offence in the UK carries six penalty points and a £200 fixed penalty, and a missing seatbelt can bring a fine of up to £500. A wrong notice is not a small thing.</p>
+
+      <h2>Why a very accurate camera can still be wrong a lot</h2>
+      <p>This is the base-rate problem, familiar from medical screening. If very few people have a condition, even a good test produces many false alarms, because the small error rate applies to the huge number of healthy people.</p>
+      <p>Road cameras work the same way. Most drivers are wearing a seatbelt and not holding a phone. If the camera wrongly flags just 1 in 200 law-abiding drivers, that error is applied to millions of journeys.</p>
+      <p>I modelled this with one formula. Two inputs come from public estimates: the share of drivers offending (Scotland's government figures, and phone-use rates from New South Wales before and after cameras). Two are assumptions, because no UK trial has published them: the camera catches 90% of real offences, and its specificity (how often it correctly leaves law-abiding drivers alone) varies from 95% to 100%.</p>
+      <figure class="a-fig">
+        <img src="../images/insights/uk-cameras-precision.png" alt="Line chart of the share of AI flags that are real offences against camera specificity from 95 to 100 percent, for four offence rates: Scotland seatbelt 3.6 percent, New South Wales phone 2019 at 1.2 percent, Scotland phone 0.6 percent, and New South Wales phone 2021 at 0.2 percent. Lower offence rates give lower precision; all curves rise steeply near 100 percent." loading="lazy">
+        <figcaption>Share of AI flags that are real offences, by camera specificity and offence rate. Sensitivity fixed at 90% (assumed).</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Offence rate</th><th>99%</th><th>99.5%</th><th>99.9%</th></tr></thead>
+          <tbody>
+            <tr><td>Scotland, seatbelt (3.6%)</td><td>77%</td><td>87%</td><td>97%</td></tr>
+            <tr><td>NSW phone, 2019 (1.2%)</td><td>53%</td><td>69%</td><td>92%</td></tr>
+            <tr><td>Scotland, phone (0.6%)</td><td>35%</td><td>52%</td><td>84%</td></tr>
+            <tr><td>NSW phone, 2021 (0.2%)</td><td>16%</td><td>27%</td><td>65%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Column headings are camera specificity; values are the share of flags that are real offences.</p>
+
+      <h2>The deterrence paradox</h2>
+      <p>In New South Wales, the share of drivers detected using a phone fell from 1 in 82 in 2019 to 1 in 478 in 2021 after cameras were introduced. That is the cameras doing their job. But with the same camera at 99.5% specificity, the share of real offences among flags falls from 69% to 27%. When most drivers behave, most of what is left to flag is error.</p>
+      <p>So the more successful a camera programme is, the more it depends on careful human review. A system designed to save reviewers' time on day one can quietly become a system that mostly flags innocent drivers by year three.</p>
+
+      <h2>Why human review matters</h2>
+      <p>Review is the last filter. If reviewers approve even a small share of wrong flags, those become wrong notices. For the West Midlands volume of 19,145 flags, a camera with 80% precision and reviewers who approve 1% of wrong flags would still send about 38 wrong notices in two weeks; at 2% it would be about 77.</p>
+      <figure class="a-fig">
+        <img src="../images/insights/uk-cameras-wrong-notices.png" alt="Line chart of wrong notices from 19,145 flags against AI precision from 50 to 99 percent, for reviewers who approve 0.5, 1, 2 or 5 percent of wrong flags. At 50 percent precision and 5 percent approval, about 480 wrong notices; all lines fall towards zero as precision approaches 100 percent." loading="lazy">
+        <figcaption>Wrong notices from the West Midlands two-week volume, by AI precision and reviewer error (both assumed).</figcaption>
+      </figure>
+      <p>Review also takes time: about 80 hours for those 19,145 images at 15 seconds each, or 160 hours at 30 seconds. Under that kind of workload, careful checking is hard to keep up.</p>
+
+      <h2>What I would ask for</h2>
+      <ul>
+        <li><b>Publish the accuracy.</b> The West Midlands checked 8,024 images. Releasing the result, separately for phone and seatbelt flags, would let the public see how often innocent drivers are flagged. Trust needs that number.</li>
+        <li><b>Test thoroughly before scaling, and aim very high.</b> For Scotland's pilot, specificity close to 99.9% should be the goal so that false flags do not overload reviewers and the courts. Even then, at Scotland's estimated phone-use rate about one phone flag in six would still be wrong.</li>
+        <li><b>Track accuracy over time</b>, because the deterrence paradox means the same camera gets less precise as driving improves.</li>
+      </ul>
+
+      <h2>Why 90% of flags are seatbelt flags</h2>
+      <p>Not wearing a seatbelt is more common than holding a phone (about 3.6% against 0.6% in Scotland's estimates), and it may be easier for a camera to flag. Some of the gap could also be false flags, like the dark-clothing errors reported in Athens. The published figures cannot separate the two; only the accuracy check can.</p>
+
+      <h2>Limitations</h2>
+      <p>The camera's sensitivity and specificity and the reviewers' error rate are assumptions, so the results are ranges, not the accuracy of any real system. The offence rates are estimates, and the New South Wales figures are detection rates that only approximate true offending. The Athens figures are leaked and mix offence types. Traffic volumes for the West Midlands sites were not published.</p>
+
+      <h2>Why this matters beyond roads</h2>
+      <p>The same arithmetic applies to any AI that screens a large population for rare events: fraud alerts, medical red-flag detection, content moderation. In my own work on clinical documentation, a red-flag detector that is right 99% of the time can still bury clinicians in false alarms if the condition is rare. Building the human review step in from the start is not optional.</p>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/uk-ai-road-cameras" target="_blank" rel="noopener">Model, data and sources on GitHub →</a>
+      </div>
+      <p class="a-ref">Sources: West Midlands trial (Highways Industry, RAC, October 2026); Sussex Police deployment (Resultsense, April 2026); Scotland pilot (Fleet World; Kurrant, February 2026); Athens figures (CarScoops, June 2026); UK penalties (GOV.UK). All figures and links are listed in the GitHub repository.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
