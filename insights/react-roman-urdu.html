@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Can a small local AI agent understand Roman Urdu? | Masmatix Innovations</title>
+  <meta name="description" content="Testing the ReAct agent pattern with a 3B model running locally on a MacBook: English vs Roman Urdu questions over a fictional physiotherapy clinic.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/react-roman-urdu.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Can a small local AI agent understand Roman Urdu?">
+  <meta property="og:description" content="Testing the ReAct agent pattern with a 3B model running locally on a MacBook: English vs Roman Urdu questions over a fictional physiotherapy clinic.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/react-roman-urdu.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/react-roman-urdu-accuracy.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Research note · Agentic AI</p>
+      <h1>Can a small local AI agent understand Roman Urdu?</h1>
+      <p class="updated">By Muzammal Hussain · 18 October 2026 · 6 min read</p>
+
+      <p class="a-lede">Millions of people in Pakistan type Urdu in Latin letters: <em>"Ayesha ke kitne sessions baqi hain?"</em> This is Roman Urdu, and it is how many patients, receptionists and clinicians actually message each other. Yet most AI agents are designed and tested in English. I wanted to see what happens when you ask a small, fully local AI agent the same clinic questions in both languages.</p>
+
+      <h2>The idea I tested: ReAct</h2>
+      <p>ReAct (Yao et al., 2022, ICLR 2023) is one of the most cited ideas behind today's AI agents. Instead of answering in one go, the model works in a loop:</p>
+      <ul>
+        <li><b>Thought:</b> "I need this patient's record first."</li>
+        <li><b>Action:</b> look the record up with a tool.</li>
+        <li><b>Observation:</b> read what the tool returned, then think again.</li>
+      </ul>
+      <p>It works much like a doctor: think, order a test, read the report, decide the next step. The paper showed this reduces made-up facts compared with pure "think step by step" prompting. However, all of its benchmarks were in English, and its prompted results came from very large models (PaLM-540B and GPT-3).</p>
+      <p>So my question was simple: <b>does a small 3-billion-parameter model, running locally on a laptop, keep its ReAct accuracy when the questions are in Roman Urdu instead of English?</b></p>
+
+      <h2>The experiment</h2>
+      <ul>
+        <li><b>Model:</b> qwen2.5:3b, running locally through Ollama on a MacBook M4 (16 GB). No data left the machine.</li>
+        <li><b>Data:</b> a small fictional physiotherapy clinic (6 patients, 3 therapists). Fictional data means the model cannot answer from memory; it has to use the tools. No real patient data was used.</li>
+        <li><b>Questions:</b> 12 questions, from one step ("How many sessions are left?") to three steps ("What is the average pain score of Dr. Omar's patients?"). Each was asked in English and in Roman Urdu.</li>
+        <li><b>Tools:</b> patient lookup, therapist lookup and a calculator.</li>
+        <li><b>Baseline:</b> the same model with the whole database pasted into the prompt, answering in one shot without tools.</li>
+      </ul>
+
+      <h2>Results</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Method</th><th>English</th><th>Roman Urdu</th></tr></thead>
+          <tbody>
+            <tr><td>ReAct (agent with tools)</td><td>11/12 (92%)</td><td>10/12 (83%)</td></tr>
+            <tr><td>Direct answer (database in prompt)</td><td>9/12 (75%)</td><td>6/12 (50%)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="a-fig">
+        <img src="../images/insights/react-roman-urdu-accuracy.png" alt="Bar chart of accuracy: ReAct 92% English and 83% Roman Urdu; direct answer 75% English and 50% Roman Urdu" loading="lazy">
+        <figcaption>Accuracy by method and language, qwen2.5:3b, temperature 0, 12 questions per language.</figcaption>
+      </figure>
+      <p>Three things stood out:</p>
+      <ol>
+        <li><b>The agent beat the direct answer in both languages.</b> Most direct-answer mistakes were arithmetic, such as giving 20 instead of 27 for an age difference. The agent hands arithmetic to a calculator.</li>
+        <li><b>Roman Urdu hurt the direct answer far more</b> (75% to 50%) than the agent (92% to 83%).</li>
+        <li><b>Accuracy has a cost:</b> the agent took about 3.5 seconds per question, against about 0.16 seconds for the direct answer.</li>
+      </ol>
+
+      <h2>What went wrong, and why it matters</h2>
+      <p>In one English question ("How many years of experience does Usman Tariq's therapist have?"), the agent put the patient's name into the therapist lookup tool. It got "not found" and, instead of trying another route, answered "No information available". The same question in Roman Urdu was answered correctly.</p>
+      <p>In a clinic, that failure is the safer kind: "I don't know" is far better than a confident wrong number, because wrong medical data can harm a patient. But a good agent should also recover from its own mistake, and this one did not.</p>
+      <p>Another observation: Roman Urdu questions were mostly answered in English, even though the model was told to reply in the question's language. My hypothesis is that the model's training data is mostly English, so it drifts into English while reasoning. The English example in the prompt may also play a part; I have not tested that yet.</p>
+
+      <h2>Limitations</h2>
+      <p>This is a small pilot, not a final result. There were only 12 questions per language, so a difference of one question could be chance. I tested one model with one setting, the Roman Urdu was written by one person (real users spell it in many ways), and the database was tiny.</p>
+
+      <h2>Why this matters for clinical AI</h2>
+      <p>I am building MeetPhysio, an AI clinical documentation assistant with a local-model mode. Running the model on the clinician's own machine keeps patient data private. This test suggests a small local agent can be useful, but it also shows where it needs guarding: choosing the right tool, recovering from errors and replying in the patient's language. Speed matters too. A 3.5-second pause feels long in a live conversation, but it may be acceptable when drafting notes after the consultation.</p>
+      <p><b>Next steps:</b> more questions with spelling variations, Urdu-script versions, two or three more local models, and a Roman Urdu prompt example.</p>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/react-roman-urdu" target="_blank" rel="noopener">Code, data and agent traces on GitHub →</a>
+      </div>
+      <p class="a-ref">Reference: Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, K. and Cao, Y. (2022). ReAct: Synergizing Reasoning and Acting in Language Models. ICLR 2023. <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629</a></p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
