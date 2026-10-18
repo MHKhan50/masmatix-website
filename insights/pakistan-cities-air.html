@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Six Pakistani cities, one year of air | Masmatix Innovations</title>
+  <meta name="description" content="One year of open sensor data across Lahore, Karachi, Islamabad, Faisalabad, Peshawar and Quetta: no city met the WHO guideline, Faisalabad ranked worst and Peshawar third.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/pakistan-cities-air.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Six Pakistani cities, one year of air: Faisalabad, not Lahore, was the worst">
+  <meta property="og:description" content="One year of open sensor data across Lahore, Karachi, Islamabad, Faisalabad, Peshawar and Quetta: no city met the WHO guideline, Faisalabad ranked worst and Peshawar third.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/pakistan-cities-air.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/pk-cities-yearly-mean.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Data analysis · Air quality · Pakistan</p>
+      <h1>Six Pakistani cities, one year of air</h1>
+      <p class="a-sub">Faisalabad, not Lahore, was the worst. Peshawar was the quiet third.</p>
+      <p class="updated">By Muzammal Hussain · 18 October 2026 · 6 min read</p>
+
+      <p class="a-lede">Lahore dominates every conversation about smog in Pakistan. In my <a href="lahore-smog.html">earlier analysis</a>, Lahore did not have a single day within the WHO guideline in a whole year. That raised a fair question: is Lahore unusual, or is this the normal state of Pakistan's cities? I applied the same method, the same rules and the same twelve months to six cities.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>No city met the WHO 24-hour guideline</b>, which allows only 3-4 days above 15 µg/m³ a year. Even Quetta, the cleanest, was above it on 307 of 364 days.</li>
+          <li><b>Faisalabad was worse than Lahore</b>: a yearly mean of 119.6 µg/m³ (24 times the WHO annual guideline), no clean day, and the worst day in the study, 407 µg/m³ on 14 January 2026.</li>
+          <li><b>Peshawar ranked third</b> (91.5 µg/m³), ahead of Islamabad and Karachi, despite getting little public attention.</li>
+          <li><b>Winter is what separates the cities.</b> In summer all six looked similar; in winter Faisalabad's monthly median was more than five times Quetta's.</li>
+        </ol>
+      </div>
+
+      <h2>Data and method</h2>
+      <ul>
+        <li><b>Source:</b> OpenAQ, an open air-quality data platform. Daily PM2.5 for every fixed sensor within 25 km of each city centre, 18 October 2025 to 18 October 2026.</li>
+        <li><b>Same rules for every city:</b> remove impossible values and days with poor hourly coverage, then take the median across a city's sensors for each day.</li>
+        <li><b>Fair comparison:</b> a city was included only with at least 3 sensors and 300 days of data. All six passed.</li>
+        <li><b>Reproducibility check:</b> Lahore's numbers matched my earlier separate analysis exactly.</li>
+      </ul>
+
+      <h2>The ranking</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/pk-cities-yearly-mean.png" alt="Horizontal bar chart of yearly mean PM2.5: Faisalabad 120, Lahore 104, Peshawar 92, Islamabad 63, Karachi 47, Quetta 34 µg/m³. All are far above the WHO annual guideline of 5." loading="lazy">
+        <figcaption>Yearly mean PM2.5 by city. The dashed line is the WHO annual guideline of 5 µg/m³.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>City</th><th>Yearly mean</th><th>× WHO annual</th><th>Clean days</th><th>Days &gt; 75</th></tr></thead>
+          <tbody>
+            <tr><td>Faisalabad</td><td><b>119.6</b></td><td>24 ×</td><td>0</td><td>48%</td></tr>
+            <tr><td>Lahore</td><td>103.8</td><td>21 ×</td><td>0</td><td>46%</td></tr>
+            <tr><td>Peshawar</td><td>91.5</td><td>18 ×</td><td>1</td><td>40%</td></tr>
+            <tr><td>Islamabad</td><td>62.9</td><td>13 ×</td><td>4</td><td>27%</td></tr>
+            <tr><td>Karachi</td><td>47.4</td><td>9.5 ×</td><td>4</td><td>20%</td></tr>
+            <tr><td>Quetta</td><td>33.6</td><td>7 ×</td><td>57</td><td>6%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>"Clean days" are days at or below the WHO 24-hour guideline of 15 µg/m³; values are in µg/m³. Faisalabad and Lahore did not have one. Quetta had 57, still far short of a healthy year.</p>
+
+      <h2>Winter tells the story</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/pk-cities-monthly.png" alt="Line chart of monthly median PM2.5 for six cities. From November to January Faisalabad peaks near 274, Lahore near 229, Peshawar near 230, Islamabad near 180, Karachi near 98 and Quetta near 53. From May to August all six lines sit between about 14 and 50." loading="lazy">
+        <figcaption>Monthly median PM2.5 by city. The dashed line is the WHO 24-hour guideline.</figcaption>
+      </figure>
+      <p>From May to August the six cities sat close together, with monthly medians between about 22 and 45 µg/m³. From November to January they pulled apart: from 43 µg/m³ in Quetta to 242 µg/m³ in Faisalabad. Winter air was about five times worse than summer air in Faisalabad, Peshawar, Islamabad and Lahore, but only about twice as bad in Quetta.</p>
+      <p>Out of 78 city-months in the study, exactly one had a median within the WHO guideline: Quetta in May 2026, at 14.4 µg/m³.</p>
+
+      <h2>Why these cities differ</h2>
+      <p>The data shows when and where the air is worst; it does not measure why. Several well-known factors fit the pattern and are the next things to test:</p>
+      <ul>
+        <li><b>Faisalabad and Lahore</b> are Punjab's dense industrial and population centres, with textile mills and heavy industry, very heavy traffic, crop-residue burning in the surrounding farmland, and the geography of the Indo-Gangetic plain, where winter inversions trap pollution close to the ground.</li>
+        <li><b>Karachi</b> may benefit from sea breezes that keep moving polluted air away.</li>
+        <li><b>Quetta</b> sits at high altitude, with lower industrial density than the plains.</li>
+      </ul>
+      <p>Peshawar deserves more attention than it gets. Its winter peak (a monthly median of 230 µg/m³ in December) was almost level with Lahore's.</p>
+
+      <h2>Who is measuring?</h2>
+      <p>All six cities had data on 364 days, but the monitoring is very uneven. On a typical day Lahore had 46 sensors reporting, Karachi 14, Islamabad 18, Faisalabad 20, Peshawar 9 and Quetta only 7. Of the 223 sensors used, just one is a reference-grade monitor, in Islamabad; the rest are low-cost sensors.</p>
+      <p>That matters. With few sensors, a city's numbers can be swayed by a handful of local pockets, so the results for Quetta and Peshawar are less certain than for Lahore. Low-cost sensors can also read high in humid conditions, and humidity differs a lot between coastal Karachi and dry Quetta.</p>
+
+      <h2>Limitations</h2>
+      <p>A fixed 25 km circle is a simple definition of a city; Islamabad's circle also covers much of Rawalpindi. A yearly mean of daily values approximates, but is not, an official annual mean. The causes discussed above are hypotheses, not results.</p>
+
+      <h2>Next steps</h2>
+      <ul>
+        <li>Apply a humidity correction to the low-cost sensors and check whether the ranking holds.</li>
+        <li>Add wind, temperature and satellite fire counts to test the explanations.</li>
+        <li>Build a small AI agent that answers questions about these cities' air, in English and Roman Urdu, using this data as a tool.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/pakistan-cities-air" target="_blank" rel="noopener">Code and data on GitHub →</a>
+      </div>
+      <p class="a-ref">Data: OpenAQ (openaq.org), daily PM2.5 aggregates; the licences of the individual data providers apply. Guideline values: WHO Global Air Quality Guidelines (2021).</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
