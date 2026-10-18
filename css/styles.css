@@ -1969,3 +1969,36 @@ footer .wrap {
     font-size: 14px;
   }
 }
+
+.article .a-sub {
+  font-size: 19px;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+
+.a-keys {
+  margin: 26px 0 8px;
+  padding: 20px 24px 8px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--royal);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.a-keys .a-keys-h {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--royal-ink);
+  margin-bottom: 10px;
+}
+
+.article code {
+  font-family: var(--f-mono);
+  font-size: .9em;
+  background: var(--royal-soft);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--ink);
+}

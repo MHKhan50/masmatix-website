@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Can a small local AI agent understand Roman Urdu? | Masmatix Innovations</title>
-  <meta name="description" content="Testing the ReAct agent pattern with a 3B model running locally on a MacBook: English vs Roman Urdu questions over a fictional physiotherapy clinic.">
+  <meta name="description" content="I tested the ReAct agent pattern with a 3B model running locally on a MacBook, in English and Roman Urdu. Changing only the names dropped Roman Urdu accuracy from 83% to 58%.">
   <meta name="author" content="Muzammal Hussain">
   <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/react-roman-urdu.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Can a small local AI agent understand Roman Urdu?">
-  <meta property="og:description" content="Testing the ReAct agent pattern with a 3B model running locally on a MacBook: English vs Roman Urdu questions over a fictional physiotherapy clinic.">
+  <meta property="og:title" content="Can a small local AI agent understand Roman Urdu? What a simple name swap revealed">
+  <meta property="og:description" content="I tested the ReAct agent pattern with a 3B model running locally on a MacBook, in English and Roman Urdu. Changing only the names dropped Roman Urdu accuracy from 83% to 58%.">
   <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/react-roman-urdu.html">
-  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/react-roman-urdu-accuracy.png">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/react-roman-urdu-name-swap.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,68 +41,93 @@
   <main class="policy article">
     <div class="wrap">
       <a class="back" href="./">← All insights</a>
-      <p class="a-kicker">Research note · Agentic AI</p>
+      <p class="a-kicker">Research note · Agentic AI · Clinical NLP</p>
       <h1>Can a small local AI agent understand Roman Urdu?</h1>
+      <p class="a-sub">What a simple name swap revealed about small AI agents</p>
       <p class="updated">By Muzammal Hussain · 18 October 2026 · 6 min read</p>
 
-      <p class="a-lede">Millions of people in Pakistan type Urdu in Latin letters: <em>"Ayesha ke kitne sessions baqi hain?"</em> This is Roman Urdu, and it is how many patients, receptionists and clinicians actually message each other. Yet most AI agents are designed and tested in English. I wanted to see what happens when you ask a small, fully local AI agent the same clinic questions in both languages.</p>
+      <p class="a-lede">Millions of people in Pakistan type Urdu in Latin letters: <em>"Maryam ke kitne sessions baqi hain?"</em> This is Roman Urdu, and it is how many patients, receptionists and clinicians actually message each other. Yet AI agents are mostly designed and evaluated in English. I wanted to know whether a small agent running entirely on a laptop could handle the same clinic questions in both languages, and whether the answer would hold up when I tested it a second time.</p>
 
-      <h2>The idea I tested: ReAct</h2>
-      <p>ReAct (Yao et al., 2022, ICLR 2023) is one of the most cited ideas behind today's AI agents. Instead of answering in one go, the model works in a loop:</p>
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>The agent beat the one-shot baseline in every condition</b>, mainly because it hands arithmetic to a calculator tool.</li>
+          <li><b>The Roman Urdu result was not stable.</b> Changing only the patient and therapist names dropped the agent's Roman Urdu accuracy from 83% to 58%. English moved by one question.</li>
+          <li><b>The Roman Urdu failures were language errors, not tool errors.</b> "5 saal baad" (in five years) became a subtraction, and "mila kar" (combined) became a difference.</li>
+          <li><b>A small agent can still invent facts inside the loop.</b> It skipped a lookup and made up a therapist's specialty.</li>
+        </ol>
+      </div>
+
+      <h2>Background: the ReAct pattern</h2>
+      <p>ReAct (Yao et al., ICLR 2023) is one of the most influential ideas behind today's AI agents. Instead of answering in one go, the model works in a loop:</p>
       <ul>
         <li><b>Thought:</b> "I need this patient's record first."</li>
-        <li><b>Action:</b> look the record up with a tool.</li>
+        <li><b>Action:</b> call a tool, for example a database lookup.</li>
         <li><b>Observation:</b> read what the tool returned, then think again.</li>
       </ul>
-      <p>It works much like a doctor: think, order a test, read the report, decide the next step. The paper showed this reduces made-up facts compared with pure "think step by step" prompting. However, all of its benchmarks were in English, and its prompted results came from very large models (PaLM-540B and GPT-3).</p>
-      <p>So my question was simple: <b>does a small 3-billion-parameter model, running locally on a laptop, keep its ReAct accuracy when the questions are in Roman Urdu instead of English?</b></p>
+      <p>It resembles how a clinician works: reason, order a test, read the result, decide the next step. The paper showed that grounding answers in tool results reduces made-up facts compared with "think step by step" prompting alone. Its experiments, however, were in English and its prompted results came from very large models (PaLM-540B and GPT-3). Whether the pattern transfers to small local models and to code-mixed languages such as Roman Urdu was not tested.</p>
 
       <h2>The experiment</h2>
       <ul>
-        <li><b>Model:</b> qwen2.5:3b, running locally through Ollama on a MacBook M4 (16 GB). No data left the machine.</li>
-        <li><b>Data:</b> a small fictional physiotherapy clinic (6 patients, 3 therapists). Fictional data means the model cannot answer from memory; it has to use the tools. No real patient data was used.</li>
-        <li><b>Questions:</b> 12 questions, from one step ("How many sessions are left?") to three steps ("What is the average pain score of Dr. Omar's patients?"). Each was asked in English and in Roman Urdu.</li>
-        <li><b>Tools:</b> patient lookup, therapist lookup and a calculator.</li>
+        <li><b>Model:</b> qwen2.5:3b, run locally with Ollama on a MacBook M4 (16 GB). No data left the machine.</li>
+        <li><b>Data:</b> a small fictional physiotherapy clinic with 6 patients and 3 therapists. Fictional data forces the model to use its tools instead of memory. No real patient data was used.</li>
+        <li><b>Questions:</b> 12 questions needing one to three lookups, such as "What is the average current pain score of Dr. Robina's patients?". Each was asked in English and in Roman Urdu with the same correct answer.</li>
+        <li><b>Tools:</b> patient lookup, therapist lookup and a safe calculator.</li>
         <li><b>Baseline:</b> the same model with the whole database pasted into the prompt, answering in one shot without tools.</li>
+        <li><b>Robustness check:</b> I ran everything twice. Run B kept the questions, numbers and answers identical and changed only the names. If the agent truly reasons over its tool results, names should not matter.</li>
       </ul>
 
       <h2>Results</h2>
       <div class="a-table">
         <table>
-          <thead><tr><th>Method</th><th>English</th><th>Roman Urdu</th></tr></thead>
+          <thead><tr><th>Method</th><th>Language</th><th>Run A</th><th>Run B (renamed)</th></tr></thead>
           <tbody>
-            <tr><td>ReAct (agent with tools)</td><td>11/12 (92%)</td><td>10/12 (83%)</td></tr>
-            <tr><td>Direct answer (database in prompt)</td><td>9/12 (75%)</td><td>6/12 (50%)</td></tr>
+            <tr><td>ReAct agent</td><td>English</td><td>11/12 (92%)</td><td>10/12 (83%)</td></tr>
+            <tr><td>ReAct agent</td><td>Roman Urdu</td><td>10/12 (83%)</td><td><b>7/12 (58%)</b></td></tr>
+            <tr><td>Direct answer</td><td>English</td><td>9/12 (75%)</td><td>8/12 (67%)</td></tr>
+            <tr><td>Direct answer</td><td>Roman Urdu</td><td>6/12 (50%)</td><td>6/12 (50%)</td></tr>
           </tbody>
         </table>
       </div>
       <figure class="a-fig">
-        <img src="../images/insights/react-roman-urdu-accuracy.png" alt="Bar chart of accuracy: ReAct 92% English and 83% Roman Urdu; direct answer 75% English and 50% Roman Urdu" loading="lazy">
-        <figcaption>Accuracy by method and language, qwen2.5:3b, temperature 0, 12 questions per language.</figcaption>
+        <img src="../images/insights/react-roman-urdu-name-swap.png" alt="Grouped bar chart comparing Run A and Run B accuracy. ReAct English 92% then 83%; ReAct Roman Urdu 83% then 58%; Direct English 75% then 67%; Direct Roman Urdu 50% in both runs." loading="lazy">
+        <figcaption>Accuracy per condition in both runs. qwen2.5:3b, temperature 0, 12 questions per language.</figcaption>
       </figure>
-      <p>Three things stood out:</p>
+      <p>The agent was consistently more accurate than the direct baseline, but at a cost: about 3 seconds per question against 0.16 seconds, roughly 20 times slower. The largest movement between runs was the agent on Roman Urdu, which lost three questions when only the names changed.</p>
+
+      <h2>What went wrong</h2>
+      <p>Because every step of the agent is logged, each failure can be traced. Three Roman Urdu examples stand out.</p>
+      <ul>
+        <li><b>"5 saal baad" read as "5 years ago".</b> Asked how old a patient will be in five years, the agent correctly found the age (38), then called <code>calculate[38 - 5]</code> and answered 33.</li>
+        <li><b>"Mila kar" read as "difference".</b> Asked for two therapists' combined experience, it found both values (6 and 8), then computed <code>6 - 8</code> and replied that one therapist has two more years.</li>
+        <li><b>An invented fact.</b> Asked for a patient's therapist and their specialty, it read only the patient record, never looked up the therapist, and answered "Orthopedics", a specialty that does not exist anywhere in the data.</li>
+      </ul>
+      <p>In the first two cases the tools worked perfectly; the model chose the wrong operation because it misunderstood the Roman Urdu wording. The third case matters because the ReAct paper's own error analysis found no hallucination among the agent's sampled failures. With a 3B model, the loop alone did not prevent it.</p>
+      <p>One failure appeared in both runs: in English, the agent sent a patient's name to the therapist lookup, received "not found" and answered "No information available" instead of trying another route. In a clinic, "I don't know" is the safer kind of failure, since a confident wrong number can harm a patient. But the invented specialty shows that abstention cannot be relied on.</p>
+
+      <h2>What this means for clinical AI</h2>
+      <p>I am building MeetPhysio, an AI clinical documentation assistant with a local-model mode. Running the model on the clinician's own machine keeps patient data private, which matters under UK data protection law. This pilot suggests three practical requirements for local agents in multilingual clinics:</p>
       <ol>
-        <li><b>The agent beat the direct answer in both languages.</b> Most direct-answer mistakes were arithmetic, such as giving 20 instead of 27 for an age difference. The agent hands arithmetic to a calculator.</li>
-        <li><b>Roman Urdu hurt the direct answer far more</b> (75% to 50%) than the agent (92% to 83%).</li>
-        <li><b>Accuracy has a cost:</b> the agent took about 3.5 seconds per question, against about 0.16 seconds for the direct answer.</li>
+        <li><b>Evaluate in the patient's language</b>, with several phrasings and name sets, not one English test.</li>
+        <li><b>Require evidence for every fact</b> in the final answer, so a claim without a matching tool result is blocked.</li>
+        <li><b>Choose the workflow to fit the speed:</b> a few seconds per step is fine for drafting notes after a consultation, but too slow for live conversation.</li>
       </ol>
 
-      <h2>What went wrong, and why it matters</h2>
-      <p>In one English question ("How many years of experience does Usman Tariq's therapist have?"), the agent put the patient's name into the therapist lookup tool. It got "not found" and, instead of trying another route, answered "No information available". The same question in Roman Urdu was answered correctly.</p>
-      <p>In a clinic, that failure is the safer kind: "I don't know" is far better than a confident wrong number, because wrong medical data can harm a patient. But a good agent should also recover from its own mistake, and this one did not.</p>
-      <p>Another observation: Roman Urdu questions were mostly answered in English, even though the model was told to reply in the question's language. My hypothesis is that the model's training data is mostly English, so it drifts into English while reasoning. The English example in the prompt may also play a part; I have not tested that yet.</p>
-
       <h2>Limitations</h2>
-      <p>This is a small pilot, not a final result. There were only 12 questions per language, so a difference of one question could be chance. I tested one model with one setting, the Roman Urdu was written by one person (real users spell it in many ways), and the database was tiny.</p>
+      <p>This is a small pilot, not a final result. Each condition has 12 questions, so one question equals 8.3 percentage points and no confidence intervals are possible yet. I tested one model with one setting, the renamed run also changed the names in the prompt example, the Roman Urdu was written by one person, and the database was tiny. The name-swap effect is a warning sign, not a measured effect size.</p>
 
-      <h2>Why this matters for clinical AI</h2>
-      <p>I am building MeetPhysio, an AI clinical documentation assistant with a local-model mode. Running the model on the clinician's own machine keeps patient data private. This test suggests a small local agent can be useful, but it also shows where it needs guarding: choosing the right tool, recovering from errors and replying in the patient's language. Speed matters too. A 3.5-second pause feels long in a live conversation, but it may be acceptable when drafting notes after the consultation.</p>
-      <p><b>Next steps:</b> more questions with spelling variations, Urdu-script versions, two or three more local models, and a Roman Urdu prompt example.</p>
+      <h2>Next steps</h2>
+      <ul>
+        <li>Expand to 50+ questions with several name sets and spelling variants each, and report the mean and spread.</li>
+        <li>Build a targeted set for Roman Urdu time and arithmetic words such as "baad", "pehle", "mila kar" and "farq".</li>
+        <li>Compare two or three local models and a Roman Urdu prompt example.</li>
+        <li>Test an evidence guard against facts that no tool returned.</li>
+      </ul>
 
       <div class="a-links">
-        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/react-roman-urdu" target="_blank" rel="noopener">Code, data and agent traces on GitHub →</a>
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/react-roman-urdu" target="_blank" rel="noopener">Code, data and full agent traces on GitHub →</a>
       </div>
-      <p class="a-ref">Reference: Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, K. and Cao, Y. (2022). ReAct: Synergizing Reasoning and Acting in Language Models. ICLR 2023. <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629</a></p>
+      <p class="a-ref">Reference: Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, K. and Cao, Y. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. International Conference on Learning Representations (ICLR). <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629</a></p>
     </div>
   </main>
 
