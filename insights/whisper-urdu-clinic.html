@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Whisper on Urdu clinic speech: fewer errors, same missed medical words | Masmatix Innovations</title>
+  <meta name="description" content="I recorded three short Urdu physiotherapy conversations and ran Whisper on a MacBook. A bigger model more than halved the word error rate, but recovered only about half of the clinical key terms.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/whisper-urdu-clinic.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Whisper halved its errors on Urdu clinic speech, but not on the medical words">
+  <meta property="og:description" content="I recorded three short Urdu physiotherapy conversations and ran Whisper on a MacBook. A bigger model more than halved the word error rate, but recovered only about half of the clinical key terms.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/whisper-urdu-clinic.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/whisper-urdu-wer.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Clinical speech-to-text · Urdu</p>
+      <h1>Whisper halved its errors on Urdu clinic speech, but not on the medical words</h1>
+      <p class="a-sub">A bigger model wrote better Urdu. It did not write better clinical terms.</p>
+      <p class="updated">By Muzammal Hussain · 19 October 2026 · 5 min read</p>
+
+      <p class="a-lede">Clinical documentation tools start with a transcript: record the consultation, turn speech into text, then let a language model draft the note. If the transcript is wrong, everything after it is wrong too. In Pakistan, and in UK clinics with Urdu-speaking patients, consultations happen in Urdu mixed with English words like X-ray, MRI, sugar and blood pressure. I wanted to know how well OpenAI's open Whisper model handles that, running locally on a laptop with no cloud service.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Going from the tiny to the small model cut the word error rate from 43.8% to 19.2%.</b></li>
+          <li><b>Clinical key-term recall barely moved:</b> 50%, 46% and 54% for tiny, base and small. A bigger model helped everyday Urdu, not the medical words.</li>
+          <li><b>No model wrote X-ray or MRI correctly.</b> MRI came out as مرائی.</li>
+          <li><b>Left to guess the language, base and small labelled every clip as Hindi.</b> The language has to be set to Urdu explicitly.</li>
+          <li><b>It is fast enough for live use on a laptop:</b> the small model transcribed 36 seconds of audio in about 4.7 seconds on a MacBook M4 CPU.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>I wrote three short, fictional physiotherapy conversations in Urdu: lower back pain with red-flag questions (numbness, problems passing urine, fever, weight loss), a twisted knee that needs an X-ray and maybe an MRI, and a painful shoulder in a patient with diabetes and high blood pressure. I read each one aloud in my own voice, about 36 seconds per clip and 203 words in total. No real patient data was used.</p>
+      <p>Each clip was transcribed by three sizes of Whisper (tiny, base and small) using faster-whisper on the MacBook's CPU. I then measured:</p>
+      <ul>
+        <li><b>Word error rate (WER):</b> the share of words that were wrong, missing or added, the way a teacher marks a dictation.</li>
+        <li><b>Character error rate (CER):</b> the same idea at the level of letters, ignoring spaces, because Urdu spacing is inconsistent.</li>
+        <li><b>Key-term recall:</b> out of 24 clinical words chosen in advance, such as پیشاب (urine), بخار (fever), گھٹنا (knee) and MRI, how many appear in the transcript.</li>
+      </ul>
+      <p>Before scoring, both the reference and the transcript go through the same clean-up (Arabic vs Urdu letter forms, punctuation, diacritics), so keyboard differences are not counted as mistakes.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/whisper-urdu-wer.png" alt="Two bar charts. Left: word error rate 44, 29 and 19 percent and character error rate 20, 11 and 8 percent for Whisper tiny, base and small. Right: clinical key terms recovered 50, 46 and 54 percent for the same models." loading="lazy">
+        <figcaption>Whisper tiny, base and small on three self-recorded Urdu clinic clips (MacBook M4, CPU).</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Model</th><th>WER</th><th>CER</th><th>Key terms</th><th>Seconds per second of audio</th></tr></thead>
+          <tbody>
+            <tr><td>tiny</td><td>43.8%</td><td>19.9%</td><td>50%</td><td>0.04</td></tr>
+            <tr><td>base</td><td>29.1%</td><td>11.2%</td><td>46%</td><td>0.05</td></tr>
+            <tr><td>small</td><td>19.2%</td><td>7.7%</td><td>54%</td><td>0.13</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Most mistakes are spelling, not hearing</h2>
+      <p>The character error rate is much lower than the word error rate, which means most wrong words are only a letter or two off. The model hears the sound but writes it the way someone who knows no Urdu spelling rules might. The clearest pattern is the dropped <i>do-chashmi he</i> (ھ): گھٹنا (knee) became گٹنا, کندھے (shoulder) became کندے, and چڑھتے (climbing) became چڑتے. Retroflex letters were also mixed up, as in ڈاکٹر written as دکٹر.</p>
+      <p>A human reader would still understand most of these. Software would not: a red-flag detector that searches for گھٹنا will not find گٹنا.</p>
+
+      <h2>English medical words are the weak point</h2>
+      <p>The words that matter most for a clinical note were the ones most often lost. No model produced X-ray or MRI in a usable form, and physiotherapy came out as فیزیو تیاریپی. These are exactly the code-switched terms that Pakistani doctors and patients use every day. Even a core Urdu word slipped: the small model wrote درد (pain) as دارد, a Persian word, three times.</p>
+      <p>The Whisper paper reports multilingual results on read-speech benchmarks. It does not test clinical conversation or Urdu-English code-switching, so this is a gap worth measuring properly.</p>
+
+      <h2>Which model would I use?</h2>
+      <p>For a local clinical tool I would pick <b>small</b>. It was best on every measure, and at about 0.13 seconds of processing per second of audio it keeps up with a live consultation on a laptop. Base was not a safe middle ground: it recovered fewer key terms than tiny. But even small missed every X-ray and MRI, so choosing a bigger model is not enough on its own.</p>
+
+      <h2>Limitations</h2>
+      <p>This is a small pilot: one speaker, three clips, read speech in a quiet room. Real consultations have two voices, interruptions, background noise and different accents. When I listened back, I found that I had said مشکل where the script said تکلیف; the model was right there, so part of the measured error comes from my reading. The key-term check only looks for listed spellings and only checks whether a term appears at least once. These numbers show a pattern worth testing further, not a benchmark.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>Give Whisper a short list of medical words as a prompt and measure whether key-term recall rises, without any retraining.</li>
+        <li>Score every occurrence of a clinical word and add a sound-alike match, to separate "heard but misspelled" from "not heard".</li>
+        <li>Add a second speaker and background noise, and pass the transcripts to a local language model to see whether transcript errors change the red-flag section of the drafted note.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/whisper-urdu-wer" target="_blank" rel="noopener">Code, transcripts and results on GitHub →</a>
+      </div>
+      <p class="a-ref">Model: Whisper (Radford et al., 2022, <a href="https://arxiv.org/abs/2212.04356" target="_blank" rel="noopener">arXiv:2212.04356</a>) run with faster-whisper. All transcripts, per-clip scores and every word error are in the GitHub repository.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
