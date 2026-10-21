@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>In Roman Urdu, a small AI wrote notes about the wrong body part | Masmatix Innovations</title>
+  <meta name="description" content="A 3B local model drafted physiotherapy SOAP notes from the same four consultations in English and Roman Urdu. In Roman Urdu it left out 13 of 42 key facts, including red flags, and wrote about the wrong body part in three of four notes.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/clinical-note-hallucination.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="In Roman Urdu, a small AI wrote notes about the wrong body part">
+  <meta property="og:description" content="A 3B local model drafted physiotherapy SOAP notes from the same four consultations in English and Roman Urdu. In Roman Urdu it left out 13 of 42 key facts, including red flags, and wrote about the wrong body part in three of four notes.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/clinical-note-hallucination.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/clinical-note-hallucination.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Clinical AI · Roman Urdu</p>
+      <h1>In Roman Urdu, a small AI wrote notes about the wrong body part</h1>
+      <p class="a-sub">Same consultations, same model. In English the notes were close to the transcript. In Roman Urdu the back became the knees.</p>
+      <p class="updated">By Muzammal Hussain · 21 October 2026 · 5 min read</p>
+
+      <p class="a-lede">AI scribes listen to a consultation and draft the clinical note. A 2025 study in npj Digital Medicine by Asgari and colleagues had clinicians check 12,999 sentences of GPT-4 notes from 450 simulated UK consultations. They found that 1.47% of sentences were hallucinated (not supported by the conversation) and 3.45% of facts were omitted, and that 44% of the hallucinations were serious enough to change care, most often in the Plan. Their study used one large cloud model and English only. I wanted to see what happens with a small model that runs on a laptop, and with consultations in Roman Urdu, the way many patients in Pakistan and the UK actually talk.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Roman Urdu notes left out 13 of 42 key facts; English notes left out 2.</b> Seven of the Roman Urdu omissions were critical, including red-flag answers. English kept every critical fact.</li>
+          <li><b>Three of four Roman Urdu notes described the wrong body part:</b> lower back became knees, a knee became a groin strain, and the neck became the shoulder.</li>
+          <li><b>The model invented details:</b> "a 45-year-old male" with "no known allergies", and night pain "starting at 10 PM for 5 hours" from "10 mein se 5" (5 out of 10).</li>
+          <li><b>In English the most serious error was in the Plan:</b> "crutches if needed" became "avoid putting weight on the knee".</li>
+          <li><b>My automatic checker missed most of the Roman Urdu errors,</b> because they sat outside the Plan and used numbers that did appear in the transcript.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>I wrote four short, fictional physiotherapy consultations: lower back pain after lifting, a twisted knee from football, a stiff shoulder in a patient with diabetes, and neck pain from desk work. Each was written in English and in Roman Urdu with the same facts and the same digits. No real patient data was used.</p>
+      <p>The model was <code>qwen2.5:3b</code>, running locally through Ollama on a MacBook M4 with 16 GB of memory. For each of the 8 transcripts it wrote an English SOAP note (Subjective, Objective, Assessment, Plan) with the instruction to include only what was said. Then:</p>
+      <ul>
+        <li><b>Omissions:</b> each consultation had 10 or 11 listed facts, some marked critical (red-flag answers, medication, the injured side, referrals). A script checked whether each one appeared in the note.</li>
+        <li><b>Hallucinations:</b> a checker flagged sentences with a number or drug that was not in the transcript, or a denied symptom written without a negation. Every Plan sentence was also reviewed, because that is where the paper found most serious errors. I labelled each reviewed sentence as supported or not, and each unsupported one as major (could change diagnosis or treatment) or minor.</li>
+      </ul>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/clinical-note-hallucination.png" alt="Two bar charts. Left: listed facts left out, 2 of 42 in English and 13 of 42 in Roman Urdu. Right: unsupported sentences among those reviewed, 3 in English and 4 in Roman Urdu." loading="lazy">
+        <figcaption>qwen2.5:3b, 4 consultations per language (MacBook M4). The right-hand chart only counts reviewed sentences, so it understates the Roman Urdu errors.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Language</th><th>Facts missing</th><th>Critical missing</th><th>Unsupported (reviewed)</th><th>Major</th></tr></thead>
+          <tbody>
+            <tr><td>English</td><td>2 of 42</td><td>0</td><td>3 of 14</td><td>1</td></tr>
+            <tr><td>Roman Urdu</td><td>13 of 42</td><td>7</td><td>4 of 12</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The wrong body part</h2>
+      <p>The labels only covered 26 of the 129 note sentences. Reading the full notes showed bigger problems in Roman Urdu:</p>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Consultation</th><th>Patient said</th><th>Note wrote</th></tr></thead>
+          <tbody>
+            <tr><td>Lower back pain</td><td>"kamar ke nichle hisse mein dard"</td><td>"pain in the knees", exercises "for the knees"</td></tr>
+            <tr><td>Twisted knee</td><td>"daayan ghutna", swollen</td><td>"groin strain", "no swelling"</td></tr>
+            <tr><td>Neck pain</td><td>"gardan mein dard", "chakkar nahi"</td><td>"shoulder pain", "no circular motion"</td></tr>
+            <tr><td>Stiff shoulder</td><td>"10 mein se 5" (5 out of 10)</td><td>night pain "starting around 10 PM, lasting up to 5 hours"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>A note about the wrong body part leads to the wrong examination and the wrong treatment. The missing red flags matter just as much: "no numbness" and "no problems passing urine" are the answers that rule out an emergency in back pain, and in Roman Urdu they were simply dropped.</p>
+
+      <h2>Why my checker missed it</h2>
+      <p>The checker looked for numbers and drug names that were not in the transcript. "10 PM" and "5 hours" passed, because 10 and 5 were both there; it was the meaning that was invented. And most errors were in the Subjective and Assessment sections, which were not reviewed unless flagged. The paper's authors note that manual labelling is expensive and suggest an LLM judge with clinician oversight. My result shows why that oversight matters: simple automatic checks can give a false sense of safety.</p>
+
+      <h2>What this means for MeetPhysio</h2>
+      <p>For a local clinical scribe, Roman Urdu cannot be passed straight to a small model and trusted. One option is to translate the transcript into English first and then draft the note. That is a hypothesis, not a result: the translation step could make the same mistakes, like reading "chakkar" (dizziness) as circular motion, so it needs its own test. Whatever the pipeline, a clinician has to read the whole note, not only the Plan.</p>
+
+      <h2>Limitations</h2>
+      <p>This is a pilot: four consultations I wrote, one small model, one run at temperature 0. The omission check uses keywords, so a fact written in unexpected words counts as missing. I labelled the sentences myself, while the paper used two clinicians per note. Only 26 of 129 sentences were labelled, and the body-part errors come from reading the notes, not from a full count. The transcripts are clean text; real ones would come from speech-to-text, which adds its own errors.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>Label every sentence of all eight notes for a complete hallucination count.</li>
+        <li>Translate-then-draft against direct drafting on the same Roman Urdu consultations.</li>
+        <li>A larger local model, and Whisper transcripts in place of clean text.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/clinical-note-hallucination" target="_blank" rel="noopener">Code, notes and labels on GitHub →</a>
+      </div>
+      <p class="a-ref">Paper: Asgari E., Montaña-Brown N., Dubois M., Khalil S., Balloch J., Au Yeung J., Pimenta D. (2025). A framework to assess clinical safety and hallucination rates of LLMs for medical text summarisation. <i>npj Digital Medicine</i> 8, 274. <a href="https://doi.org/10.1038/s41746-025-01670-7" target="_blank" rel="noopener">doi:10.1038/s41746-025-01670-7</a>. Model: Qwen2.5 3B run locally with Ollama. Every drafted note and every label is in the GitHub repository.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
