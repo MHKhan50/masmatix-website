@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="440" viewBox="0 0 820 440">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="78" y="34" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#172033">Task success by simulated tool-failure rate</text>
+<line x1="78" y1="346.0" x2="548" y2="346.0" stroke="#e5e7eb"/>
+<text x="66" y="351.0" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#475569">0%</text>
+<line x1="78" y1="292.0" x2="548" y2="292.0" stroke="#e5e7eb"/>
+<text x="66" y="297.0" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#475569">20%</text>
+<line x1="78" y1="238.0" x2="548" y2="238.0" stroke="#e5e7eb"/>
+<text x="66" y="243.0" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#475569">40%</text>
+<line x1="78" y1="184.0" x2="548" y2="184.0" stroke="#e5e7eb"/>
+<text x="66" y="189.0" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#475569">60%</text>
+<line x1="78" y1="130.0" x2="548" y2="130.0" stroke="#e5e7eb"/>
+<text x="66" y="135.0" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#475569">80%</text>
+<line x1="78" y1="76.0" x2="548" y2="76.0" stroke="#e5e7eb"/>
+<text x="66" y="81.0" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#475569">100%</text>
+<text x="78.0" y="371" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#475569">0.00</text>
+<text x="313.0" y="371" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#475569">0.10</text>
+<text x="548.0" y="371" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#475569">0.25</text>
+<line x1="78" y1="76" x2="78" y2="346" stroke="#64748b"/>
+<line x1="78" y1="346" x2="548" y2="346" stroke="#64748b"/>
+<text x="313.0" y="416" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#334155">Simulated tool-failure rate</text>
+<text transform="translate(20 211.0) rotate(-90)" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#334155">Successful tasks</text>
+<polyline points="78.0,208.8 313.0,265.0 548.0,310.1" fill="none" stroke="#64748b" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="78.0" cy="208.8" r="4" fill="#64748b"/>
+<circle cx="313.0" cy="265.0" r="4" fill="#64748b"/>
+<circle cx="548.0" cy="310.1" r="4" fill="#64748b"/>
+<line x1="585" y1="96" x2="615" y2="96" stroke="#64748b" stroke-width="3"/>
+<text x="625" y="101" font-family="Arial,sans-serif" font-size="13" fill="#172033">Baseline</text>
+<polyline points="78.0,76.0 313.0,179.4 548.0,280.7" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="78.0" cy="76.0" r="4" fill="#0f766e"/>
+<circle cx="313.0" cy="179.4" r="4" fill="#0f766e"/>
+<circle cx="548.0" cy="280.7" r="4" fill="#0f766e"/>
+<line x1="585" y1="124" x2="615" y2="124" stroke="#0f766e" stroke-width="3"/>
+<text x="625" y="129" font-family="Arial,sans-serif" font-size="13" fill="#172033">Guard only</text>
+<polyline points="78.0,76.0 313.0,82.8 548.0,116.5" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="78.0" cy="76.0" r="4" fill="#7c3aed"/>
+<circle cx="313.0" cy="82.8" r="4" fill="#7c3aed"/>
+<circle cx="548.0" cy="116.5" r="4" fill="#7c3aed"/>
+<line x1="585" y1="152" x2="615" y2="152" stroke="#7c3aed" stroke-width="3"/>
+<text x="625" y="157" font-family="Arial,sans-serif" font-size="13" fill="#172033">Guard + retry</text>
+<polyline points="78.0,208.8 313.0,213.2 548.0,226.7" fill="none" stroke="#ea580c" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="78.0" cy="208.8" r="4" fill="#ea580c"/>
+<circle cx="313.0" cy="213.2" r="4" fill="#ea580c"/>
+<circle cx="548.0" cy="226.7" r="4" fill="#ea580c"/>
+<line x1="585" y1="180" x2="615" y2="180" stroke="#ea580c" stroke-width="3"/>
+<text x="625" y="185" font-family="Arial,sans-serif" font-size="13" fill="#172033">Retry only</text>
+<text x="585" y="220" font-family="Arial,sans-serif" font-size="11" fill="#64748b">Synthetic simulator</text>
+<text x="585" y="238" font-family="Arial,sans-serif" font-size="11" fill="#64748b">120 tasks per run</text>
+</svg>

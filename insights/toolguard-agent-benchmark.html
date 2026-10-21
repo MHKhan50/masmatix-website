@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ToolGuard: testing tool guards and retries in an AI agent</title>
+  <meta name="description" content="A reproducible synthetic benchmark tests whether action validation and bounded retries help an AI agent recover from simulated tool failures.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/toolguard-agent-benchmark.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ToolGuard: testing tool guards and retries in an AI agent">
+  <meta property="og:description" content="A reproducible synthetic benchmark tests whether action validation and bounded retries help an AI agent recover from simulated tool failures.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/toolguard-agent-benchmark.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+  <div class="wrap">
+    <a class="back" href="../index.html">← Back to the website</a>
+    <p class="tag">Experiment · Agentic AI · 21 October 2026</p>
+    <h1>ToolGuard: testing tool guards and retries in an AI agent</h1>
+    <p class="updated">Updated 21 October 2026 · Reproducible benchmark and small local-model pilot</p>
+    <p class="lead">An agent can fail in two different ways: it can choose an invalid action, or a valid tool call can fail at runtime. ToolGuard tests a simple idea: validate actions before execution, then use bounded retries to recover from transient failures.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>In the 120-task synthetic benchmark, the guarded-and-retry policy achieved 97.5% task success at a simulated tool-failure rate of 10%, and 85.0% at 25%.</li>
+        <li>The action gate recorded a 0% invalid-action rate for both guarded policies in this simulator.</li>
+        <li>A separate Qwen 2.5 3B pilot covered only eight tasks. Its promising result is preliminary, not conclusive evidence of general performance.</li>
+      </ul>
+    </div>
+
+    <h2>What was tested?</h2>
+    <p>The project compares four policies: a baseline, action guard only, bounded retry only, and action guard plus retry. The synthetic experiment ran 120 tasks at each of three configured tool-failure rates (0%, 10%, and 25%), with four policies per task and rate: 1,440 episodes in total. The run used seed 7. The project's seven unit tests passed on Python 3.9.6.</p>
+    <p>The action guard checks whether a proposed action is permitted before it reaches the tool. The retry policy makes bounded additional attempts after a failed tool call. These are separate interventions, so the comparison helps distinguish preventing invalid actions from recovering after runtime failures.</p>
+
+    <figure class="a-fig">
+      <img src="../images/insights/toolguard-success-rate.svg" alt="Line chart showing task success rates for four policies at simulated tool-failure rates of zero, ten and twenty-five percent" loading="lazy">
+      <figcaption>Figure 1. Task success in the synthetic simulator. The combined guard-and-retry policy remained the strongest of the four tested policies as the configured failure rate increased.</figcaption>
+    </figure>
+    <figure class="a-fig">
+      <img src="../images/insights/toolguard-invalid-action-rate.svg" alt="Line chart showing invalid-action rates for four policies at simulated tool-failure rates of zero, ten and twenty-five percent" loading="lazy">
+      <figcaption>Figure 2. Invalid-action rate. Both guarded policies recorded zero invalid actions in this experiment; that is a result of this simulator's rules, not a guarantee for real-world agents.</figcaption>
+    </figure>
+
+    <h2>Synthetic benchmark results</h2>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Tool-failure rate</th><th>Policy</th><th>Success</th><th>Invalid actions</th><th>Mean tool calls</th></tr></thead>
+        <tbody>
+          <tr><td>0%</td><td>Baseline</td><td>50.8%</td><td>8.0%</td><td>5.00</td></tr>
+          <tr><td>0%</td><td>Guard only</td><td>100.0%</td><td>0.0%</td><td>5.00</td></tr>
+          <tr><td>0%</td><td>Guard + retry</td><td>100.0%</td><td>0.0%</td><td>5.00</td></tr>
+          <tr><td>0%</td><td>Retry only</td><td>50.8%</td><td>8.0%</td><td>5.00</td></tr>
+          <tr><td>10%</td><td>Baseline</td><td>30.0%</td><td>16.3%</td><td>5.00</td></tr>
+          <tr><td>10%</td><td>Guard only</td><td>61.7%</td><td>0.0%</td><td>4.37</td></tr>
+          <tr><td>10%</td><td>Guard + retry</td><td>97.5%</td><td>0.0%</td><td>5.53</td></tr>
+          <tr><td>10%</td><td>Retry only</td><td>49.2%</td><td>7.2%</td><td>5.54</td></tr>
+          <tr><td>25%</td><td>Baseline</td><td>13.3%</td><td>20.7%</td><td>5.00</td></tr>
+          <tr><td>25%</td><td>Guard only</td><td>24.2%</td><td>0.0%</td><td>3.79</td></tr>
+          <tr><td>25%</td><td>Guard + retry</td><td>85.0%</td><td>0.0%</td><td>6.30</td></tr>
+          <tr><td>25%</td><td>Retry only</td><td>44.2%</td><td>7.0%</td><td>6.40</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>At the 10% configured failure rate, adding retries to the guard-only policy coincided with an increase in success from 61.7% to 97.5%. At 25%, it increased from 24.2% to 85.0%. The combined policy used more tool calls at higher failure rates, which is an important cost of recovery rather than a free improvement.</p>
+
+    <h2>Small local LLM pilot</h2>
+    <p>A separate run used the local <strong>Qwen 2.5 3B</strong> model with eight tasks, seed 7, and a configured 10% tool-failure rate. This is a different experiment from the 120-task synthetic benchmark.</p>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Policy</th><th>Tasks</th><th>Success</th><th>Invalid actions</th><th>Mean tool calls</th></tr></thead>
+        <tbody>
+          <tr><td>Guard + retry</td><td>8</td><td>100.0%</td><td>0.0%</td><td>5.125</td></tr>
+          <tr><td>Unguarded</td><td>8</td><td>62.5%</td><td>9.4%</td><td>6.625</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The pilot is encouraging, but eight tasks are far too few to support a broad conclusion. Model outputs can vary across runs and model builds. More tasks, repeated seeds, confidence intervals, and a wider range of tools and models are needed.</p>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>The main benchmark is a scripted synthetic simulator, not a production deployment or a clinical, financial, or other high-stakes evaluation.</li>
+      <li>The reported benchmark uses one seed; results may change with different tasks, seeds, or simulator assumptions.</li>
+      <li>A zero invalid-action rate in a controlled simulator does not prove that a guard prevents every unsafe action in an unrestricted environment.</li>
+      <li>The local-model pilot is small and should be treated as exploratory evidence only.</li>
+    </ul>
+
+    <h2>Reproduce the experiment</h2>
+    <p>The repository includes the simulator, unit tests, experiment scripts, task data, generated summaries, figures, and the optional Ollama runner. Start with the README for the exact commands and environment notes.</p>
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/toolguard-agent-benchmark">View code and experiment files</a>
+    </div>
+    <p class="a-ref">Research note: results shown here are from the reported local runs. The synthetic benchmark and the eight-task local LLM pilot are reported separately. This is an engineering experiment, not a claim of validated real-world agent safety.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
