@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The validator said yes. The refund was still wrong. | Masmatix Innovations</title>
+  <meta name="description" content="I gave a small local AI model 16 clinic tool calls in English and Roman Urdu. Every call passed the validator, so the self-correction loop never ran, yet four were still wrong, including a refund amount the model made up.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/tool-call-self-correction.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The validator said yes. The refund was still wrong.">
+  <meta property="og:description" content="I gave a small local AI model 16 clinic tool calls in English and Roman Urdu. Every call passed the validator, so the self-correction loop never ran, yet four were still wrong, including a refund amount the model made up.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/tool-call-self-correction.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/tool-call-self-correction.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Roman Urdu</p>
+      <h1>The validator said yes. The refund was still wrong.</h1>
+      <p class="a-sub">A self-correction loop can only fix the errors it can see.</p>
+      <p class="updated">By Muzammal Hussain · 21 October 2026 · 4 min read</p>
+
+      <p class="a-lede">AI agents act through tool calls. When an agent books an appointment or issues a refund, the language model fills in a small structured form, usually JSON, such as <code>{"invoice_id": "INV-1029", "amount": 45.5, "currency": "GBP"}</code>. A common safety net is a validator: code that checks the form and sends it back to the model with a list of problems if a field is missing or has the wrong type, so the model can correct itself before anything happens. I wanted to know how much protection that net gives a small model running on a laptop, in English and in Roman Urdu, the way many people in Pakistan and the UK diaspora actually type.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>All 16 tool calls passed the validator on the first try,</b> so the self-correction loop never ran.</li>
+          <li><b>Four of them were still wrong:</b> 1 of 8 in English and 3 of 8 in Roman Urdu.</li>
+          <li><b>In one Roman Urdu refund the model wrote 100,</b> a number that appears nowhere in the request.</li>
+          <li><b>Fractions were lost in both languages:</b> "dhai baje" (2:30) became 2:00, and "forty-five pounds fifty" became 45.</li>
+          <li><b>An empty city passed the validator,</b> because an empty string is still a string.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>I wrote 8 tool calls for a physiotherapy clinic system: book an appointment, record vitals, record a pain score, set a reminder, refund a payment, cancel an appointment, search patients and log an exercise. Each request was written once in English and once in Roman Urdu, 16 calls in total. Several used number words on purpose, such as "half past two" / "dopahar dhai baje" and "forty-five pounds fifty" / "paintalees pound pachaas pence". No real patient data was used.</p>
+      <p>The model was <code>qwen2.5:3b</code>, running locally through Ollama on a MacBook M4 with 16 GB of memory. Each call went through a validator that checked keys, types, date and time formats and allowed values. If it failed, the model got the list of problems and up to two more tries. The feedback never contained the correct answer. I scored every call twice:</p>
+      <ul>
+        <li><b>Schema valid:</b> did it pass the validator? This is what a real system can check.</li>
+        <li><b>Fully correct:</b> was every value right? Only the person who wrote the test knows this.</li>
+      </ul>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/tool-call-self-correction.png" alt="Bar chart of tool calls fully correct, first try and after validator feedback: English 88 percent both times, Roman Urdu 62 percent both times." loading="lazy">
+        <figcaption>qwen2.5:3b on 8 clinic tool calls per language (MacBook M4). The bars do not change because no call ever failed the validator.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Language</th><th>Passed the validator first time</th><th>Fully correct</th><th>Valid but wrong</th></tr></thead>
+          <tbody>
+            <tr><td>English</td><td>8 of 8</td><td>7 of 8</td><td>1</td></tr>
+            <tr><td>Roman Urdu</td><td>8 of 8</td><td>5 of 8</td><td>3</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The four wrong calls</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Request</th><th>Should be</th><th>Model wrote</th></tr></thead>
+          <tbody>
+            <tr><td>"dopahar dhai baje" (Roman Urdu)</td><td>14:30</td><td>14:00</td></tr>
+            <tr><td>"forty-five pounds fifty" (English)</td><td>45.50</td><td>45</td></tr>
+            <tr><td>"paintalees pound pachaas pence" (Roman Urdu)</td><td>45.50</td><td>100</td></tr>
+            <tr><td>"Glasgow mein" (Roman Urdu)</td><td>Glasgow</td><td>an empty city</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The refund of 100 worries me most. The model did not misread a number; it produced a new one, and the system had no way to notice. A wrong refund is a billing error. The same failure in a tool that records a medication dose could harm a patient.</p>
+
+      <h2>Why the retry loop did not help</h2>
+      <p>A schema validator checks the shape of an answer, not its meaning. It is like a receptionist who checks that every box on a form is filled in, but not whether the numbers are true. In this test every error was a meaning error, so the self-correction loop, often presented as the fix for unreliable agents, had nothing to do. Roman Urdu did worse, but the lost 50 pence in English shows that number words are a problem in both languages.</p>
+
+      <h2>What I would build</h2>
+      <p>For MeetPhysio, the clinical documentation system I am building, I take two lessons from this:</p>
+      <ul>
+        <li><b>A stricter schema where it can help:</b> no empty strings, sensible ranges for numbers. That would have caught the missing city.</li>
+        <li><b>A confirmation step for anything that changes money or treatment:</b> read the call back in plain words, "Refund £45.50 for INV-1029, is that right?", before it runs. Only a check like this would have caught the invented 100.</li>
+      </ul>
+
+      <h2>Limitations</h2>
+      <p>This is a pilot: one 3B model, 16 calls, one run at temperature 0. One task is 12.5 percentage points, so the gap between English and Roman Urdu is a signal to test, not a result. I wrote the tasks and the Roman Urdu wording myself, and other spellings could behave differently. Because no call failed the validator, this run says nothing about how well feedback fixes errors when it does run. I also cannot yet say why number words fail; my guess is that words like "dhai" and "paintalees" are rarer in training data than digits.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>The same requests with digits ("2:30", "45.50") and with words ("dhai", "paintalees"), to check whether the words cause the errors.</li>
+        <li>A stricter schema and a read-back confirmation step, measured on the same tasks.</li>
+        <li>50 or more tasks, several Roman Urdu spellings, more runs and a larger local model.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/tool-call-self-correction" target="_blank" rel="noopener">Code, tasks and every model reply on GitHub →</a>
+      </div>
+      <p class="a-ref">Model: Qwen2.5 3B run locally with Ollama. The tasks, the validator, every model reply and the summary table are in the GitHub repository, and the whole experiment runs in about a minute on a laptop.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
