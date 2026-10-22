@@ -57,7 +57,7 @@
     <p>In a controlled synthetic memory-retrieval task, how do provenance filtering and corroboration affect injected-memory attack success and benign-task success compared with relevance-only retrieval?</p>
 
     <h2>What was tested?</h2>
-    <p>The benchmark generated 2,250 synthetic scenarios and evaluated three policies, producing 6,750 policy evaluations. The configured injection settings were 0%, 10% and 25%. The experiment is deterministic under its configured seed and does not call an LLM; it evaluates the rules implemented in the simulator.</p>
+    <p>The benchmark generated 2,250 synthetic scenarios and evaluated three policies, producing 6,750 policy evaluations. The configured injection settings were 0%, 10% and 25%. It uses three fixed seeds (7, 13 and 29), so every run gives the same numbers, and it does not call an LLM; it evaluates the rules implemented in the simulator.</p>
     <p>Relevance-only retrieval selects using relevance. Provenance filtering adds a trust/provenance rule. The combined policy also requires corroboration. These are policy comparisons inside the benchmark, not a general evaluation of AI agent memory systems.</p>
 
     <figure class="a-fig">
@@ -98,11 +98,11 @@
       <li>No live LLM calls or production agent were evaluated.</li>
       <li>The scenarios are synthetic, and results depend on the implemented rules and assumptions.</li>
       <li>Zero observed attack success is not a security guarantee.</li>
-      <li>Further work should test realistic adversarial memories, independent corroboration sources, multiple seeds and real models, and report uncertainty and false-rejection costs.</li>
+      <li>Next step: give the same memories to a small local model (qwen2.5:3b, then llama3.1:8b) in English and Roman Urdu, count how often it follows the injected memory, and report confidence intervals.</li>
     </ul>
 
     <h2>Reproduce the experiment</h2>
-    <p>The repository contains the Python simulator, tests, generated CSV files, figures, a data dictionary and a Kaggle demonstration notebook.</p>
+    <p>The repository contains the Python simulator, tests, generated CSV files, figures, a data dictionary and a starter notebook.</p>
     <p><a href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/memtrust-agent-memory-benchmark">View code, dataset and reproducibility instructions on GitHub</a></p>
     <p>Research author: <strong>Muzammal Hussain</strong>.</p>
     <p>Research note: this is an engineering experiment using a synthetic simulator. It is not a validated real-world AI security assessment.</p>
