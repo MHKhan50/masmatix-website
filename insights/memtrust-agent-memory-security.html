@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MemTrust-Lite: testing trust filters for AI agent memory</title>
+  <meta name="description" content="A reproducible synthetic benchmark compares relevance-only retrieval, provenance filtering and corroboration for AI agent memory security.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="MemTrust-Lite: testing trust filters for AI agent memory">
+  <meta property="og:description" content="A synthetic benchmark of provenance and corroboration policies for AI agent memory.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+<main class="policy article">
+  <div class="wrap">
+    <a class="back" href="../index.html">← Back to the website</a>
+    <p class="tag">Experiment · Agentic AI · 22 October 2026</p>
+    <h1>MemTrust-Lite: testing trust filters for AI agent memory</h1>
+    <p class="updated">By Muzammal Hussain · Reproducible synthetic benchmark</p>
+    <p class="lead">AI agents may retrieve stored information that is irrelevant, unreliable or deliberately injected. MemTrust-Lite compares three simple memory-selection policies in a controlled synthetic simulator: relevance-only retrieval, provenance filtering, and provenance filtering with corroboration.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>At the configured 10% injection setting, simulated attack success was 74.07% for relevance-only retrieval and 8.64% for provenance filtering.</li>
+        <li>The combined provenance-plus-corroboration policy recorded 0% attack success in this simulator, but benign-task success was about 91.5%.</li>
+        <li>These results come from a designed synthetic benchmark, not from testing a live LLM or a production agent. They do not establish real-world security.</li>
+      </ul>
+    </div>
+
+    <h2>Research question</h2>
+    <p>In a controlled synthetic memory-retrieval task, how do provenance filtering and corroboration affect injected-memory attack success and benign-task success compared with relevance-only retrieval?</p>
+
+    <h2>What was tested?</h2>
+    <p>The benchmark generated 2,250 synthetic scenarios and evaluated three policies, producing 6,750 policy evaluations. The configured injection settings were 0%, 10% and 25%. The experiment is deterministic under its configured seed and does not call an LLM; it evaluates the rules implemented in the simulator.</p>
+    <p>Relevance-only retrieval selects using relevance. Provenance filtering adds a trust/provenance rule. The combined policy also requires corroboration. These are policy comparisons inside the benchmark, not a general evaluation of AI agent memory systems.</p>
+
+    <figure class="a-fig">
+      <img src="../images/insights/memtrust-attack-success.svg" alt="Synthetic benchmark attack-success rates across injection settings and memory policies" loading="lazy">
+      <figcaption>Figure 1. Attack-success rate in the synthetic simulator. A zero rate in this designed setting must not be interpreted as proof that real attacks will be blocked.</figcaption>
+    </figure>
+    <figure class="a-fig">
+      <img src="../images/insights/memtrust-benign-success.svg" alt="Synthetic benchmark benign-task success rates across injection settings and memory policies" loading="lazy">
+      <figcaption>Figure 2. Benign-task success. Stronger filtering can reduce successful benign responses, illustrating a security–utility trade-off.</figcaption>
+    </figure>
+    <figure class="a-fig">
+      <img src="../images/insights/memtrust-overall-success.svg" alt="Overall task-success rates across injection settings and memory policies in the synthetic benchmark" loading="lazy">
+      <figcaption>Figure 3. Overall task success under the benchmark's synthetic assumptions.</figcaption>
+    </figure>
+
+    <h2>Selected synthetic results</h2>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Injection setting</th><th>Policy</th><th>Attack success</th><th>Benign success</th><th>Overall success</th></tr></thead>
+        <tbody>
+          <tr><td>0%</td><td>Relevance-only</td><td>NA</td><td>100.0%</td><td>100.0%</td></tr>
+          <tr><td>0%</td><td>Provenance filter</td><td>NA</td><td>100.0%</td><td>100.0%</td></tr>
+          <tr><td>0%</td><td>Provenance + corroboration</td><td>NA</td><td>91.6%</td><td>91.6%</td></tr>
+          <tr><td>10%</td><td>Relevance-only</td><td>74.07%</td><td>100.0%</td><td>92.0%</td></tr>
+          <tr><td>10%</td><td>Provenance filter</td><td>8.64%</td><td>100.0%</td><td>99.07%</td></tr>
+          <tr><td>10%</td><td>Provenance + corroboration</td><td>0.0%</td><td>91.48%</td><td>91.6%</td></tr>
+          <tr><td>25%</td><td>Relevance-only</td><td>70.85%</td><td>100.0%</td><td>81.2%</td></tr>
+          <tr><td>25%</td><td>Provenance filter</td><td>17.09%</td><td>100.0%</td><td>95.47%</td></tr>
+          <tr><td>25%</td><td>Provenance + corroboration</td><td>0.0%</td><td>92.38%</td><td>92.8%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>“NA” means no poisoned cases were sampled, so attack success is not defined for that setting. Percentages are the simulator's reported rates and may be affected by its assumptions and scenario construction.</p>
+
+    <h2>Interpretation and limitations</h2>
+    <p>In this benchmark, provenance filtering reduced simulated attack success while retaining benign-task success. The combined policy recorded no successful attacks at the tested non-zero injection settings, but it also rejected some benign cases. In particular, the zero attack-success result follows from the simulator's design: injected memories have only one corroborating source. That assumption is not representative of every real attack.</p>
+    <ul>
+      <li>No live LLM calls or production agent were evaluated.</li>
+      <li>The scenarios are synthetic, and results depend on the implemented rules and assumptions.</li>
+      <li>Zero observed attack success is not a security guarantee.</li>
+      <li>Further work should test realistic adversarial memories, independent corroboration sources, multiple seeds and real models, and report uncertainty and false-rejection costs.</li>
+    </ul>
+
+    <h2>Reproduce the experiment</h2>
+    <p>The repository contains the Python simulator, tests, generated CSV files, figures, a data dictionary and a Kaggle demonstration notebook.</p>
+    <p><a href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/memtrust-agent-memory-benchmark">View code, dataset and reproducibility instructions on GitHub</a></p>
+    <p>Research author: <strong>Muzammal Hussain</strong>.</p>
+    <p>Research note: this is an engineering experiment using a synthetic simulator. It is not a validated real-world AI security assessment.</p>
+  </div>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <p>MASMATIX INNOVATIONS · Software development, AI and data.</p>
+    <p><a href="./">Insights</a> · <a href="../index.html#contact">Contact</a></p>
+  </div>
+</footer>
+</body>
+</html>
