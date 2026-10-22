@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>MemTrust-Lite: testing trust filters for AI agent memory</title>
-  <meta name="description" content="A reproducible synthetic benchmark compares relevance-only retrieval, provenance filtering and corroboration for AI agent memory security.">
+  <title>A planted memory fooled a simple AI agent 74% of the time. A trust filter cut it to 9%. | Masmatix Innovations</title>
+  <meta name="description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
   <meta name="author" content="Muzammal Hussain">
   <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="MemTrust-Lite: testing trust filters for AI agent memory">
-  <meta property="og:description" content="A synthetic benchmark of provenance and corroboration policies for AI agent memory.">
+  <meta property="og:title" content="A planted memory fooled a simple AI agent 74% of the time. A trust filter cut it to 9%.">
+  <meta property="og:description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
   <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/memtrust-agent-memory.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,82 +37,89 @@
     </nav>
   </div>
 </header>
-<main class="policy article">
-  <div class="wrap">
-    <a class="back" href="../index.html">← Back to the website</a>
-    <p class="tag">Experiment · Agentic AI · 22 October 2026</p>
-    <h1>MemTrust-Lite: testing trust filters for AI agent memory</h1>
-    <p class="updated">By Muzammal Hussain · Reproducible synthetic benchmark</p>
-    <p class="lead">AI agents may retrieve stored information that is irrelevant, unreliable or deliberately injected. MemTrust-Lite compares three simple memory-selection policies in a controlled synthetic simulator: relevance-only retrieval, provenance filtering, and provenance filtering with corroboration.</p>
 
-    <div class="a-keys">
-      <h2>Key findings</h2>
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Agent memory</p>
+      <h1>A planted memory fooled a simple AI agent 74% of the time. A trust filter cut it to 9%.</h1>
+      <p class="a-sub">A small simulator of agent memory, three retrieval rules, and one result that looks perfect only because of how I built the test.</p>
+      <p class="updated">By Muzammal Hussain · 22 October 2026 · 4 min read</p>
+
+      <p class="a-lede">AI agents increasingly keep long-term memory: notes from earlier sessions that they look up before acting. That memory is also an attack surface. If someone can plant a false note, the agent may read it later and act on it. Recent benchmarks such as AgentPoison, MemSecBench and MemForm test this on real LLM agents. Before testing a model, I wanted to isolate one smaller question: how much does the rule that picks a memory matter on its own?</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Picking the most relevant memory chose the planted one in 74.1% of poisoned cases</b> (60 of 81) at 10% injection, and 70.9% (141 of 199) at 25%.</li>
+          <li><b>A trust filter cut this to 8.6% and 17.1%</b> and still picked the right clean memory in every clean case.</li>
+          <li><b>A corroboration rule reached 0%, but that result is built in:</b> every planted memory in my simulator has exactly one source, so a rule that needs two can never choose it.</li>
+          <li><b>The same rule had a real cost:</b> about 8% of correct clean memories also had only one source, so it dropped them.</li>
+          <li><b>No language model was involved.</b> These numbers describe the simulator, not real agents.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>I wrote a small Python simulator (standard library only). Each scenario holds two clean memories and, at a set rate, one planted memory. Every memory has a relevance score, a trust score and a count of independent sources that agree with it. Three rules then pick one memory:</p>
       <ul>
-        <li>At the configured 10% injection setting, simulated attack success was 74.07% for relevance-only retrieval and 8.64% for provenance filtering.</li>
-        <li>The combined provenance-plus-corroboration policy recorded 0% attack success in this simulator, but benign-task success was about 91.5%.</li>
-        <li>These results come from a designed synthetic benchmark, not from testing a live LLM or a production agent. They do not establish real-world security.</li>
+        <li><b>Relevance only:</b> take the most relevant memory.</li>
+        <li><b>Trust filter:</b> ignore anything with trust below 0.70, then take the most relevant.</li>
+        <li><b>Trust + corroboration:</b> also require at least two agreeing sources.</li>
       </ul>
+      <p>I ran 250 tasks for each of three injection rates (0%, 10%, 25%) and three fixed seeds (7, 13, 29): 2,250 scenarios and 6,750 scored decisions. The same seeds always give the same numbers.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/memtrust-agent-memory.png" alt="Two grouped bar charts. Left: attack success at 10% and 25% injection, relevance only 74.1% and 70.9%, trust filter 8.6% and 17.1%, trust plus corroboration 0% and 0%. Right: correct clean memory picked, 92.0%, 99.1% and 91.6% at 10%, and 81.2%, 95.5% and 92.8% at 25%." loading="lazy">
+        <figcaption>Synthetic simulator, 3 seeds x 250 tasks per injection rate. Attack success counts only episodes where a planted memory was present.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Injected</th><th>Rule</th><th>Attack success</th><th>Clean tasks</th><th>Overall</th></tr></thead>
+          <tbody>
+            <tr><td>10%</td><td>Relevance only</td><td>74.1% (60/81)</td><td>100.0%</td><td>92.0%</td></tr>
+            <tr><td>10%</td><td>Trust filter</td><td>8.6% (7/81)</td><td>100.0%</td><td>99.1%</td></tr>
+            <tr><td>10%</td><td>Trust + corroboration</td><td>0.0% (0/81)</td><td>91.5%</td><td>91.6%</td></tr>
+            <tr><td>25%</td><td>Relevance only</td><td>70.9% (141/199)</td><td>100.0%</td><td>81.2%</td></tr>
+            <tr><td>25%</td><td>Trust filter</td><td>17.1% (34/199)</td><td>100.0%</td><td>95.5%</td></tr>
+            <tr><td>25%</td><td>Trust + corroboration</td><td>0.0% (0/199)</td><td>92.4%</td><td>92.8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>With no planted memories (0%), the first two rules were always right and the corroboration rule was right 91.6% of the time.</p>
+
+      <h2>Why the perfect score is not a real result</h2>
+      <p>When I checked the data, every planted memory had exactly one source. The corroboration rule needs two, so it could never pick one. The 0% simply restates that assumption. A real attacker who can plant two agreeing notes, or a planted note that looks trustworthy, would get through. The useful finding is the cost: the rule also threw away correct memories that happened to have one source.</p>
+
+      <h2>Limitations</h2>
+      <p>This is a simulator, not an agent. There is no language model, no embedding search, no memory written over time and no attacker who adapts. The trust threshold and score ranges are my own choices, and the numbers will move if they change. With 81 poisoned cases at 10% injection, the trust-filter rate is uncertain by several points, and I have not reported confidence intervals yet.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>Give the same memories to a small local model (qwen2.5:3b, then llama3.1:8b) and count how often it follows the planted one.</li>
+        <li>Run it in English and Roman Urdu, in a clinic setting, to link it to my tool-call and clinical-note experiments.</li>
+        <li>Let the planted memory carry two fake sources, and report confidence intervals.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/memtrust-agent-memory-benchmark" target="_blank" rel="noopener">Code, data and tests on GitHub →</a>
+      </div>
+      <p class="a-ref">Related work: Chen Z. et al. (2024). AgentPoison: Red-teaming LLM agents via poisoning memory or knowledge bases. NeurIPS 2024. <a href="https://arxiv.org/abs/2407.12784" target="_blank" rel="noopener">arXiv:2407.12784</a>. Chen X. et al. (2026). MemSecBench: Tracking agent memory poisoning from persistence to consequence and repair. <a href="https://arxiv.org/abs/2607.27080" target="_blank" rel="noopener">arXiv:2607.27080</a> (preprint). Pan H. et al. (2026). MemForm: Benchmarking memory formation poisoning in LLM agents. <a href="https://arxiv.org/abs/2610.14431" target="_blank" rel="noopener">arXiv:2610.14431</a> (preprint). All data in this article is synthetic.</p>
     </div>
+  </main>
 
-    <h2>Research question</h2>
-    <p>In a controlled synthetic memory-retrieval task, how do provenance filtering and corroboration affect injected-memory attack success and benign-task success compared with relevance-only retrieval?</p>
-
-    <h2>What was tested?</h2>
-    <p>The benchmark generated 2,250 synthetic scenarios and evaluated three policies, producing 6,750 policy evaluations. The configured injection settings were 0%, 10% and 25%. It uses three fixed seeds (7, 13 and 29), so every run gives the same numbers, and it does not call an LLM; it evaluates the rules implemented in the simulator.</p>
-    <p>Relevance-only retrieval selects using relevance. Provenance filtering adds a trust/provenance rule. The combined policy also requires corroboration. These are policy comparisons inside the benchmark, not a general evaluation of AI agent memory systems.</p>
-
-    <figure class="a-fig">
-      <img src="../images/insights/memtrust-attack-success.svg" alt="Synthetic benchmark attack-success rates across injection settings and memory policies" loading="lazy">
-      <figcaption>Figure 1. Attack-success rate in the synthetic simulator. A zero rate in this designed setting must not be interpreted as proof that real attacks will be blocked.</figcaption>
-    </figure>
-    <figure class="a-fig">
-      <img src="../images/insights/memtrust-benign-success.svg" alt="Synthetic benchmark benign-task success rates across injection settings and memory policies" loading="lazy">
-      <figcaption>Figure 2. Benign-task success. Stronger filtering can reduce successful benign responses, illustrating a security–utility trade-off.</figcaption>
-    </figure>
-    <figure class="a-fig">
-      <img src="../images/insights/memtrust-overall-success.svg" alt="Overall task-success rates across injection settings and memory policies in the synthetic benchmark" loading="lazy">
-      <figcaption>Figure 3. Overall task success under the benchmark's synthetic assumptions.</figcaption>
-    </figure>
-
-    <h2>Selected synthetic results</h2>
-    <div class="a-table">
-      <table>
-        <thead><tr><th>Injection setting</th><th>Policy</th><th>Attack success</th><th>Benign success</th><th>Overall success</th></tr></thead>
-        <tbody>
-          <tr><td>0%</td><td>Relevance-only</td><td>NA</td><td>100.0%</td><td>100.0%</td></tr>
-          <tr><td>0%</td><td>Provenance filter</td><td>NA</td><td>100.0%</td><td>100.0%</td></tr>
-          <tr><td>0%</td><td>Provenance + corroboration</td><td>NA</td><td>91.6%</td><td>91.6%</td></tr>
-          <tr><td>10%</td><td>Relevance-only</td><td>74.07%</td><td>100.0%</td><td>92.0%</td></tr>
-          <tr><td>10%</td><td>Provenance filter</td><td>8.64%</td><td>100.0%</td><td>99.07%</td></tr>
-          <tr><td>10%</td><td>Provenance + corroboration</td><td>0.0%</td><td>91.48%</td><td>91.6%</td></tr>
-          <tr><td>25%</td><td>Relevance-only</td><td>70.85%</td><td>100.0%</td><td>81.2%</td></tr>
-          <tr><td>25%</td><td>Provenance filter</td><td>17.09%</td><td>100.0%</td><td>95.47%</td></tr>
-          <tr><td>25%</td><td>Provenance + corroboration</td><td>0.0%</td><td>92.38%</td><td>92.8%</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p>“NA” means no poisoned cases were sampled, so attack success is not defined for that setting. Percentages are the simulator's reported rates and may be affected by its assumptions and scenario construction.</p>
-
-    <h2>Interpretation and limitations</h2>
-    <p>In this benchmark, provenance filtering reduced simulated attack success while retaining benign-task success. The combined policy recorded no successful attacks at the tested non-zero injection settings, but it also rejected some benign cases. In particular, the zero attack-success result follows from the simulator's design: injected memories have only one corroborating source. That assumption is not representative of every real attack.</p>
-    <ul>
-      <li>No live LLM calls or production agent were evaluated.</li>
-      <li>The scenarios are synthetic, and results depend on the implemented rules and assumptions.</li>
-      <li>Zero observed attack success is not a security guarantee.</li>
-      <li>Next step: give the same memories to a small local model (qwen2.5:3b, then llama3.1:8b) in English and Roman Urdu, count how often it follows the injected memory, and report confidence intervals.</li>
-    </ul>
-
-    <h2>Reproduce the experiment</h2>
-    <p>The repository contains the Python simulator, tests, generated CSV files, figures, a data dictionary and a starter notebook.</p>
-    <p><a href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/memtrust-agent-memory-benchmark">View code, dataset and reproducibility instructions on GitHub</a></p>
-    <p>Research author: <strong>Muzammal Hussain</strong>.</p>
-    <p>Research note: this is an engineering experiment using a synthetic simulator. It is not a validated real-world AI security assessment.</p>
-  </div>
-</main>
-<footer class="footer">
+<footer>
   <div class="wrap">
-    <p>MASMATIX INNOVATIONS · Software development, AI and data.</p>
-    <p><a href="./">Insights</a> · <a href="../index.html#contact">Contact</a></p>
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
   </div>
 </footer>
 </body>
