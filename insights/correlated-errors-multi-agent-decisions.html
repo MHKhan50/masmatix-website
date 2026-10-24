@@ -1,40 +1,91 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Correlated Errors in Multi-Agent Decisions | Masmatix Innovations</title>
-<meta name="description" content="A reproducible synthetic study of shared shocks, correlated errors and multi-agent decision policies.">
-<link rel="canonical" href="https://masmatixinnovations.co.uk/insights/correlated-errors-multi-agent-decisions.html">
-<link rel="icon" href="../images/favicon.svg"><link rel="stylesheet" href="../css/styles.css">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>When AI Agents Fail Together | Masmatix Innovations</title>
+  <meta name="description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A planted memory fooled a simple AI agent 74% of the time. A trust filter cut it to 9%.">
+  <meta property="og:description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/memtrust-agent-memory.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-<header><div class="wrap"><a href="../index.html"><img src="../images/logo.svg" alt="Masmatix Innovations" style="max-width:190px"></a><nav><a href="../index.html">Home</a> <a href="./">Insights</a></nav></div></header>
-<main class="policy article"><div class="wrap">
-<p><a href="./">← Back to Insights</a></p><p class="tag">Research · Multi-agent systems</p>
-<h1>Correlated Errors in Multi-Agent Decisions</h1>
-<p class="meta">Published 24 October 2026 · Synthetic experiment</p>
-<p class="lead">Adding more agents does not guarantee more reliable decisions when those agents can fail together. This experiment studies how a shared-shock mechanism affects majority voting and confidence-weighted aggregation.</p>
-<h2>Key findings</h2>
-<ul><li>Mean majority accuracy declined as the shared-shock mixture probability increased.</li><li>Across the tested settings, mean accuracy fell from approximately 79.9% at q = 0 to 69.8% at q = 1.</li><li>Confidence-weighted policies had lower Brier scores than hard majority predictions in this simulation. Calibration adjustment produced only a modest additional improvement.</li></ul>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article"><div class="wrap">
+<a class="back" href="./">← All insights</a>
+<p class="a-kicker">Experiment · Agentic AI · Multi-agent decisions</p>
+<h1>When AI agents fail together, adding more votes may not help</h1>
+<p class="a-sub">A synthetic experiment studies shared shocks, majority voting and confidence-weighted aggregation across three agents.</p>
+<p class="updated">By Muzammal Hussain · 24 October 2026 · Synthetic research</p>
+<p class="a-lede">An ensemble can look more reliable when its members make independent errors. If several agents can be wrong for the same underlying reason, their votes are not independent evidence. This experiment varies the probability of a shared-shock event and measures how majority accuracy and weighted-policy Brier scores change. No real LLMs were called.</p>
+<div class="a-keys"><p class="a-keys-h">Key findings</p><ol>
+<li><b>Majority accuracy fell as shared-shock probability increased:</b> from 79.932% at q = 0 to 69.800% at q = 1.</li>
+<li><b>Mean raw weighted Brier score rose</b> from 0.146602 to 0.246166 across the same range; lower Brier scores are better.</li>
+<li><b>Calibration adjustment made only a small difference:</b> the mean calibrated-weighted Brier score was slightly lower at each reported q.</li>
+<li><b>Accuracy was unchanged between the two weighted policies</b> within each seed and q. ECE did not improve consistently.</li>
+<li><b>These are synthetic results,</b> not measurements of real language models or deployed agent teams.</li>
+</ol></div>
 <h2>Experimental design</h2>
-<p>The simulation used five random seeds, 2,500 scenarios per seed and setting, nominal agent skills of 0.80, 0.70 and 0.62, and q values of 0, 0.25, 0.50, 0.75 and 1. Here q is the probability of a shared-shock component in the mixture; it is not a pairwise correlation coefficient.</p>
+<p>The simulator uses three agents with nominal skills 0.80, 0.70 and 0.62. Five seeds were run with 2,500 scenarios per seed. The parameter q is the shared-shock mixture probability: it is <b>not</b> a pairwise correlation coefficient. The comparison includes majority-vote accuracy, raw confidence-weighted Brier score and calibrated-weighted Brier score.</p>
 <h2>Results</h2>
-<table><thead><tr><th>q</th><th>Mean majority accuracy</th><th>Mean raw-weighted Brier</th><th>Mean calibrated-weighted Brier</th></tr></thead><tbody>
-<tr><td>0.00</td><td>79.93%</td><td>0.1466</td><td>0.1460</td></tr>
-<tr><td>0.25</td><td>77.42%</td><td>0.1726</td><td>0.1719</td></tr>
-<tr><td>0.50</td><td>75.02%</td><td>0.1963</td><td>0.1956</td></tr>
-<tr><td>0.75</td><td>72.55%</td><td>0.2214</td><td>0.2207</td></tr>
-<tr><td>1.00</td><td>69.80%</td><td>0.2462</td><td>0.2452</td></tr>
-</tbody></table>
-<p>Accuracy was the same across the weighted policies for each seed and setting. The Brier-score comparison also reflects that majority predictions were evaluated as hard 0/1 outputs, so the metrics should not be interpreted as a like-for-like accuracy comparison.</p>
+<figure class="a-fig"><img src="../images/insights/correlated-errors-accuracy.svg" alt="Bar chart showing majority accuracy falling from 79.932 percent at q zero to 69.800 percent at q one." loading="lazy"><figcaption>Mean majority accuracy across five seeds. q is the probability of the simulator's shared-shock component.</figcaption></figure>
+<figure class="a-fig"><img src="../images/insights/correlated-errors-brier.svg" alt="Bar chart comparing raw and calibrated weighted Brier scores at five q values." loading="lazy"><figcaption>Mean Brier scores across five seeds; lower is better. The calibration-adjusted scores are only modestly lower.</figcaption></figure>
+<div class="a-table"><table><thead><tr><th>q</th><th>Majority accuracy</th><th>Raw weighted Brier</th><th>Calibrated weighted Brier</th></tr></thead><tbody>
+<tr><td>0.00</td><td>79.932%</td><td>0.146602</td><td>0.145962</td></tr>
+<tr><td>0.25</td><td>77.424%</td><td>0.172583</td><td>0.171934</td></tr>
+<tr><td>0.50</td><td>75.024%</td><td>0.196304</td><td>0.195580</td></tr>
+<tr><td>0.75</td><td>72.552%</td><td>0.221443</td><td>0.220687</td></tr>
+<tr><td>1.00</td><td>69.800%</td><td>0.246166</td><td>0.245224</td></tr>
+</tbody></table></div>
+<h2>Interpretation</h2>
+<p>The main pattern is that increasing the shared-shock probability coincides with lower majority accuracy and worse Brier scores. The calibration adjustment's average Brier improvement is small, so it should not be presented as a complete solution to correlated errors. A hard majority decision's accuracy is also not directly equivalent to a probabilistic Brier score; they measure different properties.</p>
 <h2>Limitations</h2>
-<p>This is a synthetic experiment, not a benchmark of real language models or deployed agent systems. Results depend on the chosen shared-shock mechanism, skills, aggregation rules and calibration assumptions. They do not establish that one policy is universally superior.</p>
-<h2>Reproducibility</h2>
-<p>Experiment code and data: <a href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/correlated_errors">correlated-errors experiment repository</a>.</p>
-<h2>Conclusion</h2>
-<p>Evaluations of multi-agent systems should test shared failure modes, not just individual agent accuracy. Independence assumptions can materially change how much benefit aggregation appears to provide.</p>
-<p><strong>Suggested citation:</strong> Masmatix Innovations (2026). “Correlated Errors in Multi-Agent Decisions.” Synthetic simulation study.</p>
+<p>This is a synthetic simulator with chosen agent skills and a specific shared-shock mechanism. It does not establish how real LLMs correlate their errors, and q should not be interpreted as a measured correlation. Five seeds give a limited view of run-to-run variation. ECE improvements were not consistent.</p>
+<h2>Reproducibility and next steps</h2>
+<p>The experiment uses Python and synthetic scenarios. A useful next step is to measure error dependence in real model outputs, separate common prompts from shared evidence, and evaluate calibration on held-out data.</p>
+<div class="a-links"><a class="btn btn-grad" href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/correlated_errors" target="_blank" rel="noopener">Code, data and experiment →</a></div>
 </div></main>
-<footer><div class="wrap"><p>© Masmatix Innovations</p></div></footer>
-</body></html>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>

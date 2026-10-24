@@ -1,42 +1,90 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Confidence Inflation and Calibration | Masmatix Innovations</title>
-<meta name="description" content="A synthetic held-out evaluation of confidence inflation and simple calibration correction for agent predictions.">
-<link rel="canonical" href="https://masmatixinnovations.co.uk/insights/confidence-inflation-calibration.html">
-<link rel="icon" href="../images/favicon.svg"><link rel="stylesheet" href="../css/styles.css">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Confidence Inflation and Calibration | Masmatix Innovations</title>
+  <meta name="description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A planted memory fooled a simple AI agent 74% of the time. A trust filter cut it to 9%.">
+  <meta property="og:description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/memtrust-agent-memory.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-<header><div class="wrap"><a href="../index.html"><img src="../images/logo.svg" alt="Masmatix Innovations" style="max-width:190px"></a><nav><a href="../index.html">Home</a> <a href="./">Insights</a></nav></div></header>
-<main class="policy article"><div class="wrap">
-<p><a href="./">← Back to Insights</a></p><p class="tag">Research · Calibration</p>
-<h1>Confidence Inflation and Calibration</h1>
-<p class="meta">Published 24 October 2026 · Synthetic experiment</p>
-<p class="lead">Confidence scores can become less reliable when reported confidence is systematically inflated. This experiment tests whether a simple correction estimated on separate calibration data improves held-out probabilistic predictions.</p>
-<h2>Key findings</h2>
-<ul><li>Prediction accuracy was unchanged by the confidence correction, as expected for a confidence-only adjustment.</li><li>Raw Brier scores worsened as the simulated inflation level increased.</li><li>At inflation 0.25, the correction reduced Brier score in all five seeds, but the improvement was small.</li><li>Expected calibration error (ECE) did not improve uniformly across all settings.</li></ul>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article"><div class="wrap">
+<a class="back" href="./">← All insights</a>
+<p class="a-kicker">Experiment · Agentic AI · Confidence calibration</p>
+<h1>Confidence inflation: can a simple correction improve calibration?</h1>
+<p class="a-sub">A synthetic held-out evaluation tests a simple confidence correction when agents systematically overstate certainty.</p>
+<p class="updated">By Muzammal Hussain · 24 October 2026 · Synthetic research</p>
+<p class="a-lede">Confidence-weighted decisions can become misleading when reported confidence is systematically too high. This experiment estimates an additive confidence gap on a separate calibration sample, then evaluates the correction on held-out scenarios. It tests a simple baseline—not a universal calibration method. No real LLMs were called.</p>
+<div class="a-keys"><p class="a-keys-h">Key findings</p><ol>
+<li><b>At inflation 0.25, corrected Brier scores were lower in all five reported seeds.</b> The absolute changes were small.</li>
+<li><b>Accuracy did not change</b> between raw and corrected methods within each seed and inflation level.</li>
+<li><b>ECE did not improve consistently</b> across inflation levels, so the correction cannot be described as uniformly better calibrated.</li>
+<li><b>The test is synthetic:</b> the correction is estimated from a separate calibration sample and evaluated on held-out scenarios.</li>
+</ol></div>
 <h2>Experimental design</h2>
-<p>The synthetic study used five seeds, three simulated agents with nominal skills 0.80, 0.70 and 0.62, a calibration sample of 1,000 cases and a held-out test sample of 2,000 cases. Inflation levels were 0, 0.05, 0.10, 0.15, 0.20 and 0.25.</p>
-<p>For each run, a simple additive correction was estimated from the calibration sample as the mean gap between reported confidence and correctness, then evaluated on held-out scenarios. Metrics were accuracy, Brier score and 10-bin ECE.</p>
-<h2>Illustrative results at inflation 0.25</h2>
-<table><thead><tr><th>Seed</th><th>Raw Brier</th><th>Corrected Brier</th></tr></thead><tbody>
-<tr><td>1</td><td>0.14844</td><td>0.14763</td></tr>
-<tr><td>2</td><td>0.15881</td><td>0.15799</td></tr>
-<tr><td>3</td><td>0.14566</td><td>0.14469</td></tr>
-<tr><td>4</td><td>0.15523</td><td>0.15444</td></tr>
-<tr><td>5</td><td>0.14986</td><td>0.14883</td></tr>
-</tbody></table>
-<p>Mean accuracy across the reported settings was approximately 79.35% and did not change between raw and corrected confidence for a given run. The Brier-score gains at the highest inflation level were modest. ECE results varied by setting, so the correction should not be treated as a guaranteed calibration improvement.</p>
+<p>Three simulated agents have nominal skills 0.80, 0.70 and 0.62. Each run uses a calibration sample of 1,000 scenarios and a held-out test sample of 2,000. Five seeds were used for the reported run. The tested confidence-inflation levels are 0, 0.05, 0.10, 0.15, 0.20 and 0.25. The correction estimates the mean reported-confidence minus correctness gap from calibration data and applies a simple additive adjustment.</p>
+<h2>Held-out results at inflation 0.25</h2>
+<figure class="a-fig"><img src="../images/insights/confidence-inflation-brier.svg" alt="Grouped bar chart of raw and corrected held-out Brier scores for five seeds; corrected scores are slightly lower in every seed." loading="lazy"><figcaption>Held-out Brier scores at inflation 0.25. Lower is better; the differences are small.</figcaption></figure>
+<div class="a-table"><table><thead><tr><th>Seed</th><th>Accuracy</th><th>Raw Brier</th><th>Corrected Brier</th><th>Absolute Brier reduction</th></tr></thead><tbody>
+<tr><td>1</td><td>80.35%</td><td>0.14844</td><td>0.14763</td><td>0.00081</td></tr>
+<tr><td>2</td><td>78.25%</td><td>0.15881</td><td>0.15799</td><td>0.00082</td></tr>
+<tr><td>3</td><td>79.90%</td><td>0.14566</td><td>0.14469</td><td>0.00097</td></tr>
+<tr><td>4</td><td>78.75%</td><td>0.15523</td><td>0.15444</td><td>0.00079</td></tr>
+<tr><td>5</td><td>79.50%</td><td>0.14986</td><td>0.14883</td><td>0.00103</td></tr>
+</tbody></table></div>
+<p>Accuracy for the five seeds was 80.35%, 78.25%, 79.90%, 78.75% and 79.50%, respectively. It was unchanged by the correction within each seed. The table reports the supplied held-out Brier values at inflation 0.25; it does not imply that every inflation level benefits.</p>
+<h2>Interpretation</h2>
+<p>The correction improved Brier score slightly in all five reported seeds at the highest tested inflation level. This is encouraging for this simulator, but a lower Brier score at one setting does not prove that the method is generally calibrated. ECE results varied by inflation level, and accuracy did not change.</p>
 <h2>Limitations</h2>
-<p>This is a synthetic proof-of-concept, not evidence that real agents share a constant additive confidence bias. The correction is deliberately simple and may fail under distribution shift, non-uniform errors or different confidence-generation processes. Calibration should be evaluated on representative held-out data.</p>
-<h2>Reproducibility</h2>
-<p>Experiment code and data: <a href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/confidence_inflation">confidence-inflation experiment repository</a>.</p>
-<p>Run with <code>python3 run_experiment.py --seeds 10</code>; run tests with <code>python3 -m unittest discover -s tests -v</code>. The experiment uses Python's standard library only.</p>
-<h2>Conclusion</h2>
-<p>Confidence correction can improve probabilistic scoring under controlled inflation, but the observed gains are small and ECE is not consistently improved. Measure calibration on held-out data before using corrected confidence in consequential decisions.</p>
-<p><strong>Suggested citation:</strong> Masmatix Innovations (2026). “Confidence Inflation and Calibration.” Synthetic simulation study.</p>
+<p>The agents and scenarios are synthetic, the correction is deliberately simple, and only five seeds are reported here. The estimated confidence gap may not transfer to a different model, task, language or deployment distribution. Calibration should be evaluated on representative held-out data, with uncertainty estimates and comparison to stronger baselines.</p>
+<h2>Reproducibility and next steps</h2>
+<p>The experiment is implemented in Python using the standard library. The repository includes the experiment runner and tests. A next step is to report full per-level ECE and Brier results with more seeds, then compare the additive correction with established calibration baselines.</p>
+<div class="a-links"><a class="btn btn-grad" href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/confidence_inflation" target="_blank" rel="noopener">Code, data and experiment →</a></div>
 </div></main>
-<footer><div class="wrap"><p>© Masmatix Innovations</p></div></footer>
-</body></html>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
