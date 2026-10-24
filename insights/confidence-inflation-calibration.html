@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Confidence Inflation and Calibration | Masmatix Innovations</title>
-  <meta name="description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
+  <title>A one-number fix for overconfident agents worked, but barely | Masmatix Innovations</title>
+  <meta name="description" content="I made three simulated AI agents overconfident and corrected them with a single measured shift. The Brier score improved at every level, but by less than 0.001, and calibration error did not improve.">
   <meta name="author" content="Muzammal Hussain">
-  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/confidence-inflation-calibration.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="A planted memory fooled a simple AI agent 74% of the time. A trust filter cut it to 9%.">
-  <meta property="og:description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
-  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
-  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/memtrust-agent-memory.png">
+  <meta property="og:title" content="A one-number fix for overconfident agents worked, but barely">
+  <meta property="og:description" content="I made three simulated AI agents overconfident and corrected them with a single measured shift. The Brier score improved at every level, but by less than 0.001, and calibration error did not improve.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/confidence-inflation-calibration.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/confidence-inflation-calibration.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,39 +38,71 @@
   </div>
 </header>
 
-  <main class="policy article"><div class="wrap">
-<a class="back" href="./">← All insights</a>
-<p class="a-kicker">Experiment · Agentic AI · Confidence calibration</p>
-<h1>Confidence inflation: can a simple correction improve calibration?</h1>
-<p class="a-sub">A synthetic held-out evaluation tests a simple confidence correction when agents systematically overstate certainty.</p>
-<p class="updated">By Muzammal Hussain · 24 October 2026 · Synthetic research</p>
-<p class="a-lede">Confidence-weighted decisions can become misleading when reported confidence is systematically too high. This experiment estimates an additive confidence gap on a separate calibration sample, then evaluates the correction on held-out scenarios. It tests a simple baseline—not a universal calibration method. No real LLMs were called.</p>
-<div class="a-keys"><p class="a-keys-h">Key findings</p><ol>
-<li><b>At inflation 0.25, corrected Brier scores were lower in all five reported seeds.</b> The absolute changes were small.</li>
-<li><b>Accuracy did not change</b> between raw and corrected methods within each seed and inflation level.</li>
-<li><b>ECE did not improve consistently</b> across inflation levels, so the correction cannot be described as uniformly better calibrated.</li>
-<li><b>The test is synthetic:</b> the correction is estimated from a separate calibration sample and evaluated on held-out scenarios.</li>
-</ol></div>
-<h2>Experimental design</h2>
-<p>Three simulated agents have nominal skills 0.80, 0.70 and 0.62. Each run uses a calibration sample of 1,000 scenarios and a held-out test sample of 2,000. Five seeds were used for the reported run. The tested confidence-inflation levels are 0, 0.05, 0.10, 0.15, 0.20 and 0.25. The correction estimates the mean reported-confidence minus correctness gap from calibration data and applies a simple additive adjustment.</p>
-<h2>Held-out results at inflation 0.25</h2>
-<figure class="a-fig"><img src="../images/insights/confidence-inflation-brier.svg" alt="Grouped bar chart of raw and corrected held-out Brier scores for five seeds; corrected scores are slightly lower in every seed." loading="lazy"><figcaption>Held-out Brier scores at inflation 0.25. Lower is better; the differences are small.</figcaption></figure>
-<div class="a-table"><table><thead><tr><th>Seed</th><th>Accuracy</th><th>Raw Brier</th><th>Corrected Brier</th><th>Absolute Brier reduction</th></tr></thead><tbody>
-<tr><td>1</td><td>80.35%</td><td>0.14844</td><td>0.14763</td><td>0.00081</td></tr>
-<tr><td>2</td><td>78.25%</td><td>0.15881</td><td>0.15799</td><td>0.00082</td></tr>
-<tr><td>3</td><td>79.90%</td><td>0.14566</td><td>0.14469</td><td>0.00097</td></tr>
-<tr><td>4</td><td>78.75%</td><td>0.15523</td><td>0.15444</td><td>0.00079</td></tr>
-<tr><td>5</td><td>79.50%</td><td>0.14986</td><td>0.14883</td><td>0.00103</td></tr>
-</tbody></table></div>
-<p>Accuracy for the five seeds was 80.35%, 78.25%, 79.90%, 78.75% and 79.50%, respectively. It was unchanged by the correction within each seed. The table reports the supplied held-out Brier values at inflation 0.25; it does not imply that every inflation level benefits.</p>
-<h2>Interpretation</h2>
-<p>The correction improved Brier score slightly in all five reported seeds at the highest tested inflation level. This is encouraging for this simulator, but a lower Brier score at one setting does not prove that the method is generally calibrated. ECE results varied by inflation level, and accuracy did not change.</p>
-<h2>Limitations</h2>
-<p>The agents and scenarios are synthetic, the correction is deliberately simple, and only five seeds are reported here. The estimated confidence gap may not transfer to a different model, task, language or deployment distribution. Calibration should be evaluated on representative held-out data, with uncertainty estimates and comparison to stronger baselines.</p>
-<h2>Reproducibility and next steps</h2>
-<p>The experiment is implemented in Python using the standard library. The repository includes the experiment runner and tests. A next step is to report full per-level ECE and Brier results with more seeds, then compare the additive correction with established calibration baselines.</p>
-<div class="a-links"><a class="btn btn-grad" href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/confidence_inflation" target="_blank" rel="noopener">Code, data and experiment →</a></div>
-</div></main>
+    <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Calibration</p>
+      <h1>A one-number fix for overconfident agents worked, but barely</h1>
+      <p class="a-sub">Subtracting the measured overconfidence is safe, but it is not enough.</p>
+      <p class="updated">By Muzammal Hussain · 24 October 2026 · 4 min read</p>
+
+      <p class="a-lede">Language models often sound more certain than they should. If an agent says "95% sure" but is right only 80% of the time, any system that weighs its answers by confidence will trust it too much. The simplest fix is to measure how much the agent overstates itself on a test set and subtract that gap from every future score. I wanted to know how much this one-number fix really helps.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>The fix lowered the Brier score at every level of overconfidence I tested,</b> and in all five runs at the highest level.</li>
+          <li><b>The gain was tiny:</b> at most 0.001, on Brier scores of about 0.15.</li>
+          <li><b>Calibration error did not improve:</b> it was slightly worse after the fix at four of the five overconfidence levels, and only better at the highest one.</li>
+          <li><b>Accuracy did not change,</b> as expected, because the fix moves confidence and never changes an answer.</li>
+          <li><b>These are simulated agents, not language models.</b> No LLM was called.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>I used three simulated agents with set skills of 80%, 70% and 62% on a yes/no task. Each agent reports a confidence close to its skill, plus an extra amount I call inflation: 0, 0.05, 0.10, 0.15, 0.20 or 0.25. For each of five random seeds I created 1,000 scenarios to measure the gap between reported confidence and real accuracy, and a separate 2,000 scenarios to test the fix. The fix subtracts that measured gap from every confidence.</p>
+      <p>I scored the result with the Brier score (the average squared gap between confidence and what really happened) and expected calibration error, ECE (when the agent says 80%, is it right about 80% of the time?). For both, lower is better.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/confidence-inflation-calibration.png" alt="Bar chart of the mean Brier score reduction from the fix at each inflation level: almost zero at 0, rising to about 0.0009 to 0.001 at 0.15 to 0.25." loading="lazy">
+        <figcaption>Mean Brier score reduction from the fix on held-out scenarios, five seeds per level. Higher is better.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Inflation</th><th>Brier reduction (mean)</th><th>ECE before</th><th>ECE after</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>0.00001</td><td>0.052</td><td>0.052</td></tr>
+            <tr><td>0.05</td><td>0.00034</td><td>0.051</td><td>0.052</td></tr>
+            <tr><td>0.10</td><td>0.00064</td><td>0.050</td><td>0.052</td></tr>
+            <tr><td>0.15</td><td>0.00088</td><td>0.049</td><td>0.051</td></tr>
+            <tr><td>0.20</td><td>0.00099</td><td>0.049</td><td>0.049</td></tr>
+            <tr><td>0.25</td><td>0.00088</td><td>0.049</td><td>0.049</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>At inflation 0.25 the ECE fell slightly in every seed (for example 0.0589 to 0.0582 in the first seed), but the change only shows at the fourth decimal place. Accuracy stayed between 78.3% and 80.4% depending on the seed, the same before and after the fix.</p>
+
+      <h2>What this means</h2>
+      <p>A single shift is like correcting a watch that runs five minutes fast: it works if the error is the same at every hour. Here the overconfidence was not the same everywhere, because confidence is capped at 0.99 and the agents have different skills, so one shift for all of them could only remove a small part of the problem. In my simulator the fix is safe but weak. A per-agent correction, or one that bends the whole confidence curve, is the obvious stronger baseline.</p>
+      <p>The ECE result is the more useful lesson for me: a fix can improve one score and make another slightly worse, so a calibration method should always be reported with more than one measure.</p>
+
+      <h2>Limitations</h2>
+      <p>The agents, the task and the way overconfidence is added are all my own choices. There are five seeds per level, and the differences are so small that they could change with other settings. The correction is deliberately the simplest possible one and is not compared yet with standard methods such as temperature scaling or isotonic regression. Nothing here measures a real language model.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>A separate correction for each agent, and standard calibration methods on the same data.</li>
+        <li>More seeds, so the very small differences come with a measure of uncertainty.</li>
+        <li>Real confidence scores from qwen2.5:3b and llama3.1:8b, where the overconfidence is not added by me.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/confidence_inflation" target="_blank" rel="noopener">Code, results and tests on GitHub →</a>
+      </div>
+      <p class="a-ref">The experiment runs in plain Python. The results above are computed from <code>outputs/metrics_summary.csv</code> in the repository; it is a follow-up to <a href="agent-uncertainty-wire.html">Averaging agents' confidence made the team less trustworthy</a>.</p>
+    </div>
+  </main>
 
 <footer>
   <div class="wrap">

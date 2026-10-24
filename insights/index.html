@@ -45,23 +45,29 @@
       <p class="updated">Research notes and small experiments from our AI work</p>
       <p>Short write-ups of experiments on AI agents, local models, AI in public services and open data on real-world problems. Each one links to the code and data, so the results can be checked and reproduced.</p>
       <div class="i-list">
+        <a class="proj" href="roman-urdu-left-right-confidence.html">
+          <span class="tag">Agentic AI · 24 October 2026</span>
+          <h3>Three local AI models mixed up left and right in Roman Urdu, and were sure they were right</h3>
+          <p>qwen2.5:3b and llama3.1:8b read the same physio notes in English and Roman Urdu. In Roman Urdu all three agents said yes to the wrong side on 3 of 4 questions, almost always with 100% confidence.</p>
+          <ul><li>LLM agents</li><li>Roman Urdu</li><li>Clinical AI</li></ul>
+        </a>
         <a class="proj" href="correlated-errors-multi-agent-decisions.html">
           <span class="tag">Agentic AI · 24 October 2026</span>
-          <h3>Correlated Errors in Multi-Agent Decisions</h3>
-          <p>A synthetic experiment tests how shared shocks affect majority-vote accuracy and confidence-weighted decisions across three agents. Results show why correlated errors matter; no real LLMs were called.</p>
-          <ul><li>Agentic AI</li><li>Correlated errors</li><li>Reproducible research</li></ul>
+          <h3>When AI agents fail together, more votes do not help</h3>
+          <p>Three simulated agents that can fail for the same reason: majority vote accuracy fell from 79.9% to 70.0% as shared failures became more likely, and never beat the best single agent.</p>
+          <ul><li>Agentic AI</li><li>Multi-agent systems</li><li>Synthetic benchmark</li></ul>
         </a>
         <a class="proj" href="confidence-inflation-calibration.html">
           <span class="tag">Agentic AI · 24 October 2026</span>
-          <h3>Confidence Inflation and Calibration</h3>
-          <p>A synthetic experiment tests whether a simple confidence correction helps when agents overstate certainty, using held-out accuracy, Brier score and calibration error. No real LLMs were called.</p>
-          <ul><li>Agentic AI</li><li>Calibration</li><li>Reproducible research</li></ul>
+          <h3>A one-number fix for overconfident agents worked, but barely</h3>
+          <p>Subtracting the measured overconfidence improved the Brier score of three simulated agents at every level, but by less than 0.001, and calibration error did not improve.</p>
+          <ul><li>Agentic AI</li><li>Calibration</li><li>Synthetic benchmark</li></ul>
         </a>
         <a class="proj" href="agent-uncertainty-wire.html">
           <span class="tag">Agentic AI · 24 October 2026</span>
-          <h3>Agent Uncertainty Wire: comparing confidence aggregation in a synthetic agent team</h3>
-          <p>A reproducible benchmark compares five confidence aggregation rules for three simulated agents, using held-out accuracy, Brier score and calibration error. No real LLMs were called.</p>
-          <ul><li>Agentic AI</li><li>Uncertainty</li><li>Reproducible research</li></ul>
+          <h3>Averaging agents' confidence made the team less trustworthy</h3>
+          <p>Five ways to combine three simulated agents: averaging their confidence gave the worst calibrated team, and adding evidence in log-odds the best, once each agent was corrected.</p>
+          <ul><li>Agentic AI</li><li>Uncertainty</li><li>Synthetic benchmark</li></ul>
         </a>
         <a class="proj" href="memtrust-agent-memory-security.html">
           <span class="tag">Agentic AI · 22 October 2026</span>

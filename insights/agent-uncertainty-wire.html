@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Agent Uncertainty Wire: comparing confidence aggregation in a synthetic agent team</title>
-  <meta name="description" content="A reproducible synthetic benchmark compares five confidence aggregation rules for three simulated agents, measuring accuracy, Brier score and calibration error.">
+  <title>Averaging agents' confidence made the team less trustworthy | Masmatix Innovations</title>
+  <meta name="description" content="I combined three simulated AI agents in five ways. Averaging their confidence gave the worst calibrated team; adding their evidence in log-odds gave the best, as long as each agent was corrected first.">
   <meta name="author" content="Muzammal Hussain">
   <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/agent-uncertainty-wire.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Agent Uncertainty Wire: comparing confidence aggregation in a synthetic agent team">
-  <meta property="og:description" content="Five aggregation rules compared in a reproducible synthetic multi-agent benchmark. No real LLMs were called.">
+  <meta property="og:title" content="Averaging agents&#x27; confidence made the team less trustworthy">
+  <meta property="og:description" content="I combined three simulated AI agents in five ways. Averaging their confidence gave the worst calibrated team; adding their evidence in log-odds gave the best, as long as each agent was corrected first.">
   <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/agent-uncertainty-wire.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/agent-uncertainty-wire.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,78 +22,111 @@
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a>
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
     <nav class="nav" aria-label="Main">
-      <a href="../index.html#services">Services</a><a href="../index.html#ai">AI &amp; Data</a><a href="../index.html#work">Work</a><a href="../index.html#process">How we work</a><a href="../index.html#about">About</a><a href="./">Insights</a><a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
     </nav>
   </div>
 </header>
-<main class="policy article">
-  <div class="wrap">
-    <a class="back" href="../index.html">← Back to the website</a>
-    <p class="tag">Experiment · Agentic AI · 24 October 2026</p>
-    <h1>Agent Uncertainty Wire: comparing confidence aggregation in a synthetic agent team</h1>
-    <p class="updated">Published 24 October 2026 · Reproducible synthetic benchmark · Version 0.3.0</p>
-    <p class="lead">When several agents provide a label and a confidence score, how should a team combine their opinions? This experiment compares five simple aggregation rules in a controlled synthetic binary task. The results show why probability quality depends on the aggregation assumptions—not confidence scores alone.</p>
-    <div class="a-keys">
-      <h2>Key findings</h2>
+
+    <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Synthetic benchmark</p>
+      <h1>Averaging agents' confidence made the team less trustworthy</h1>
+      <p class="a-sub">How you combine three agents' confidence matters more than how often they are right.</p>
+      <p class="updated">By Muzammal Hussain · 24 October 2026 · 5 min read</p>
+
+      <p class="a-lede">When several AI agents work as a team, each one can return an answer and a confidence score, such as "yes, 80% sure". The team then has to turn those into one decision and one confidence. That step sounds like simple arithmetic, but the rule you pick decides whether the team's final confidence can be trusted. I built a small simulator with three agents and compared five rules for combining them.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Averaging the agents' confidence gave the worst calibrated team:</b> calibration error 0.142, against 0.055 for a plain majority vote.</li>
+          <li><b>Adding up the evidence in log-odds was the best calibrated rule:</b> 0.019, and 0.018 after a per-agent correction.</li>
+          <li><b>When every agent overstated its confidence by 0.18,</b> the log-odds rule's error jumped from 0.019 to 0.152. Correcting each agent first brought it back to 0.017.</li>
+          <li><b>Accuracy hardly moved:</b> between 71.7% and 73.6% for every rule. The rules differ in how honest the final confidence is, not in how often the team is right.</li>
+          <li><b>These are simulated agents, not language models.</b> No LLM was called.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>I wrote a simulator in plain Python with three agents whose set skills are 80%, 70% and 62% on a yes/no task. Each of five random seeds creates 2,500 scenarios. For every scenario each agent gives an answer and a confidence. I ran everything twice: once with honest confidence, and once where every agent adds 0.18 to its confidence, a simple way to imitate an overconfident model.</p>
+      <p>40% of the scenarios were used to fit a correction for each agent (a small logistic model that maps reported confidence to how often that agent is really right). All results below come from the other 60%, which the correction never saw. The five rules were:</p>
       <ul>
-        <li>Across the synthetic test scenarios, independent log-odds aggregation had lower Brier score and expected calibration error (ECE) than the other tested rules in both confidence regimes.</li>
-        <li>Under the overconfident regime, raw log-odds ECE rose to 0.152; the calibrated log-odds variant was 0.017. Calibration helped in this simulator, but does not guarantee the same result in real systems.</li>
-        <li>These are simulated agents, not real LLMs. No LLM calls were made, and the findings do not establish real-world performance or safety.</li>
+        <li><b>Majority vote:</b> two out of three wins; confidence is just the share of votes.</li>
+        <li><b>Confidence average:</b> weight each vote by the agent's confidence, raw or corrected.</li>
+        <li><b>Log-odds:</b> turn each confidence into odds and add them up, raw or corrected. This is the textbook answer if the agents' mistakes are independent.</li>
       </ul>
+      <p>I scored each rule on accuracy, Brier score (the average squared gap between confidence and what really happened) and expected calibration error, ECE (when the team says 80%, is it right about 80% of the time?). For both, lower is better.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/agent-uncertainty-wire.png" alt="Bar chart of calibration error for five rules. Confidence averaging is around 0.14 to 0.15, majority vote 0.055, log-odds 0.019 with honest agents but 0.152 with overconfident agents, and corrected log-odds about 0.017 in both cases." loading="lazy">
+        <figcaption>Calibration error of the team on held-out scenarios, mean of five seeds. Lower is better.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Agents' confidence</th><th>Rule</th><th>Accuracy</th><th>Brier</th><th>ECE</th></tr></thead>
+          <tbody>
+            <tr><td>Honest</td><td>Majority vote</td><td>71.7%</td><td>0.198</td><td>0.055</td></tr>
+            <tr><td>Honest</td><td>Confidence average</td><td>73.3%</td><td>0.205</td><td>0.142</td></tr>
+            <tr><td>Honest</td><td>Confidence average, corrected</td><td>73.1%</td><td>0.206</td><td>0.146</td></tr>
+            <tr><td>Honest</td><td>Log-odds</td><td>73.6%</td><td>0.180</td><td>0.019</td></tr>
+            <tr><td>Honest</td><td>Log-odds, corrected</td><td>73.3%</td><td>0.179</td><td>0.018</td></tr>
+            <tr><td>Overconfident</td><td>Majority vote</td><td>71.7%</td><td>0.198</td><td>0.055</td></tr>
+            <tr><td>Overconfident</td><td>Confidence average</td><td>71.8%</td><td>0.185</td><td>0.064</td></tr>
+            <tr><td>Overconfident</td><td>Confidence average, corrected</td><td>73.3%</td><td>0.207</td><td>0.149</td></tr>
+            <tr><td>Overconfident</td><td>Log-odds</td><td>72.9%</td><td>0.206</td><td>0.152</td></tr>
+            <tr><td>Overconfident</td><td>Log-odds, corrected</td><td>73.3%</td><td>0.180</td><td>0.017</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Each row is 7,500 held-out predictions (1,500 per seed). Across seeds the accuracy varies by about ±1.3 points, so the small accuracy differences are noise.</p>
+
+      <h2>Two results that surprised me</h2>
+      <p><b>Fixing each agent did not fix the team.</b> In the overconfident run, the per-agent correction worked well on each agent: its calibration error fell from 0.180 to 0.023. But the corrected confidence average was still badly calibrated as a team (0.149). Only the log-odds rule turned well-calibrated agents into a well-calibrated team. A correction has to be checked at the level where the decision is made, not only agent by agent.</p>
+      <p><b>Overconfidence made the confidence average look better.</b> Its error fell from 0.142 to 0.064 when the agents became overconfident. My reading is that averaging pulls the team's confidence towards 50% even when all three agents agree, and the extra 0.18 happened to cancel part of that. I have not yet checked the direction of the error in the reliability bins, so this explanation is a hypothesis. It is a good reminder that one number can look better for the wrong reason.</p>
+
+      <h2>Limitations</h2>
+      <p>The agents and the task are synthetic: no language, no tools, no real model outputs. There are only three agents and five seeds. The log-odds rule assumes the agents' mistakes are independent and that yes and no are equally likely; in real teams agents often share data, prompts and blind spots, and then this rule can become overconfident. ECE also depends on how the scores are grouped into bins and can hide problems in small subgroups.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>Agents that fail together, to see when the independence assumption breaks (the first step is in <a href="correlated-errors-multi-agent-decisions.html">this follow-up</a>).</li>
+        <li>Unequal yes/no rates and decisions where one kind of mistake costs more than the other.</li>
+        <li>Real confidence scores from local models such as qwen2.5:3b and llama3.1:8b on the same kind of task.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-uncertainty-wire" target="_blank" rel="noopener">Code, data and results on GitHub →</a>
+      </div>
+      <p class="a-ref">Version 0.3.0 of the benchmark. It uses only the Python standard library; the run produces 75,000 agent messages and 75,000 held-out predictions, with the CSV outputs, charts and tests in the GitHub repository. No DOI has been minted for this version.</p>
     </div>
-    <h2>Research question</h2>
-    <p>How do confidence aggregation rules compare in a controlled synthetic binary task, and does correcting agent-level confidence necessarily improve team-level predictions?</p>
-    <h2>What was tested?</h2>
-    <p>The benchmark simulates three agents with different nominal skills. Each of five random seeds generates 2,500 scenarios. Scenario IDs are split into a calibration partition (40%) and a held-out test partition (60%). The same base scenarios are evaluated under two confidence regimes: calibrated and overconfident. The overconfident regime adds 0.18 to reported confidence before clipping.</p>
-    <p>Five policies are compared: label-only majority; raw arithmetic confidence weighting; confidence weighting after a per-agent logistic calibration model; raw independent log-odds aggregation; and independent log-odds aggregation after calibration. Calibration is fitted on calibration rows only. Metrics are reported on held-out scenarios, with mean and standard deviation across five seeds.</p>
-    <p>The log-odds policies assume a balanced prior and conditionally independent agent errors. That assumption may not hold when agents share data, models or failure modes. The method is therefore a comparison baseline, not a universally valid rule.</p>
-    <h2>Results: calibrated confidence regime</h2>
-    <figure class="a-fig"><img src="../images/insights/agent-uncertainty-accuracy.svg" alt="Line chart comparing held-out accuracy across five aggregation policies and two confidence regimes" loading="lazy"><figcaption>Figure 1. Held-out accuracy. Differences are modest and should be interpreted with the small number of seeds in mind.</figcaption></figure>
-    <figure class="a-fig"><img src="../images/insights/agent-uncertainty-brier.svg" alt="Chart comparing held-out Brier scores across five aggregation policies" loading="lazy"><figcaption>Figure 2. Brier score, a proper scoring rule for probabilistic predictions; lower is better.</figcaption></figure>
-    <figure class="a-fig"><img src="../images/insights/agent-uncertainty-ece.svg" alt="Chart comparing held-out expected calibration error across five aggregation policies" loading="lazy"><figcaption>Figure 3. Ten-bin expected calibration error (ECE); lower is better. ECE depends on binning and is not a complete calibration diagnosis.</figcaption></figure>
-    <div class="a-table"><table><thead><tr><th>Confidence regime</th><th>Policy</th><th>Accuracy</th><th>Brier</th><th>ECE</th></tr></thead><tbody>
-      <tr><td>Calibrated</td><td>Label-only majority</td><td>0.717 ± 0.013</td><td>0.198 ± 0.004</td><td>0.055 ± 0.009</td></tr>
-      <tr><td>Calibrated</td><td>Confidence-weighted, raw</td><td>0.733 ± 0.013</td><td>0.205 ± 0.002</td><td>0.142 ± 0.013</td></tr>
-      <tr><td>Calibrated</td><td>Confidence-weighted, calibrated</td><td>0.731 ± 0.013</td><td>0.206 ± 0.003</td><td>0.146 ± 0.012</td></tr>
-      <tr><td>Calibrated</td><td>Independent log-odds, raw</td><td>0.736 ± 0.014</td><td>0.180 ± 0.006</td><td>0.019 ± 0.009</td></tr>
-      <tr><td>Calibrated</td><td>Independent log-odds, calibrated</td><td>0.733 ± 0.013</td><td>0.179 ± 0.005</td><td>0.018 ± 0.005</td></tr>
-      <tr><td>Overconfident</td><td>Label-only majority</td><td>0.717 ± 0.013</td><td>0.198 ± 0.004</td><td>0.055 ± 0.009</td></tr>
-      <tr><td>Overconfident</td><td>Confidence-weighted, raw</td><td>0.718 ± 0.010</td><td>0.185 ± 0.004</td><td>0.064 ± 0.009</td></tr>
-      <tr><td>Overconfident</td><td>Confidence-weighted, calibrated</td><td>0.733 ± 0.012</td><td>0.207 ± 0.003</td><td>0.149 ± 0.011</td></tr>
-      <tr><td>Overconfident</td><td>Independent log-odds, raw</td><td>0.729 ± 0.012</td><td>0.206 ± 0.009</td><td>0.152 ± 0.012</td></tr>
-      <tr><td>Overconfident</td><td>Independent log-odds, calibrated</td><td>0.733 ± 0.014</td><td>0.180 ± 0.005</td><td>0.017 ± 0.004</td></tr>
-    </tbody></table></div>
-    <p>Values are mean ± standard deviation across five seeds; the standard deviation is not a confidence interval. Each regime-policy row contains 7,500 held-out predictions pooled across seeds. The paired seed-level intervals in the repository are descriptive and imprecise with only five seeds.</p>
-    <h2>Agent-level calibration is not team-level calibration</h2>
-    <figure class="a-fig"><img src="../images/insights/agent-uncertainty-reliability-calibrated.svg" alt="Reliability diagram for simulated agent confidence under the calibrated regime" loading="lazy"><figcaption>Figure 4. Agent-level reliability in the calibrated regime.</figcaption></figure>
-    <figure class="a-fig"><img src="../images/insights/agent-uncertainty-reliability-overconfident.svg" alt="Reliability diagram showing raw and calibrated confidence for simulated agents under the overconfident regime" loading="lazy"><figcaption>Figure 5. Agent-level reliability in the overconfident regime. The calibration mapping reduces the imposed overconfidence in this simulator.</figcaption></figure>
-    <p>In the overconfident regime, the agent-level raw Brier score was 0.2553 and raw ECE was 0.1801; after calibration these were 0.2229 and 0.0228. This is a separate diagnostic from the team-level scores. Notably, calibrated arithmetic confidence weighting did not improve team-level Brier score in the same way. A calibration step should therefore be evaluated within the full downstream decision pipeline.</p>
-    <h2>Limitations</h2>
-    <ul>
-      <li>The task and agents are synthetic; the benchmark does not include natural-language messages, tool use, long-horizon planning or real LLM outputs.</li>
-      <li>Only three simulated agents and five random seeds are used. Small differences should not be overinterpreted.</li>
-      <li>Independent log-odds aggregation relies on a balanced prior and conditional independence. Correlated errors can invalidate the assumptions.</li>
-      <li>ECE depends on binning and can hide subgroup miscalibration. Accuracy, Brier score, reliability plots and operational costs should be considered together.</li>
-    </ul>
-    <h2>Reproducibility and code</h2>
-    <p>The benchmark uses Python's standard library. The v0.3.0 run generated 75,000 agent-message rows and 75,000 held-out policy predictions. Eight automated tests passed in the reported local run. The code, data card, run manifest, CSV outputs and graphs are available in the public repository.</p>
-    <p><a href="https://github.com/MHKhan50/agent-uncertainty-wire">View the Agent Uncertainty Wire code and data on GitHub →</a></p>
-    <h2>Conclusion</h2>
-    <p>Confidence aggregation is an assumption-sensitive design choice. In this controlled simulator, independent log-odds aggregation produced the lowest Brier score and ECE, especially after calibration under imposed overconfidence. The next step is to test the hypotheses with real model outputs, deliberately correlated agent errors, imbalanced priors and decision costs before making claims about deployed agent teams.</p>
-    <p><strong>Suggested citation:</strong> Hussain, M. (2026). <em>Agent Uncertainty Wire: Comparing Confidence Aggregation Rules in a Synthetic Multi-Agent Task</em>, version 0.3.0. Code and data: <a href="https://github.com/MHKhan50/agent-uncertainty-wire">GitHub repository</a>. No DOI has been minted.</p>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
   </div>
-</main>
-<footer><div class="wrap"><div class="fcols">
-  <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
-    <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook">Facebook</a>
-    <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X">X</a>
-    <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn">LinkedIn</a>
-  </div></div>
-  <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
-  <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
-  <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
-</div><div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div></div></footer>
+</footer>
 </body>
 </html>

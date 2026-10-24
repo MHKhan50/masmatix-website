@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>When AI Agents Fail Together | Masmatix Innovations</title>
-  <meta name="description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
+  <title>When AI agents fail together, more votes do not help | Masmatix Innovations</title>
+  <meta name="description" content="I simulated three AI agents that can fail for the same reason. As shared failures became more likely, majority vote accuracy fell from 79.9% to 70.0%, and the vote never beat the best single agent.">
   <meta name="author" content="Muzammal Hussain">
-  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/correlated-errors-multi-agent-decisions.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="A planted memory fooled a simple AI agent 74% of the time. A trust filter cut it to 9%.">
-  <meta property="og:description" content="In a synthetic simulator of agent memory, picking the most relevant memory chose a planted one in 74% of poisoned cases. A trust filter cut that to 8.6% with no loss on clean tasks. A corroboration rule reached 0%, but only because of how the simulator was built.">
-  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/memtrust-agent-memory-security.html">
-  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/memtrust-agent-memory.png">
+  <meta property="og:title" content="When AI agents fail together, more votes do not help">
+  <meta property="og:description" content="I simulated three AI agents that can fail for the same reason. As shared failures became more likely, majority vote accuracy fell from 79.9% to 70.0%, and the vote never beat the best single agent.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/correlated-errors-multi-agent-decisions.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/correlated-errors-multi-agent-decisions.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,40 +38,70 @@
   </div>
 </header>
 
-  <main class="policy article"><div class="wrap">
-<a class="back" href="./">← All insights</a>
-<p class="a-kicker">Experiment · Agentic AI · Multi-agent decisions</p>
-<h1>When AI agents fail together, adding more votes may not help</h1>
-<p class="a-sub">A synthetic experiment studies shared shocks, majority voting and confidence-weighted aggregation across three agents.</p>
-<p class="updated">By Muzammal Hussain · 24 October 2026 · Synthetic research</p>
-<p class="a-lede">An ensemble can look more reliable when its members make independent errors. If several agents can be wrong for the same underlying reason, their votes are not independent evidence. This experiment varies the probability of a shared-shock event and measures how majority accuracy and weighted-policy Brier scores change. No real LLMs were called.</p>
-<div class="a-keys"><p class="a-keys-h">Key findings</p><ol>
-<li><b>Majority accuracy fell as shared-shock probability increased:</b> from 79.932% at q = 0 to 69.800% at q = 1.</li>
-<li><b>Mean raw weighted Brier score rose</b> from 0.146602 to 0.246166 across the same range; lower Brier scores are better.</li>
-<li><b>Calibration adjustment made only a small difference:</b> the mean calibrated-weighted Brier score was slightly lower at each reported q.</li>
-<li><b>Accuracy was unchanged between the two weighted policies</b> within each seed and q. ECE did not improve consistently.</li>
-<li><b>These are synthetic results,</b> not measurements of real language models or deployed agent teams.</li>
-</ol></div>
-<h2>Experimental design</h2>
-<p>The simulator uses three agents with nominal skills 0.80, 0.70 and 0.62. Five seeds were run with 2,500 scenarios per seed. The parameter q is the shared-shock mixture probability: it is <b>not</b> a pairwise correlation coefficient. The comparison includes majority-vote accuracy, raw confidence-weighted Brier score and calibrated-weighted Brier score.</p>
-<h2>Results</h2>
-<figure class="a-fig"><img src="../images/insights/correlated-errors-accuracy.svg" alt="Bar chart showing majority accuracy falling from 79.932 percent at q zero to 69.800 percent at q one." loading="lazy"><figcaption>Mean majority accuracy across five seeds. q is the probability of the simulator's shared-shock component.</figcaption></figure>
-<figure class="a-fig"><img src="../images/insights/correlated-errors-brier.svg" alt="Bar chart comparing raw and calibrated weighted Brier scores at five q values." loading="lazy"><figcaption>Mean Brier scores across five seeds; lower is better. The calibration-adjusted scores are only modestly lower.</figcaption></figure>
-<div class="a-table"><table><thead><tr><th>q</th><th>Majority accuracy</th><th>Raw weighted Brier</th><th>Calibrated weighted Brier</th></tr></thead><tbody>
-<tr><td>0.00</td><td>79.932%</td><td>0.146602</td><td>0.145962</td></tr>
-<tr><td>0.25</td><td>77.424%</td><td>0.172583</td><td>0.171934</td></tr>
-<tr><td>0.50</td><td>75.024%</td><td>0.196304</td><td>0.195580</td></tr>
-<tr><td>0.75</td><td>72.552%</td><td>0.221443</td><td>0.220687</td></tr>
-<tr><td>1.00</td><td>69.800%</td><td>0.246166</td><td>0.245224</td></tr>
-</tbody></table></div>
-<h2>Interpretation</h2>
-<p>The main pattern is that increasing the shared-shock probability coincides with lower majority accuracy and worse Brier scores. The calibration adjustment's average Brier improvement is small, so it should not be presented as a complete solution to correlated errors. A hard majority decision's accuracy is also not directly equivalent to a probabilistic Brier score; they measure different properties.</p>
-<h2>Limitations</h2>
-<p>This is a synthetic simulator with chosen agent skills and a specific shared-shock mechanism. It does not establish how real LLMs correlate their errors, and q should not be interpreted as a measured correlation. Five seeds give a limited view of run-to-run variation. ECE improvements were not consistent.</p>
-<h2>Reproducibility and next steps</h2>
-<p>The experiment uses Python and synthetic scenarios. A useful next step is to measure error dependence in real model outputs, separate common prompts from shared evidence, and evaluate calibration on held-out data.</p>
-<div class="a-links"><a class="btn btn-grad" href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/correlated_errors" target="_blank" rel="noopener">Code, data and experiment →</a></div>
-</div></main>
+    <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Multi-agent decisions</p>
+      <h1>When AI agents fail together, more votes do not help</h1>
+      <p class="a-sub">Majority voting only helps when the agents make different mistakes.</p>
+      <p class="updated">By Muzammal Hussain · 24 October 2026 · 4 min read</p>
+
+      <p class="a-lede">A common way to make AI agents more reliable is to ask several of them and take the majority answer. This works when their mistakes are independent, like asking three people who never talked to each other. But agents built on similar models, prompts and data can be wrong for the same reason at the same time. I simulated that situation to see how quickly voting loses its value.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Majority vote accuracy fell from 79.9% to 70.0%</b> as the chance of a shared failure went from 0 to 1.</li>
+          <li><b>Even with fully independent agents, the vote did not beat the best agent:</b> 79.9% against that agent's set skill of 80%.</li>
+          <li><b>Confidence-weighted voting got worse too:</b> its Brier score rose from 0.147 to 0.246.</li>
+          <li><b>A confidence correction barely helped:</b> it lowered the Brier score by less than 0.001 at every level.</li>
+          <li><b>These are simulated agents, not language models.</b> No LLM was called.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>I used three simulated agents with set skills of 80%, 70% and 62% on a yes/no task. For every scenario there is a chance q that a shared shock happens, a single cause that pushes all three agents the same way. I ran q at 0, 0.25, 0.5, 0.75 and 1, with five random seeds and 2,500 scenarios per seed. Note that q is the chance of the shared event in my simulator; it is not a correlation coefficient measured between agents.</p>
+      <p>I compared three team rules: a plain majority vote, a vote weighted by each agent's raw confidence, and the same weighted vote after a confidence correction. I report accuracy for the vote and the Brier score (the average squared gap between confidence and what really happened, lower is better) for the weighted rules.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/correlated-errors-multi-agent-decisions.png" alt="Line chart: majority vote accuracy falls from 79.9 percent at q equal to 0 to 70.0 percent at q equal to 1, staying below a dashed line at 80 percent for the best agent's set skill." loading="lazy">
+        <figcaption>Majority vote accuracy as shared failures become more likely, mean of five seeds.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Shared failure chance (q)</th><th>Majority vote accuracy</th><th>Weighted Brier</th><th>Weighted Brier, corrected</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>79.9%</td><td>0.1466</td><td>0.1460</td></tr>
+            <tr><td>0.25</td><td>77.4%</td><td>0.1726</td><td>0.1719</td></tr>
+            <tr><td>0.5</td><td>75.0%</td><td>0.1963</td><td>0.1956</td></tr>
+            <tr><td>0.75</td><td>72.6%</td><td>0.2214</td><td>0.2207</td></tr>
+            <tr><td>1</td><td>70.0%</td><td>0.2462</td><td>0.2452</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>What this means</h2>
+      <p>Three votes only count as three pieces of evidence if the voters fail for different reasons. When they share a failure, the extra votes repeat the same mistake, like three witnesses who all read the same wrong newspaper report. The drop was steady: about 2.5 accuracy points for every 0.25 increase in q.</p>
+      <p>The second finding was a surprise to me. With one strong agent and two weaker ones, the vote was never better than the strong agent's set skill, even with independent mistakes; the two weaker agents can outvote the strong one when it is right. Before building a team of agents, it is worth checking whether the best single agent is already as good.</p>
+      <p>The confidence correction did not solve anything here, because the problem is not that each agent's confidence is wrong but that the agents are not independent. That needs a different kind of fix, such as giving agents different evidence or measuring how often they fail together.</p>
+
+      <h2>Limitations</h2>
+      <p>This is a simulator with skills and a shared-shock mechanism that I chose. It does not show how often real language models fail together, and q should not be read as a measured correlation. There are five seeds per setting. Accuracy and Brier score measure different things, so the two columns of the table should not be compared directly. The calibration error of the weighted rules did not change in a consistent way and is in the repository rather than here.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>Measure how often qwen2.5:3b and llama3.1:8b are wrong on the same questions.</li>
+        <li>Compare agents that share a prompt with agents given different evidence.</li>
+        <li>Compare the team with its best single agent in every run, not only with its set skill.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/correlated_errors" target="_blank" rel="noopener">Code, results and tests on GitHub →</a>
+      </div>
+      <p class="a-ref">The experiment runs in plain Python. The numbers above are means across five seeds computed from <code>outputs/metrics_summary.csv</code> in the repository; it is a follow-up to <a href="agent-uncertainty-wire.html">Averaging agents' confidence made the team less trustworthy</a>.</p>
+    </div>
+  </main>
 
 <footer>
   <div class="wrap">

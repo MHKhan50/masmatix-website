@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Three local AI models mixed up left and right in Roman Urdu, and were sure they were right | Masmatix Innovations</title>
+  <meta name="description" content="Three local AI agents read the same physiotherapy notes in English and Roman Urdu. In Roman Urdu all three said yes to the wrong side of the body on 3 of 4 questions, and 20 of 21 wrong answers came with 100% confidence.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/roman-urdu-left-right-confidence.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Three local AI models mixed up left and right in Roman Urdu, and were sure they were right">
+  <meta property="og:description" content="Three local AI agents read the same physiotherapy notes in English and Roman Urdu. In Roman Urdu all three said yes to the wrong side of the body on 3 of 4 questions, and 20 of 21 wrong answers came with 100% confidence.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/roman-urdu-left-right-confidence.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/roman-urdu-left-right-confidence.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+    <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Roman Urdu</p>
+      <h1>Three local AI models mixed up left and right in Roman Urdu, and were sure they were right</h1>
+      <p class="a-sub">A second agent on the same model made the same mistakes, so the team could not catch them.</p>
+      <p class="updated">By Muzammal Hussain · 24 October 2026 · 5 min read</p>
+
+      <p class="a-lede">In my earlier simulations, agents that fail for the same reason made team voting useless. Simulated agents are easy to control, so I repeated the idea with real local models. Three AI agents read short physiotherapy notes in English and in Roman Urdu, answered yes/no questions about them, and said how sure they were. The most worrying mistakes were about something very simple: left and right.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Left and right broke in Roman Urdu:</b> on 4 questions that named the wrong side, all three agents were wrong together on 3. In English, every agent got all 4 right.</li>
+          <li><b>The models were sure even when wrong:</b> 20 of the 21 wrong answers came with 100% confidence. llama3.1:8b said 100% on all 96 of its answers.</li>
+          <li><b>All three models did worse in Roman Urdu:</b> 85.4% to 91.7% correct, against 95.8% to 97.9% in English, on the same notes.</li>
+          <li><b>A "careful checker" prompt did not catch anything new:</b> every Roman Urdu mistake of the checker was also made by the plain agent on the same model.</li>
+          <li><b>The team of three was worse than its best member in Roman Urdu:</b> 87.5% for every team rule, against 91.7% for llama3.1:8b alone.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>I wrote 12 short physiotherapy notes about invented patients, each in English and in Roman Urdu, with 4 yes/no questions per note: 48 questions per language. Each note has one question of each kind:</p>
+      <ul>
+        <li><b>Stated:</b> "Is the pain worse when sitting?" (yes)</li>
+        <li><b>Negation:</b> "Does the note say there is no numbness in the legs?" (yes)</li>
+        <li><b>Wrong detail:</b> "Has the back pain lasted 3 months?" when the note says 3 weeks (no)</li>
+        <li><b>Not in the note:</b> "Has the patient had an X-ray?" when the note never mentions one (no)</li>
+      </ul>
+      <p>Three agents answered every question in both languages, running locally with Ollama on a MacBook M4 at temperature 0: <code>qwen2.5:3b</code> with a plain prompt, <code>llama3.1:8b</code> with the same prompt, and <code>qwen2.5:3b</code> again with a "careful checker" prompt that tells it to check the side of the body, numbers, times and treatments. Each agent replied in JSON with an answer and a confidence from 50 to 100. That is 288 answers, and every reply was usable.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/roman-urdu-left-right-confidence.png" alt="Bar chart of accuracy on 48 questions per language. qwen2.5:3b 95.8 percent in English and 85.4 percent in Roman Urdu; qwen2.5:3b with a checker prompt 97.9 and 87.5; llama3.1:8b 97.9 and 91.7." loading="lazy">
+        <figcaption>Share of the 48 questions per language each agent answered correctly. Same notes and questions in both languages.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Agent</th><th>English</th><th>Roman Urdu</th><th>Mean confidence</th></tr></thead>
+          <tbody>
+            <tr><td>qwen2.5:3b</td><td>95.8%</td><td>85.4%</td><td>99.3%</td></tr>
+            <tr><td>qwen2.5:3b, checker prompt</td><td>97.9%</td><td>87.5%</td><td>98.8%</td></tr>
+            <tr><td>llama3.1:8b</td><td>97.9%</td><td>91.7%</td><td>100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>No agent said yes to anything that was not in the note: all 24 "not in the note" questions were answered correctly by all three. Almost all Roman Urdu mistakes were on wrong details, and most of those were about the side of the body.</p>
+
+      <h2>The left and right questions</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Roman Urdu question</th><th>The note says</th><th>Agents that answered "yes"</th></tr></thead>
+          <tbody>
+            <tr><td>"Kya dard baayen ghutne mein hai?" (left knee)</td><td>right knee</td><td>all three</td></tr>
+            <tr><td>"Kya dard baayen eri ke neeche hai?" (left heel)</td><td>right heel</td><td>all three</td></tr>
+            <tr><td>"Kya kamzori daayen baazu mein hai?" (right arm)</td><td>left arm</td><td>all three</td></tr>
+            <tr><td>"Kya akraahat daayen kandhe mein hai?" (right shoulder)</td><td>left shoulder</td><td>both qwen2.5:3b agents</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The same four questions in English were answered correctly by every agent. In a clinic, a note that records the wrong side can lead to treatment of the wrong knee. For MeetPhysio, the clinical documentation system I am building, this is a direct warning: Roman Urdu consultations need a check on body side that does not depend on the model.</p>
+
+      <h2>Why the checker and the team did not help</h2>
+      <p>If two agents made mistakes independently, they would both be wrong on about 1.8% of the Roman Urdu questions. The plain and checker agents on qwen2.5:3b were both wrong on 12.5%, about seven times more. Every mistake the checker made, the plain agent made too. A new role changed the instructions, not the model reading the words. A different model helped a little: llama3.1:8b made fewer mistakes, but it still failed on the same three side questions. So the three votes were really closer to one vote, and the team could not outvote an error that all of its members shared.</p>
+      <p>The confidence scores could not help either. When nearly every answer says 100%, right or wrong, the number carries almost no information, so the rules that weigh or correct confidence had nothing to work with. Verbal confidence from these small models should not be used to decide when to trust them.</p>
+
+      <h2>Limitations</h2>
+      <p>This is a pilot. There are 48 questions per language, and only 4 side questions, written by me with one spelling of Roman Urdu. One run at temperature 0. The notes are invented and short, and a yes/no question is easier than writing a full note. Confidence was asked in words; token probabilities were not used. Why the models confuse "daayen" and "baayen" is not tested here; spelling, tokenisation and training data are all possible reasons.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>A larger set of side questions (left/right, upper/lower) with several Roman Urdu spellings, and the same questions with "right" and "left" written in English inside the Roman Urdu note.</li>
+        <li>A simple rule-based side check that compares the side words in the note and in the output, measured on the same questions.</li>
+        <li>Token-level probabilities instead of verbal confidence.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/real_llm_confidence" target="_blank" rel="noopener">Notes, questions, every model reply and code on GitHub →</a>
+      </div>
+      <p class="a-ref">Models: Qwen2.5 3B and Llama 3.1 8B run locally with Ollama 0.40.10. The 48 questions in both languages, all 288 replies and the result tables are in the repository, and the experiment runs in about four minutes on a laptop. It follows <a href="correlated-errors-multi-agent-decisions.html">When AI agents fail together, more votes do not help</a>.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/Masmatix12" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
