@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Confidence Inflation and Calibration | Masmatix Innovations</title>
+<meta name="description" content="A synthetic held-out evaluation of confidence inflation and simple calibration correction for agent predictions.">
+<link rel="canonical" href="https://masmatixinnovations.co.uk/insights/confidence-inflation-calibration.html">
+<link rel="icon" href="../images/favicon.svg"><link rel="stylesheet" href="../css/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<header><div class="wrap"><a href="../index.html"><img src="../images/logo.svg" alt="Masmatix Innovations" style="max-width:190px"></a><nav><a href="../index.html">Home</a> <a href="./">Insights</a></nav></div></header>
+<main class="policy article"><div class="wrap">
+<p><a href="./">← Back to Insights</a></p><p class="tag">Research · Calibration</p>
+<h1>Confidence Inflation and Calibration</h1>
+<p class="meta">Published 24 October 2026 · Synthetic experiment</p>
+<p class="lead">Confidence scores can become less reliable when reported confidence is systematically inflated. This experiment tests whether a simple correction estimated on separate calibration data improves held-out probabilistic predictions.</p>
+<h2>Key findings</h2>
+<ul><li>Prediction accuracy was unchanged by the confidence correction, as expected for a confidence-only adjustment.</li><li>Raw Brier scores worsened as the simulated inflation level increased.</li><li>At inflation 0.25, the correction reduced Brier score in all five seeds, but the improvement was small.</li><li>Expected calibration error (ECE) did not improve uniformly across all settings.</li></ul>
+<h2>Experimental design</h2>
+<p>The synthetic study used five seeds, three simulated agents with nominal skills 0.80, 0.70 and 0.62, a calibration sample of 1,000 cases and a held-out test sample of 2,000 cases. Inflation levels were 0, 0.05, 0.10, 0.15, 0.20 and 0.25.</p>
+<p>For each run, a simple additive correction was estimated from the calibration sample as the mean gap between reported confidence and correctness, then evaluated on held-out scenarios. Metrics were accuracy, Brier score and 10-bin ECE.</p>
+<h2>Illustrative results at inflation 0.25</h2>
+<table><thead><tr><th>Seed</th><th>Raw Brier</th><th>Corrected Brier</th></tr></thead><tbody>
+<tr><td>1</td><td>0.14844</td><td>0.14763</td></tr>
+<tr><td>2</td><td>0.15881</td><td>0.15799</td></tr>
+<tr><td>3</td><td>0.14566</td><td>0.14469</td></tr>
+<tr><td>4</td><td>0.15523</td><td>0.15444</td></tr>
+<tr><td>5</td><td>0.14986</td><td>0.14883</td></tr>
+</tbody></table>
+<p>Mean accuracy across the reported settings was approximately 79.35% and did not change between raw and corrected confidence for a given run. The Brier-score gains at the highest inflation level were modest. ECE results varied by setting, so the correction should not be treated as a guaranteed calibration improvement.</p>
+<h2>Limitations</h2>
+<p>This is a synthetic proof-of-concept, not evidence that real agents share a constant additive confidence bias. The correction is deliberately simple and may fail under distribution shift, non-uniform errors or different confidence-generation processes. Calibration should be evaluated on representative held-out data.</p>
+<h2>Reproducibility</h2>
+<p>Experiment code and data: <a href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/confidence_inflation">confidence-inflation experiment repository</a>.</p>
+<p>Run with <code>python3 run_experiment.py --seeds 10</code>; run tests with <code>python3 -m unittest discover -s tests -v</code>. The experiment uses Python's standard library only.</p>
+<h2>Conclusion</h2>
+<p>Confidence correction can improve probabilistic scoring under controlled inflation, but the observed gains are small and ECE is not consistently improved. Measure calibration on held-out data before using corrected confidence in consequential decisions.</p>
+<p><strong>Suggested citation:</strong> Masmatix Innovations (2026). “Confidence Inflation and Calibration.” Synthetic simulation study.</p>
+</div></main>
+<footer><div class="wrap"><p>© Masmatix Innovations</p></div></footer>
+</body></html>

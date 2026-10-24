@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Correlated Errors in Multi-Agent Decisions | Masmatix Innovations</title>
+<meta name="description" content="A reproducible synthetic study of shared shocks, correlated errors and multi-agent decision policies.">
+<link rel="canonical" href="https://masmatixinnovations.co.uk/insights/correlated-errors-multi-agent-decisions.html">
+<link rel="icon" href="../images/favicon.svg"><link rel="stylesheet" href="../css/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<header><div class="wrap"><a href="../index.html"><img src="../images/logo.svg" alt="Masmatix Innovations" style="max-width:190px"></a><nav><a href="../index.html">Home</a> <a href="./">Insights</a></nav></div></header>
+<main class="policy article"><div class="wrap">
+<p><a href="./">← Back to Insights</a></p><p class="tag">Research · Multi-agent systems</p>
+<h1>Correlated Errors in Multi-Agent Decisions</h1>
+<p class="meta">Published 24 October 2026 · Synthetic experiment</p>
+<p class="lead">Adding more agents does not guarantee more reliable decisions when those agents can fail together. This experiment studies how a shared-shock mechanism affects majority voting and confidence-weighted aggregation.</p>
+<h2>Key findings</h2>
+<ul><li>Mean majority accuracy declined as the shared-shock mixture probability increased.</li><li>Across the tested settings, mean accuracy fell from approximately 79.9% at q = 0 to 69.8% at q = 1.</li><li>Confidence-weighted policies had lower Brier scores than hard majority predictions in this simulation. Calibration adjustment produced only a modest additional improvement.</li></ul>
+<h2>Experimental design</h2>
+<p>The simulation used five random seeds, 2,500 scenarios per seed and setting, nominal agent skills of 0.80, 0.70 and 0.62, and q values of 0, 0.25, 0.50, 0.75 and 1. Here q is the probability of a shared-shock component in the mixture; it is not a pairwise correlation coefficient.</p>
+<h2>Results</h2>
+<table><thead><tr><th>q</th><th>Mean majority accuracy</th><th>Mean raw-weighted Brier</th><th>Mean calibrated-weighted Brier</th></tr></thead><tbody>
+<tr><td>0.00</td><td>79.93%</td><td>0.1466</td><td>0.1460</td></tr>
+<tr><td>0.25</td><td>77.42%</td><td>0.1726</td><td>0.1719</td></tr>
+<tr><td>0.50</td><td>75.02%</td><td>0.1963</td><td>0.1956</td></tr>
+<tr><td>0.75</td><td>72.55%</td><td>0.2214</td><td>0.2207</td></tr>
+<tr><td>1.00</td><td>69.80%</td><td>0.2462</td><td>0.2452</td></tr>
+</tbody></table>
+<p>Accuracy was the same across the weighted policies for each seed and setting. The Brier-score comparison also reflects that majority predictions were evaluated as hard 0/1 outputs, so the metrics should not be interpreted as a like-for-like accuracy comparison.</p>
+<h2>Limitations</h2>
+<p>This is a synthetic experiment, not a benchmark of real language models or deployed agent systems. Results depend on the chosen shared-shock mechanism, skills, aggregation rules and calibration assumptions. They do not establish that one policy is universally superior.</p>
+<h2>Reproducibility</h2>
+<p>Experiment code and data: <a href="https://github.com/MHKhan50/agent-uncertainty-wire/tree/main/experiments/correlated_errors">correlated-errors experiment repository</a>.</p>
+<h2>Conclusion</h2>
+<p>Evaluations of multi-agent systems should test shared failure modes, not just individual agent accuracy. Independence assumptions can materially change how much benefit aggregation appears to provide.</p>
+<p><strong>Suggested citation:</strong> Masmatix Innovations (2026). “Correlated Errors in Multi-Agent Decisions.” Synthetic simulation study.</p>
+</div></main>
+<footer><div class="wrap"><p>© Masmatix Innovations</p></div></footer>
+</body></html>
