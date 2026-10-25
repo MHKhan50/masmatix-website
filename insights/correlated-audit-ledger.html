@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Missing AI audit logs weakened responsibility-gap detection | Masmatix Innovations</title>
+  <meta name="description" content="A reproducible synthetic benchmark tests responsibility-gap detection under missing multi-agent logs and shared outages, comparing strict evidence rules with cost-sensitive thresholds.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/correlated-audit-ledger.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Missing AI audit logs weakened responsibility-gap detection">
+  <meta property="og:description" content="A synthetic benchmark examines missing evidence, shared agent outages and cost-sensitive responsibility-gap detection.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/correlated-audit-ledger.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+<main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Research · Agentic AI · Synthetic benchmark</p>
+    <h1>Missing AI audit logs weakened responsibility-gap detection</h1>
+    <p class="a-sub">Testing how incomplete evidence and shared agent outages affect audits—and whether cost-sensitive thresholds help.</p>
+    <p class="updated">By Muzammal Hussain · 25 October 2026 · 5 min read</p>
+
+    <p class="a-lede">When several AI agents share responsibility for a task, an audit may need to determine whether a required duty was missed. But what if part of the record is missing? A missing entry does not necessarily mean that the duty was not performed. I built a small synthetic benchmark to test how independent field omissions and shared whole-agent outages affect responsibility-gap detection.</p>
+
+    <div class="a-keys">
+      <p class="a-keys-h">Key findings</p>
+      <ol>
+        <li><b>Shared outages made detection harder:</b> at 15% field missingness, increasing the simulated shared-outage rate from 0% to 25% reduced cost-tuned mean recall from 0.939 to 0.628.</li>
+        <li><b>The cost-tuned threshold reduced weighted cost:</b> in that same 15% missingness, 25% outage setting, mean weighted cost was 181.5, compared with 337.5 for strict complete-evidence detection.</li>
+        <li><b>Strict evidence rules missed more labelled cases:</b> across the tested settings, strict complete-evidence detection had zero measured false-positive rate, but generally lower recall.</li>
+        <li><b>These results are exploratory:</b> the benchmark uses simulated episodes and only two held-out test seeds, 44 and 55.</li>
+      </ol>
+    </div>
+
+    <h2>The research question</h2>
+    <p>How do independent field omissions and shared whole-agent outages affect responsibility-gap detection, and can a cost-sensitive threshold selected on training simulations improve held-out performance?</p>
+
+    <h2>What I tested</h2>
+    <p>I implemented a Python simulator that generates labelled episodes with varying rates of independently missing evidence fields and shared agent outages. I compared four approaches: a cost-sensitive threshold selected using separate training seeds, an optimistic rule for missing evidence, a fixed score threshold, and a strict rule requiring complete evidence.</p>
+    <p>The cost-sensitive rule assigns false negatives five times the cost of false positives. That design makes missed responsibility gaps more expensive than false alarms. The test results are evaluated on separate seeds rather than being used to select the threshold.</p>
+
+    <h2>Results</h2>
+    <p>The table below shows mean results at 15% independent field missingness. Higher F1 and recall indicate better detection; lower false-positive rate (FPR) and weighted cost are preferable. Weighted cost is the benchmark's defined cost measure, not a monetary estimate.</p>
+
+    <div class="a-table">
+      <table>
+        <thead>
+          <tr><th>Shared outage</th><th>Rule</th><th>F1</th><th>Recall</th><th>FPR</th><th>Weighted cost</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0%</td><td>Cost-tuned</td><td>0.895</td><td>0.939</td><td>0.087</td><td>41.5</td></tr>
+          <tr><td>0%</td><td>Optimistic missing</td><td>0.895</td><td>0.865</td><td>0.037</td><td>66.0</td></tr>
+          <tr><td>0%</td><td>Score threshold</td><td>0.663</td><td>0.514</td><td>0.002</td><td>215.2</td></tr>
+          <tr><td>0%</td><td>Strict complete</td><td>0.530</td><td>0.361</td><td>0.000</td><td>282.5</td></tr>
+          <tr><td>10%</td><td>Cost-tuned</td><td>0.793</td><td>0.757</td><td>0.084</td><td>121.0</td></tr>
+          <tr><td>10%</td><td>Optimistic missing</td><td>0.791</td><td>0.695</td><td>0.034</td><td>140.5</td></tr>
+          <tr><td>10%</td><td>Score threshold</td><td>0.585</td><td>0.423</td><td>0.002</td><td>255.2</td></tr>
+          <tr><td>10%</td><td>Strict complete</td><td>0.474</td><td>0.311</td><td>0.000</td><td>305.0</td></tr>
+          <tr><td>25%</td><td>Cost-tuned</td><td>0.691</td><td>0.628</td><td>0.102</td><td>181.5</td></tr>
+          <tr><td>25%</td><td>Optimistic missing</td><td>0.680</td><td>0.549</td><td>0.034</td><td>205.5</td></tr>
+          <tr><td>25%</td><td>Score threshold</td><td>0.482</td><td>0.325</td><td>0.002</td><td>299.0</td></tr>
+          <tr><td>25%</td><td>Strict complete</td><td>0.383</td><td>0.238</td><td>0.000</td><td>337.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>As the shared-outage rate increased, the cost-tuned detector's recall declined and its weighted cost rose. In these settings, it nevertheless had lower weighted cost and higher recall than the strict complete-evidence rule. That is a trade-off, not a free improvement: the cost-tuned rule also accepts a higher false-positive rate.</p>
+
+    <h2>Why this matters</h2>
+    <p>An audit system needs to distinguish an observed failure from an incomplete record. Treating every missing field as proof of failure can produce false accusations; treating missing evidence as harmless can hide genuine gaps. A threshold also encodes the relative costs of these errors. The appropriate choice therefore depends on the audit's purpose and the consequences of each error.</p>
+
+    <h2>Limitations</h2>
+    <p>This is a synthetic benchmark, not a study of real AI agents, deployed systems or real-world incident logs. The evidence score is deliberately simplified, and only two held-out seeds were used. The results do not establish production readiness, real-world detection rates or a universally optimal threshold. The weighted cost reflects the experiment's chosen penalty scheme.</p>
+
+    <h2>What comes next</h2>
+    <p>Further work should test richer missingness mechanisms, add uncertainty intervals across more random seeds, and define evaluation protocols before examining final test results. Carefully governed real traces could be considered only where provenance, permissions and privacy requirements are clear.</p>
+
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/correlated-audit-ledger" target="_blank" rel="noopener">Code, data and results on GitHub →</a>
+    </div>
+    <p class="a-ref">Reproducible Python benchmark using the standard library. The dataset contains simulated episode-level labels and observed evidence scores; it was not collected from real users, deployed systems or LLMs. See the repository for the dataset card, experiment commands and tests.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a>
+        <p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p>
+      </div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd · © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
