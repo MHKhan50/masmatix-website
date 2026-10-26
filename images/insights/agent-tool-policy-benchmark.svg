@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="580" viewBox="0 0 980 580">
+<rect width="100%" height="100%" fill="white"/>
+<text x="40" y="40" font-size="24" font-family="Arial" fill="#222">Synthetic agent tool-policy benchmark</text>
+<text x="40" y="64" font-size="13" font-family="Arial" fill="#555">Mean across configured seeds; simulation only, not real-agent security performance</text>
+<text x="40" y="90" font-size="17" font-family="Arial" fill="#222">Attack success rate (lower is better)</text>
+<line x1="300" y1="275" x2="860" y2="275" stroke="#666"/>
+<line x1="300.0" y1="115" x2="300.0" y2="275" stroke="#ddd"/>
+<text x="300.0" y="293" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.0</text>
+<line x1="412.0" y1="115" x2="412.0" y2="275" stroke="#ddd"/>
+<text x="412.0" y="293" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.2</text>
+<line x1="524.0" y1="115" x2="524.0" y2="275" stroke="#ddd"/>
+<text x="524.0" y="293" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.4</text>
+<line x1="636.0" y1="115" x2="636.0" y2="275" stroke="#ddd"/>
+<text x="636.0" y="293" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.6</text>
+<line x1="748.0" y1="115" x2="748.0" y2="275" stroke="#ddd"/>
+<text x="748.0" y="293" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.8</text>
+<line x1="860.0" y1="115" x2="860.0" y2="275" stroke="#ddd"/>
+<text x="860.0" y="293" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">1.0</text>
+<text x="288" y="140" text-anchor="end" font-size="12" font-family="Arial" fill="#222">unrestricted</text>
+<rect x="300" y="125" width="560.0" height="22" fill="#5276A7"/>
+<text x="867.0" y="140" font-size="12" font-family="Arial" fill="#222">1.000</text>
+<text x="288" y="174" text-anchor="end" font-size="12" font-family="Arial" fill="#222">static denylist</text>
+<rect x="300" y="159" width="310.5" height="22" fill="#D17B49"/>
+<text x="617.5" y="174" font-size="12" font-family="Arial" fill="#222">0.554</text>
+<text x="288" y="208" text-anchor="end" font-size="12" font-family="Arial" fill="#222">simulated confirmation</text>
+<rect x="300" y="193" width="249.3" height="22" fill="#579A77"/>
+<text x="556.3" y="208" font-size="12" font-family="Arial" fill="#222">0.445</text>
+<text x="288" y="242" text-anchor="end" font-size="12" font-family="Arial" fill="#222">task scoped capability</text>
+<rect x="300" y="227" width="0.0" height="22" fill="#8B6FA8"/>
+<text x="307.0" y="242" font-size="12" font-family="Arial" fill="#222">0.000</text>
+<text x="40" y="335" font-size="17" font-family="Arial" fill="#222">Task completion rate (higher is better)</text>
+<line x1="300" y1="520" x2="860" y2="520" stroke="#666"/>
+<line x1="300.0" y1="360" x2="300.0" y2="520" stroke="#ddd"/>
+<text x="300.0" y="538" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.0</text>
+<line x1="412.0" y1="360" x2="412.0" y2="520" stroke="#ddd"/>
+<text x="412.0" y="538" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.2</text>
+<line x1="524.0" y1="360" x2="524.0" y2="520" stroke="#ddd"/>
+<text x="524.0" y="538" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.4</text>
+<line x1="636.0" y1="360" x2="636.0" y2="520" stroke="#ddd"/>
+<text x="636.0" y="538" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.6</text>
+<line x1="748.0" y1="360" x2="748.0" y2="520" stroke="#ddd"/>
+<text x="748.0" y="538" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">0.8</text>
+<line x1="860.0" y1="360" x2="860.0" y2="520" stroke="#ddd"/>
+<text x="860.0" y="538" text-anchor="middle" font-size="11" font-family="Arial" fill="#555">1.0</text>
+<text x="288" y="385" text-anchor="end" font-size="12" font-family="Arial" fill="#222">unrestricted</text>
+<rect x="300" y="370" width="510.3" height="22" fill="#5276A7"/>
+<text x="817.3" y="385" font-size="12" font-family="Arial" fill="#222">0.911</text>
+<text x="288" y="419" text-anchor="end" font-size="12" font-family="Arial" fill="#222">static denylist</text>
+<rect x="300" y="404" width="256.7" height="22" fill="#D17B49"/>
+<text x="563.7" y="419" font-size="12" font-family="Arial" fill="#222">0.458</text>
+<text x="288" y="453" text-anchor="end" font-size="12" font-family="Arial" fill="#222">simulated confirmation</text>
+<rect x="300" y="438" width="486.8" height="22" fill="#579A77"/>
+<text x="793.8" y="453" font-size="12" font-family="Arial" fill="#222">0.869</text>
+<text x="288" y="487" text-anchor="end" font-size="12" font-family="Arial" fill="#222">task scoped capability</text>
+<rect x="300" y="472" width="510.3" height="22" fill="#8B6FA8"/>
+<text x="817.3" y="487" font-size="12" font-family="Arial" fill="#222">0.911</text>
+</svg>

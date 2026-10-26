@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Insights | Masmatix Innovations</title>
+  <meta name="description" content="Research notes and small experiments on AI agents, clinical language technology and local models.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Insights">
+  <meta property="og:description" content="Research notes and small experiments on AI agents, clinical language technology and local models.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy insights">
+    <div class="wrap">
+      <a class="back" href="../index.html">← Back to the website</a>
+      <h1>Insights</h1>
+      <p class="updated">Research notes and small experiments from our AI work</p>
+      <p>Short write-ups of experiments on AI agents, local models, AI in public services and open data on real-world problems. Each one links to the code and data, so the results can be checked and reproduced.</p>
+      <div class="i-list">
+          <a class="proj" href="correlated-audit-ledger.html">
+            <span class="tag">Agentic AI · 25 October 2026</span>
+            <h3>When AI agents' logs went missing together, every audit rule either missed gaps or raised false alarms</h3>
+            <p>Three simulated agents lose their logs one field at a time or two at once. Judging only complete logs missed about half the skipped duties, and counting missing logs as failures flagged more than half of the clean episodes when outages were frequent.</p>
+            <ul><li>AI accountability</li><li>Multi-agent systems</li><li>Synthetic benchmark</li></ul>
+          </a>
+        <a class="proj" href="roman-urdu-left-right-confidence.html">
+          <span class="tag">Agentic AI · 24 October 2026</span>
+          <h3>Three local AI models mixed up left and right in Roman Urdu, and were sure they were right</h3>
+          <p>qwen2.5:3b and llama3.1:8b read the same physio notes in English and Roman Urdu. In Roman Urdu all three agents said yes to the wrong side on 3 of 4 questions, almost always with 100% confidence.</p>
+          <ul><li>LLM agents</li><li>Roman Urdu</li><li>Clinical AI</li></ul>
+        </a>
+        <a class="proj" href="correlated-errors-multi-agent-decisions.html">
+          <span class="tag">Agentic AI · 24 October 2026</span>
+          <h3>When AI agents fail together, more votes do not help</h3>
+          <p>Three simulated agents that can fail for the same reason: majority vote accuracy fell from 79.9% to 70.0% as shared failures became more likely, and never beat the best single agent.</p>
+          <ul><li>Agentic AI</li><li>Multi-agent systems</li><li>Synthetic benchmark</li></ul>
+        </a>
+        <a class="proj" href="confidence-inflation-calibration.html">
+          <span class="tag">Agentic AI · 24 October 2026</span>
+          <h3>A one-number fix for overconfident agents worked, but barely</h3>
+          <p>Subtracting the measured overconfidence improved the Brier score of three simulated agents at every level, but by less than 0.001, and calibration error did not improve.</p>
+          <ul><li>Agentic AI</li><li>Calibration</li><li>Synthetic benchmark</li></ul>
+        </a>
+        <a class="proj" href="agent-uncertainty-wire.html">
+          <span class="tag">Agentic AI · 24 October 2026</span>
+          <h3>Averaging agents' confidence made the team less trustworthy</h3>
+          <p>Five ways to combine three simulated agents: averaging their confidence gave the worst calibrated team, and adding evidence in log-odds the best, once each agent was corrected.</p>
+          <ul><li>Agentic AI</li><li>Uncertainty</li><li>Synthetic benchmark</li></ul>
+        </a>
+        <a class="proj" href="memtrust-agent-memory-security.html">
+          <span class="tag">Agentic AI · 22 October 2026</span>
+          <h3>A planted memory fooled a simple AI agent 74% of the time. A trust filter cut it to 9%.</h3>
+          <p>A synthetic simulator of agent memory compares three retrieval rules. A trust filter removed most planted memories at no cost; a corroboration rule scored 0%, but only because of how the test was built.</p>
+          <ul><li>Agentic AI</li><li>Agent memory</li><li>Security</li></ul>
+        </a>
+        <a class="proj" href="clinical-note-hallucination.html">
+          <span class="tag">Clinical AI · 21 October 2026</span>
+          <h3>In Roman Urdu, a small AI wrote notes about the wrong body part</h3>
+          <p>A 3B local model drafted physiotherapy notes from the same consultations in two languages. Roman Urdu notes left out 13 of 42 key facts, against 2 in English, and three of four described the wrong body part.</p>
+          <ul><li>Clinical AI</li><li>Hallucination</li><li>Roman Urdu</li></ul>
+        </a>
+<a class="proj" href="toolguard-agent-benchmark.html">
+          <span class="tag">Agentic AI · 21 October 2026</span>
+          <h3>ToolGuard: testing tool guards and retries in an AI agent</h3>
+          <p>A 120-task synthetic benchmark tests action validation and bounded retries; a separate eight-task Qwen 2.5 3B pilot is reported as preliminary evidence.</p>
+          <ul><li>Agentic AI</li><li>Tool use</li><li>Reproducible research</li></ul>
+        </a>
+        <a class="proj" href="tool-call-self-correction.html">
+          <span class="tag">Agentic AI · 21 October 2026</span>
+          <h3>The validator said yes. The refund was still wrong.</h3>
+          <p>16 clinic tool calls from a 3B local model in English and Roman Urdu: all passed the validator first time, yet four were wrong, including a refund amount the model made up.</p>
+          <ul><li>LLM agents</li><li>Tool use</li><li>Roman Urdu</li></ul>
+        </a>
+        <a class="proj" href="whisper-urdu-clinic.html">
+          <span class="tag">Clinical AI · 19 October 2026</span>
+          <h3>Whisper halved its errors on Urdu clinic speech, but not on the medical words</h3>
+          <p>Three self-recorded Urdu physiotherapy conversations on a MacBook: word errors fell from 44% to 19% with a bigger model, but only about half of the clinical key terms survived.</p>
+          <ul><li>Speech-to-text</li><li>Clinical AI</li><li>Urdu</li></ul>
+        </a>
+        <a class="proj" href="uk-ai-road-cameras.html">
+          <span class="tag">AI in public services · 18 October 2026</span>
+          <h3>AI road cameras: how many flags are wrong?</h3>
+          <p>Using public trial figures and Scotland's own estimates: when fewer drivers offend, a larger share of AI flags is wrong, so human review matters more over time.</p>
+          <ul><li>AI accountability</li><li>Base rates</li><li>UK</li></ul>
+        </a>
+        <a class="proj" href="pakistan-cities-air.html">
+          <span class="tag">Data analysis · 18 October 2026</span>
+          <h3>Six Pakistani cities, one year of air: Faisalabad, not Lahore, ranked worst</h3>
+          <p>The same method across Lahore, Karachi, Islamabad, Faisalabad, Peshawar and Quetta: no city met the WHO guideline, and Peshawar quietly ranked third.</p>
+          <ul><li>Air quality</li><li>Open data</li><li>Pakistan</li></ul>
+        </a>
+        <a class="proj" href="lahore-smog.html">
+          <span class="tag">Data analysis · 18 October 2026</span>
+          <h3>Lahore did not have a single clean-air day in the past year</h3>
+          <p>One year of open data from 77 PM2.5 sensors: all 364 days were above the WHO 24-hour guideline, and the yearly mean was about 21 times the annual guideline.</p>
+          <ul><li>Air quality</li><li>Open data</li><li>Pakistan</li></ul>
+        </a>
+        <a class="proj" href="react-roman-urdu.html">
+          <span class="tag">Agentic AI · 18 October 2026</span>
+          <h3>Can a small local AI agent understand Roman Urdu?</h3>
+          <p>ReAct with a 3B model running locally on a MacBook, tested in English and Roman Urdu. Changing only the names dropped Roman Urdu accuracy from 83% to 58%.</p>
+          <ul><li>LLM agents</li><li>Robustness</li><li>Roman Urdu</li></ul>
+        </a>
+      </div>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
