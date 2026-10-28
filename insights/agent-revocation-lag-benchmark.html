@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>RevocationLag: Measuring Stale-Authority Exposure in AI-Agent Workflows</title>
+  <meta name="description" content="A reproducible synthetic benchmark comparing four authorization strategies after tool permissions are revoked during AI-agent workflows.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/agent-revocation-lag-benchmark.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Small local AI agents followed hidden instructions in clinic notes. Checking the tool&#39;s arguments stopped them.">
+  <meta property="og:description" content="qwen2.5:3b and llama3.1:8b proposed tool actions for 10 invented physiotherapy-clinic tasks in English and Roman Urdu. A hidden instruction in the patient note was followed in 6 to 8 of 10 tasks; only a rule that checks the patient and recipient stopped all of them.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/agent-tool-policy-clinic.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  
+<main class="policy article">
+<article>
+<p class="tag">Agentic AI · 27 October 2026 · Synthetic benchmark</p>
+<h1>RevocationLag: Measuring Stale-Authority Exposure in AI-Agent Workflows</h1>
+<p class="lead">What happens when a tool permission is revoked while an AI-agent workflow is running? RevocationLag compares four authorization strategies on deterministic synthetic action traces.</p>
+<h2>Research question</h2>
+<p>How does authorization-check granularity affect unauthorized side effects after a tool permission is revoked during a multi-step workflow, and what control-event overhead accompanies each strategy?</p>
+<h2>Method</h2>
+<p>The benchmark generates 1,800 deterministic synthetic action traces using seeds 17, 29, and 43. Each trace contains benign actions, sensitive actions requiring a capability, a plan length, and a revocation point. All four policies run on the same traces.</p>
+<ul>
+<li><strong>check_once:</strong> checks permission at workflow start only.</li>
+<li><strong>periodic_3:</strong> re-checks every three action positions.</li>
+<li><strong>per_sensitive:</strong> checks before every sensitive action.</li>
+<li><strong>push_revoke:</strong> assumes immediate, perfectly delivered revocation notification.</li>
+</ul>
+<h2>Results</h2>
+<p>These are synthetic simulator results, not estimates of real-world incident rates.</p>
+<table>
+<thead><tr><th>Policy</th><th>Unauthorized side effects</th><th>Revoked actions blocked</th><th>Authorized-work completion</th><th>Control events / episode</th></tr></thead>
+<tbody>
+<tr><td>check_once</td><td>100.0%</td><td>0.0%</td><td>100.0%</td><td>1.00</td></tr>
+<tr><td>periodic_3</td><td>15.2%</td><td>84.8%</td><td>100.0%</td><td>4.33</td></tr>
+<tr><td>per_sensitive</td><td>0.0%</td><td>100.0%</td><td>100.0%</td><td>5.21</td></tr>
+<tr><td>push_revoke</td><td>0.0%</td><td>100.0%</td><td>100.0%</td><td>2.00</td></tr>
+</tbody></table>
+<figure><img src="../images/insights/revocation-tradeoff.svg" alt="Synthetic RevocationLag policy trade-off chart" loading="lazy"><figcaption>Synthetic policy comparison. Control-event counts are not production latency or cost measurements.</figcaption></figure>
+<p>In these traces, one-time authorization permits sensitive actions after revocation. Periodic checks reduce exposure but do not eliminate it. Per-sensitive-action checks block revoked actions at higher control-event counts. The push-notification baseline also blocks them with fewer events, but assumes perfect immediate delivery.</p>
+<h2>Limitations</h2>
+<p>This policy-level experiment does not execute a real agent or external tool, model prompt injection or network failures, or prove a sandbox secure. It omits concurrent actions, queued requests, retries, distributed caches, multiple capability classes, and partial failure. Results must not be generalized to deployed systems.</p>
+<h2>Reproducibility</h2>
+<pre><code>python3 run_benchmark.py
+python3 -m unittest discover -s tests -v</code></pre>
+<p>The package uses Python's standard library and fixed seeds. <a href="https://github.com/MHKhan50/agent-revocation-lag-benchmark">View the benchmark code on GitHub</a>.</p>
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://www.surrey.ac.uk/news/surrey-leads-ps32m-project-collaboration-sheffield-and-melbourne-develop-provably-secure-sandbox-ai">University of Surrey: secure sandbox research for AI agents</a></li>
+<li><a href="https://cetas.turing.ac.uk/publications/behavioural-assurance-agentic-ai-sensitive-and-high-stakes-organisations">The Alan Turing Institute, CETaS: Behavioural Assurance of Agentic AI</a></li>
+<li><a href="https://www.gla.ac.uk/news/headline_1256583_en.html">University of Glasgow: agentic AI research programme</a></li>
+</ul>
+</article>
+</main>
+
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
