@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Translating Roman Urdu first did not make a local AI&#39;s clinic notes safer | Masmatix Innovations</title>
+  <meta name="description" content="Two local models drafted physiotherapy notes from Roman Urdu consultations, directly and after translating to English. With llama3.1:8b, translating first raised missed critical facts from 3 to 5 and swapped left and right; qwen2.5:3b did not translate at all.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/translate-then-draft-roman-urdu.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Translating Roman Urdu first did not make a local AI&#39;s clinic notes safer">
+  <meta property="og:description" content="Two local models drafted physiotherapy notes from Roman Urdu consultations, directly and after translating to English. With llama3.1:8b, translating first raised missed critical facts from 3 to 5 and swapped left and right; qwen2.5:3b did not translate at all.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/translate-then-draft-roman-urdu.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/translate-then-draft-roman-urdu.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Clinical AI · Roman Urdu</p>
+      <h1>Translating Roman Urdu first did not make a local AI&#39;s clinic notes safer</h1>
+      <p class="a-sub">I tested the fix I suggested last week. The translation step brought its own errors, and the smaller model skipped it altogether.</p>
+      <p class="updated">By Muzammal Hussain · 28 October 2026 · 4 min read</p>
+
+      <p class="a-lede">Last week a 3B local model wrote physiotherapy notes from Roman Urdu consultations and got the body part wrong in three of four notes (<a href="clinical-note-hallucination.html">read it here</a>). The obvious fix is to translate the consultation into English first and then write the note, since the same model did well in English. I tested that fix on the same four consultations with two local models, qwen2.5:3b and llama3.1:8b.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>With llama3.1:8b, translating first made things worse:</b> critical facts missing rose from 3 to 5 of 42 listed facts.</li>
+          <li><b>The translation changed side and body part:</b> the neck&#39;s left side became the right, and a stiff shoulder became lower back pain.</li>
+          <li><b>qwen2.5:3b did not translate at all.</b> In all four cases it returned the Roman Urdu text unchanged, and the pipeline carried on as if it had worked.</li>
+          <li><b>The larger model helped more than the pipeline:</b> drafting directly from Roman Urdu, llama3.1:8b missed 4 of 42 facts against 13 for qwen2.5:3b.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>The four consultations are fictional and the same as last time: lower back pain, a twisted knee, a stiff shoulder with diabetes, and neck pain from desk work, each in English and Roman Urdu with the same facts. No real patient data was used. Both models ran locally through Ollama on a MacBook M4 (16 GB) at temperature 0. For each model and consultation there were three conditions:</p>
+      <ul>
+        <li><b>English, direct:</b> the English transcript to a SOAP note (the reference).</li>
+        <li><b>Roman Urdu, direct:</b> the Roman Urdu transcript to a SOAP note.</li>
+        <li><b>Roman Urdu, translate first:</b> the model translates the transcript into English, then writes the note from its own translation.</li>
+      </ul>
+      <p>A script checked 42 listed facts per condition, some marked critical (red-flag answers, medication, the injured side, referrals). A new check flagged notes that missed the main body part or named one that never came up in the consultation. On last week&#39;s notes it caught all three wrong-body-part notes and no English note.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/translate-then-draft-roman-urdu.png" alt="Bar chart of listed facts left out, out of 42. llama3.1:8b: English 0, Roman Urdu direct 4, translate first 6. qwen2.5:3b: English 2, Roman Urdu direct 13, translate first 13." loading="lazy">
+        <figcaption>Facts left out per model and condition (MacBook M4). qwen2.5:3b&#39;s translate-first bar equals its direct bar because it returned the input unchanged.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Model</th><th>Condition</th><th>Facts missing</th><th>Critical missing</th><th>Wrong or missing body part</th></tr></thead>
+          <tbody>
+            <tr><td>qwen2.5:3b</td><td>English</td><td>2 of 42</td><td>0</td><td>0 of 4</td></tr>
+            <tr><td>qwen2.5:3b</td><td>Roman Urdu, direct</td><td>13 of 42</td><td>7</td><td>3 of 4</td></tr>
+            <tr><td>qwen2.5:3b</td><td>Translate first</td><td colspan="3">not tested: the model returned the input unchanged</td></tr>
+            <tr><td>llama3.1:8b</td><td>English</td><td>0 of 42</td><td>0</td><td>0 of 4</td></tr>
+            <tr><td>llama3.1:8b</td><td>Roman Urdu, direct</td><td>4 of 42</td><td>3</td><td>1 of 4</td></tr>
+            <tr><td>llama3.1:8b</td><td>Translate first</td><td>6 of 42</td><td>5</td><td>1 of 4</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>What the translation changed</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Consultation</th><th>Patient or physio said</th><th>llama3.1:8b translation</th></tr></thead>
+          <tbody>
+            <tr><td>Neck pain</td><td>"gardan baayen taraf ghumane mein" (turning the neck to the left)</td><td>"moving the neck to the right"</td></tr>
+            <tr><td>Stiff shoulder</td><td>shoulder stiff for 4 months</td><td>"My lower back has been aching for 4 months"</td></tr>
+            <tr><td>Twisted knee</td><td>swelled up the same evening; does not lock</td><td>"I slept on it that same evening"; "it&#39;s not giving way"</td></tr>
+            <tr><td>Lower back pain</td><td>"koi sunn-pan nahi" (no numbness)</td><td>a second "no problem with urination"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The translation fixed one error: drafting directly, llama3.1:8b called the twisted knee an ankle injury, and from its own translation it wrote knee. But it broke the shoulder note in the same run, so the net result was worse.</p>
+
+      <h2>A step that silently did nothing</h2>
+      <p>qwen2.5:3b was asked to translate and gave back the Roman Urdu text word for word, four times out of four. Nothing in the pipeline noticed, so its notes were the same flawed notes as before. A real system needs to check each step, for example stop when the translation is the same as the input and pass the case to a person.</p>
+
+      <h2>What this means for MeetPhysio</h2>
+      <p>From this data the safer route is to draft directly with the larger model and require a physiotherapist to review the whole note before sign-off. A wrong side or body part leads to treatment and exercises for the wrong area, and even the better route still wrote ankle for a knee once.</p>
+
+      <h2>Limitations</h2>
+      <p>This is a pilot: four consultations I wrote, two models, one run at temperature 0. The fact and body-part checks use keywords, so a fair translation like "vertigo" for "dizziness" counts as missing, and a fact written wrongly can still count as present. Both models got the same translation prompt; another prompt might get qwen2.5:3b to translate. I did not label every sentence this time, and the transcripts are clean text rather than speech-to-text output.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>Step checks that stop the pipeline when a translation equals the input or a body part changes.</li>
+        <li>Sentence-by-sentence labels for the direct llama3.1:8b notes.</li>
+        <li>Whisper transcripts in place of clean text.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/translate-then-draft" target="_blank" rel="noopener">Code, notes and translations on GitHub →</a>
+      </div>
+      <p class="a-ref">Follows: Asgari E., Montaña-Brown N., Dubois M., Khalil S., Balloch J., Au Yeung J., Pimenta D. (2025). A framework to assess clinical safety and hallucination rates of LLMs for medical text summarisation. <i>npj Digital Medicine</i> 8, 274. <a href="https://doi.org/10.1038/s41746-025-01670-7" target="_blank" rel="noopener">doi:10.1038/s41746-025-01670-7</a>. Models: Qwen2.5 3B and Llama 3.1 8B run locally with Ollama. Every note and translation is in the GitHub repository.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
