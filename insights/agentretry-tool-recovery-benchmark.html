@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgentRetry: Recovery Policies for Ambiguous Tool Outcomes | Masmatix</title>
+  <meta name="description" content="A reproducible synthetic benchmark comparing retry, verification and escalation policies for ambiguous outcomes in agentic AI workflows.">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/agentretry-tool-recovery-benchmark.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="AgentRetry: Benchmarking Recovery Policies for Ambiguous Tool Outcomes">
+  <meta property="og:description" content="A synthetic benchmark of task completion, safe recovery and duplicate-side-effect risk in tool-using agents.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/agentretry-tool-recovery-benchmark.html">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a href="../index.html" class="brand">Masmatix Innovations</a>
+    <nav aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="index.html">Insights</a>
+    </nav>
+  </div>
+</header>
+
+<main class="policy article">
+  <div class="wrap">
+    <p class="tag">Experiment · Agentic AI · 29 October 2026</p>
+    <h1>AgentRetry: Benchmarking Recovery Policies for Ambiguous Tool Outcomes in Agentic Workflows</h1>
+    <p class="updated">By Muzammal Hussain · 29 October 2026</p>
+
+    <p class="lead">When a tool call times out, an agent may not know whether the operation failed or succeeded without returning a usable response. Retrying can recover a task, but it can also repeat a non-idempotent action. AgentRetry provides a reproducible synthetic baseline for comparing recovery strategies under this ambiguity.</p>
+
+    <div class="a-keys">
+      <h2>At a glance</h2>
+      <ul>
+        <li>800 synthetic scenarios and 3,200 policy episodes.</li>
+        <li>Four deterministic reference policies.</li>
+        <li>Python standard library; reproducible with a fixed seed.</li>
+        <li>Research prototype, not a live-agent or production evaluation.</li>
+      </ul>
+    </div>
+
+    <h2>Research question</h2>
+    <p>How do simple recovery policies trade task completion against duplicate side effects when a tool outcome is ambiguous?</p>
+
+    <h2>Why this matters</h2>
+    <p>Tool-using agents can encounter pre-execution failures, timeouts after an operation has already executed, or stale observations. These cases are not equivalent. Blindly repeating an operation may duplicate an action such as creating a record or submitting a request. Always stopping, however, can leave recoverable tasks unfinished. A useful recovery policy must reason about uncertainty and the consequences of acting again.</p>
+
+    <h2>Benchmark design</h2>
+    <p>AgentRetry generates synthetic scenarios with different operation and outcome classes, then evaluates four deterministic reference policies against the same scenarios. The baseline uses seed <code>20261029</code>, with 800 scenarios and 3,200 policy episodes.</p>
+    <ul>
+      <li><strong>Blind retry:</strong> repeats the operation without first resolving the ambiguous outcome.</li>
+      <li><strong>Bounded retry:</strong> limits retries and escalates when its recovery path is exhausted.</li>
+      <li><strong>Verify then act:</strong> checks a simulated ledger when available before deciding whether to repeat the operation.</li>
+      <li><strong>Stop and escalate:</strong> avoids retrying an ambiguous action and hands the case off instead.</li>
+    </ul>
+    <p>The simulation assumes that a pre-execution failure has no side effect, while a post-execution timeout or stale observation may occur after the side effect has happened. These assumptions are explicit modelling choices, not claims about all real APIs.</p>
+
+    <h2>Baseline results</h2>
+    <p>The table reports the current fixed-seed synthetic baseline. “Safe completion” means a completed task without the benchmark's defined unsafe duplicate-side-effect outcome. Duplicate-risk values are evaluated on the benchmark's ambiguous non-idempotent cases.</p>
+
+    <div class="a-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Policy</th>
+            <th>Completion</th>
+            <th>Safe completion</th>
+            <th>Duplicate risk</th>
+            <th>Escalation</th>
+            <th>Mean tool calls</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Blind retry</td><td>1.000</td><td>0.864</td><td>1.000</td><td>0.000</td><td>1.587</td></tr>
+          <tr><td>Bounded retry</td><td>0.654</td><td>0.654</td><td>0.000</td><td>0.346</td><td>1.241</td></tr>
+          <tr><td>Verify then act</td><td>0.909</td><td>0.909</td><td>0.000</td><td>0.091</td><td>1.587</td></tr>
+          <tr><td>Stop and escalate</td><td>0.412</td><td>0.412</td><td>0.000</td><td>0.588</td><td>1.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="a-fig">
+      <img src="../images/insights/agentretry-completion-vs-duplicate-risk.svg" alt="AgentRetry synthetic baseline comparison of task completion and duplicate-side-effect risk by recovery policy" loading="lazy">
+      <figcaption>Fixed-seed synthetic baseline. These values are simulated benchmark outputs, not measurements from deployed agents.</figcaption>
+    </figure>
+
+    <h2>Interpretation</h2>
+    <p>Blind retry achieves the highest completion in this particular simulation, but it also incurs the highest duplicate-side-effect risk. Stop and escalate avoids that risk in the model but leaves more tasks incomplete. Verify then act offers a different trade-off in this setup: high completion with no observed duplicate risk under the benchmark's verification assumptions.</p>
+    <p>These results do not establish that verification will always be safe or that one policy is universally best. The ranking depends on the scenario generator, operation semantics, verification availability and policy definitions. In particular, the simulated ledger makes verification more reliable than many real systems may permit.</p>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>One critical operation is modelled per episode.</li>
+      <li>Failure behaviour and policy decisions are deterministic reference rules.</li>
+      <li>The verification ledger is idealised; its reliability and cost are not fully modelled.</li>
+      <li>The baseline does not model concurrent requests, partial commits, persistent failures, realistic latency distributions or diverse API semantics.</li>
+      <li>These are point estimates from a fixed seed, not confidence intervals or live LLM evaluations.</li>
+    </ul>
+
+    <h2>Reproducibility</h2>
+    <p>The project uses Python 3.9+ and the standard library. From the benchmark repository root, run:</p>
+    <pre><code>python3 run_benchmark.py
+python3 -m unittest discover -s tests -v</code></pre>
+    <p>Repository: <a href="https://github.com/MHKhan50/agentretry-tool-recovery-benchmark">AgentRetry synthetic benchmark on GitHub</a>.</p>
+
+    <h2>Next steps</h2>
+    <p>Further experiments should vary random seeds and scenario weights, report uncertainty intervals, model delayed and persistent failures, introduce imperfect verification with measurable cost, and test against real tool APIs in a controlled environment.</p>
+
+    <h2>Research status</h2>
+    <p>This is an independently developed synthetic benchmark and preprint-style research draft. It has not been peer reviewed. The cited background material provides topic context only and does not imply endorsement of this benchmark.</p>
+
+    <h2>Background reading</h2>
+    <ul>
+      <li><a href="https://www.gla.ac.uk/news/headline_1256583_en.html">University of Glasgow and Lloyds Banking Group announce agentic AI research programme</a> (30 March 2026).</li>
+      <li><a href="https://phd.leeds.ac.uk/project/2300-long-horizon-robotic-dexterous-manipulation">University of Leeds: Long-Horizon Robotic Dexterous Manipulation</a>.</li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>
