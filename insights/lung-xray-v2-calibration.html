@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>I rebuilt my MSc chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high</title>
+  <meta name="description" content="DenseNet121 and ResNet50 were retrained on NIH ChestX-ray14 as a 14-label task with the official patient-wise split. DenseNet121 reached a test mean AUROC of 0.801, but its raw probabilities were 2.5 to 10.9 times the true prevalence until per-class recalibration.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/lung-xray-v2-calibration.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="I rebuilt my MSc chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high">
+  <meta property="og:description" content="DenseNet121 and ResNet50 were retrained on NIH ChestX-ray14 as a 14-label task with the official patient-wise split. DenseNet121 reached a test mean AUROC of 0.801, but its raw probabilities were 2.5 to 10.9 times the true prevalence until per-class recalibration.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/lung-xray-v2-calibration.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/lung-v2-calibration-gap.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+  <div class="wrap">
+    <a class="back" href="../index.html">← Back to the website</a>
+    <p class="tag">Experiment · Medical imaging · 29 October 2026</p>
+    <h1>I rebuilt my MSc chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high</h1>
+    <p class="updated">Muzammal Hussain, Software Engineer, Data Scientist and AI Researcher · 29 October 2026 · One training run on a public dataset</p>
+    <p class="lead">In 2023 my MSc project classified chest X-rays from the NIH ChestX-ray14 dataset and reported about 58% accuracy. Looking back, that number could not be trusted: the task was set up wrongly, the metric hid rare diseases, and the same patient could appear in training and validation. I rebuilt it in one Kaggle notebook and then checked something the first version never looked at: whether the model's percentages mean what they say.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>With 14 labels, the official patient-wise split and per-class AUROC, DenseNet121 reached a test mean AUROC of 0.801 (95% interval 0.796 to 0.806) and ResNet50 0.795, on 25,596 test images.</li>
+        <li>DenseNet121 was ahead in a paired bootstrap by 0.006 (interval 0.003 to 0.010). Small, but it did not flip in 1,000 resamples.</li>
+        <li>The raw probabilities were far too high: 2.5 to 10.9 times the real share of images with each label. For consolidation the model said 49% on average, while 7% of test images had it.</li>
+        <li>A simple per-class correction (Platt scaling) cut the mean calibration error from 0.265 to 0.005 without changing the AUROC.</li>
+      </ul>
+    </div>
+
+    <h2>What changed from the MSc version?</h2>
+    <div class="a-table">
+      <table>
+        <thead><tr><th></th><th>V1 (2023)</th><th>V2 (2026)</th></tr></thead>
+        <tbody>
+          <tr><td>Task</td><td>836 label combinations as classes</td><td>14 labels, one sigmoid output each</td></tr>
+          <tr><td>Split</td><td>random by image</td><td>official split, by patient</td></tr>
+          <tr><td>Metric</td><td>accuracy</td><td>per-class AUROC</td></tr>
+          <tr><td>Result</td><td>58.1% validation accuracy</td><td>0.801 test mean AUROC (DenseNet121)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The two results measure different things, so they cannot be compared. The V2 split puts 77,719 images in training, 8,805 in validation and 25,596 in test, and the code checks that no patient appears in two of them. Both models were ImageNet-pretrained, trained at 224x224 with the same settings on a Kaggle T4 GPU, and stopped after 7 epochs, keeping the weights from epoch 5. After that the training loss kept falling while the validation AUROC dropped, which is the overfitting V1 never caught.</p>
+
+    <figure class="a-fig">
+      <img src="../images/insights/lung-v2-per-class-auroc.png" alt="Horizontal bar chart of test AUROC for 14 chest X-ray labels for DenseNet121 and ResNet50. Highest are emphysema, hernia and cardiomegaly near 0.88 to 0.91; lowest are infiltration, pneumonia and consolidation near 0.69 to 0.73.">
+      <figcaption>Figure 1. Per-class test AUROC on the official patient-wise test split. One run per model.</figcaption>
+    </figure>
+    <p>The easiest labels were emphysema (0.912), hernia (0.892) and cardiomegaly (0.879). The hardest were infiltration (0.695), pneumonia (0.711) and consolidation (0.728). On an X-ray all three appear as white opacity where air should be, so they overlap visually, and their labels, which were mined from report text, may also be the least reliable.</p>
+
+    <h2>The percentages were wrong</h2>
+    <p>AUROC only asks whether a sick patient gets a higher score than a healthy one. It says nothing about whether "49%" means 49%. I compared the average predicted probability with the real share of test images for each label.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/lung-v2-calibration-gap.png" alt="Bar chart comparing, for 14 labels, the share of test images with the label and DenseNet121's mean predicted probability. The predicted probability is several times higher for every label.">
+      <figcaption>Figure 2. Mean predicted probability against the real share of test images with each label, DenseNet121.</figcaption>
+    </figure>
+    <p>Every label was overestimated, from 2.5 times for infiltration to 10.9 times for pneumonia. The likely cause is a choice I made on purpose: during training, rare labels were given more weight so the model would not ignore them. That helps the ranking but inflates the probabilities. Fitting a one-line logistic correction for each label on half of the test images and applying it to the other half brought the mean expected calibration error from 0.265 to 0.005 and the mean Brier score from 0.175 to 0.058. The AUROC stayed at 0.801.</p>
+    <p>I also tried letting the model refer its least certain images to a person. Keeping the 50% of images it was most sure about raised the mean AUROC on those images from 0.801 to 0.816. This used the uncorrected probabilities, so it is a first look only.</p>
+
+    <h2>What I noticed</h2>
+    <ul>
+      <li>For a clinician, wrong percentages can be more harmful than a lower AUROC. With raw outputs, almost every image would raise a consolidation alarm. Any demo or app built on this model has to show recalibrated values.</li>
+      <li>The class weights that helped rare labels are also what broke the probabilities. A training choice that fixes one problem needs a check for the problem it creates.</li>
+      <li>My guess is that the image alone is not enough to separate infiltration, pneumonia and consolidation, and that clinical information would help. I have not tested that.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>One run and one seed per model. The bootstrap resamples images, not patients, so the true intervals are probably wider.</li>
+      <li>The correction was fitted and checked on halves of the test set split by image, not by patient. A clean version fits it on the validation set.</li>
+      <li>224x224 images and simple flips only. All images come from one hospital, so results may not hold elsewhere.</li>
+      <li>This is a research experiment, not a medical device, and must not be used for diagnosis.</li>
+    </ul>
+
+    <h2>Reproduce the experiment</h2>
+    <p>The repository has the Kaggle notebook, the saved test predictions, the analysis script and its unit tests. The analysis runs on a Mac with Python 3.9 in a few minutes: <code>python3 reliability_analysis.py --results results --out analysis</code>. Training both models takes under two hours on a free Kaggle T4.</p>
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/lung-disease-classification">View code and data</a>
+    </div>
+    <p class="a-ref">Data: NIH ChestX-ray14 (Wang et al., 2017), from the Kaggle dataset nih-chest-xrays/data. Related reading: <a href="https://arxiv.org/abs/2509.15107">Rafferty and Rajan, 2025, on the limits of public chest X-ray datasets</a>. This is a small engineering experiment, not a peer-reviewed paper.</p>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
