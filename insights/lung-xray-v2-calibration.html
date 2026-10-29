@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>I rebuilt my MSc chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high</title>
+  <title>I rebuilt my chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high</title>
   <meta name="description" content="DenseNet121 and ResNet50 were retrained on NIH ChestX-ray14 as a 14-label task with the official patient-wise split. DenseNet121 reached a test mean AUROC of 0.801, but its raw probabilities were 2.5 to 10.9 times the true prevalence until per-class recalibration.">
   <meta name="author" content="Muzammal Hussain">
   <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/lung-xray-v2-calibration.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="I rebuilt my MSc chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high">
+  <meta property="og:title" content="I rebuilt my chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high">
   <meta property="og:description" content="DenseNet121 and ResNet50 were retrained on NIH ChestX-ray14 as a 14-label task with the official patient-wise split. DenseNet121 reached a test mean AUROC of 0.801, but its raw probabilities were 2.5 to 10.9 times the true prevalence until per-class recalibration.">
   <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/lung-xray-v2-calibration.html">
   <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/lung-v2-calibration-gap.png">
@@ -42,9 +42,9 @@
   <div class="wrap">
     <a class="back" href="../index.html">← Back to the website</a>
     <p class="tag">Experiment · Medical imaging · 29 October 2026</p>
-    <h1>I rebuilt my MSc chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high</h1>
+    <h1>I rebuilt my chest X-ray model: 0.80 AUROC on a patient-wise split, and probabilities up to 11 times too high</h1>
     <p class="updated">Muzammal Hussain, Software Engineer, Data Scientist and AI Researcher · 29 October 2026 · One training run on a public dataset</p>
-    <p class="lead">In 2023 my MSc project classified chest X-rays from the NIH ChestX-ray14 dataset and reported about 58% accuracy. Looking back, that number could not be trusted: the task was set up wrongly, the metric hid rare diseases, and the same patient could appear in training and validation. I rebuilt it in one Kaggle notebook and then checked something the first version never looked at: whether the model's percentages mean what they say.</p>
+    <p class="lead">In 2023 my first version classified chest X-rays from the NIH ChestX-ray14 dataset and reported about 58% accuracy. Looking back, that number could not be trusted: the task was set up wrongly, the metric hid rare diseases, and the same patient could appear in training and validation. I rebuilt it in one Kaggle notebook and then checked something the first version never looked at: whether the model's percentages mean what they say.</p>
 
     <div class="a-keys">
       <h2>Key findings</h2>
@@ -56,7 +56,7 @@
       </ul>
     </div>
 
-    <h2>What changed from the MSc version?</h2>
+    <h2>What changed from the first version?</h2>
     <div class="a-table">
       <table>
         <thead><tr><th></th><th>V1 (2023)</th><th>V2 (2026)</th></tr></thead>
