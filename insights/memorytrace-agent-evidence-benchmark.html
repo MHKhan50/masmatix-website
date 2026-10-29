@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>MemoryTrace: Evidence-Aware Memory Retrieval | Masmatix Innovations</title>
-  <meta name="description" content="MemoryTrace is a reproducible synthetic benchmark comparing evidence-aware memory retrieval policies across freshness, provenance and consent.">
+  <title>AI memory filters break when the labels are wrong, and no model said CONFLICT | Masmatix Innovations</title>
+  <meta name="description" content="A memory gate that removes unverified, non-consented and stale notes let unsafe memory through in about 21% of questions when 20% of labels were wrong. Given conflicting notes, neither qwen2.5:3b nor llama3.1:8b ever answered CONFLICT.">
   <meta name="author" content="Muzammal Hussain">
   <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/memorytrace-agent-evidence-benchmark.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="MemoryTrace: Evidence-Aware Memory Retrieval">
-  <meta property="og:description" content="A synthetic benchmark of memory retrieval coverage, freshness, provenance and consent.">
+  <meta property="og:title" content="AI memory filters break when the labels are wrong, and no model said CONFLICT">
+  <meta property="og:description" content="A memory gate that removes unverified, non-consented and stale notes let unsafe memory through in about 21% of questions when 20% of labels were wrong. Given conflicting notes, neither qwen2.5:3b nor llama3.1:8b ever answered CONFLICT.">
   <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/memorytrace-agent-evidence-benchmark.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/memorytrace-noise-effects.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,64 +38,80 @@
   </div>
 </header>
 
-  
-<main class="policy article">
-<div class="wrap">
-<a class="back" href="./">← Back to Insights</a>
-<p class="tag">Research benchmark · Agentic AI · 28 October 2026</p>
-<h1>MemoryTrace: Measuring Evidence-Aware Memory Retrieval in Agentic Workflows</h1>
-<p class="updated">Muzammal Hussain · Synthetic benchmark · 28 October 2026</p>
-<p class="lead">An AI assistant can retrieve a note that looks relevant but is stale, weakly sourced, or retained without consent. MemoryTrace tests four retrieval policies in a deterministic synthetic benchmark, measuring answer coverage alongside incorrect, stale, unsupported and non-consensual selections.</p>
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Memory</p>
+      <h1>AI memory filters break when the labels are wrong, and no model said CONFLICT</h1>
+      <p class="a-sub">A simulator for noisy labels, and two local models choosing between six notes about the same project.</p>
+      <p class="updated">By Muzammal Hussain · 29 October 2026 · 5 min read</p>
 
-<div class="a-keys">
-<h2>Key findings</h2>
-<ul>
-<li>Across 600 synthetic scenarios, <code>keyword_only</code> achieved 16.17% correct answers, while <code>provenance_gate</code> achieved 37.17%.</li>
-<li><code>latest_relevant</code> selected non-consensual records in 17.00% of scenarios and unsupported records in 52.17%.</li>
-<li><code>provenance_gate</code> reported zero stale, unsupported and non-consensual selections in this simulator, with 100% coverage.</li>
-<li><code>strict_evidence</code> reported 96.83% coverage and 36.00% correct answers across all scenarios.</li>
-</ul>
-</div>
+      <p class="a-lede">An AI assistant with memory has to decide which stored note to trust: the recent one, the verified one, or the one it is allowed to use. A common answer is a gate that only lets through notes that are verified, have consent and are not out of date. I tested two things: what happens when those labels are sometimes wrong, and which note real local models pick when they read six notes about the same question.</p>
 
-<h2>Research question</h2>
-<p>How much do provenance, freshness and consent gates change the trade-off between answer coverage and unsafe memory use in a multi-step assistant workflow?</p>
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>My first version had a design flaw:</b> in every question, the gate either let through two verified notes that disagree, or only a wrong one. Its 37% accuracy came from a tie-break, not from the gate.</li>
+          <li><b>Wrong labels leak:</b> with 20% of labels wrong, unsafe memory got past the gate in about 21% of questions. Refusing to answer when the remaining notes disagree held it to about 10%, but answered only 44% of questions.</li>
+          <li><b>A prompt rule removed the obvious risks:</b> with it, llama3.1:8b stopped using unverified and non-consented notes (English 3 to 0, Roman Urdu 5 to 0).</li>
+          <li><b>No model said CONFLICT:</b> instead, llama3.1:8b picked the disagreeing verified note more often with the rule (6 to 8 in English, 6 to 9 in Roman Urdu). qwen2.5:3b answered &quot;unknown&quot; to 71 of 80 questions.</li>
+        </ol>
+      </div>
 
-<h2>Method</h2>
-<p>A deterministic generator creates 600 scenarios with six candidate memory records each: a potentially verified current record, a stale archive, a recent unverified record, a non-consensual note, a lexical distractor, and an authentic but conflicting record. Four policies select a candidate or abstain. The benchmark uses Python's standard library and writes reproducible CSV and JSON outputs.</p>
+      <h2>Part 1: when the labels are wrong (simulator)</h2>
+      <p>The simulator has 600 questions about a project&#39;s status, each with six candidate notes: current and verified, a stale archive, a recent unverified note, a note without consent, a note about another project, and a verified note that disagrees. I flipped each label (verified, consent, current) with a set probability, let the gates decide on the noisy labels, and scored them on the true ones. I also added a third rule: answer only when every note left after the gate agrees.</p>
+      <figure class="a-fig">
+        <img src="../images/insights/memorytrace-noise-effects.png" alt="Two line charts against label error rate from 0% to 20%. Left: wrong answers fall from about 63% to 49% for the provenance gate and stay between 20% and 28% for conflict abstention. Right: unsafe memory used rises from 0% to about 21% for the provenance gate, 18% for the strict gate and 10% for conflict abstention." loading="lazy">
+        <figcaption>Scored on the true labels. Unsafe memory adds unverified, non-consented and stale picks.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Labels wrong</th><th>Policy</th><th>Answered</th><th>Wrong answers</th><th>Unsafe memory used</th></tr></thead>
+          <tbody>
+            <tr><td>0%</td><td>Provenance gate</td><td>100%</td><td>62.8%</td><td>0%</td></tr>
+            <tr><td>0%</td><td>Refuse on conflict</td><td>19.8%</td><td>19.8%</td><td>0%</td></tr>
+            <tr><td>20%</td><td>Provenance gate</td><td>81.7%</td><td>49.2%</td><td>21.3%</td></tr>
+            <tr><td>20%</td><td>Strict gate</td><td>73.0%</td><td>44.3%</td><td>17.8%</td></tr>
+            <tr><td>20%</td><td>Refuse on conflict</td><td>43.8%</td><td>27.8%</td><td>10.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The first row is the design flaw: with perfect labels the gate never used unsafe memory, but it still answered wrongly in 63% of questions, because a verified note that disagreed always got through with the right one. Refusing on conflict exposed this: when it did answer, it was wrong, because the only note left was the wrong one.</p>
 
-<figure class="a-fig">
-<img src="../images/insights/memorytrace-coverage-vs-risk.svg" alt="MemoryTrace synthetic benchmark chart comparing retrieval policy coverage and risk." loading="lazy">
-<figcaption>Coverage and risk metrics from the bundled synthetic benchmark output.</figcaption>
-</figure>
+      <h2>Part 2: which note real models picked</h2>
+      <p>I turned 20 of the questions into text prompts with six labelled notes and asked qwen2.5:3b and llama3.1:8b to give the status and name the note they used, or say unknown or CONFLICT. Each question ran in English and Roman Urdu, with a plain prompt and with a rule: use only notes that are verified, have consent and are at most 7 days old, and answer CONFLICT if they disagree.</p>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Model</th><th>Language</th><th>Prompt</th><th>Correct note</th><th>Disagreeing verified note</th><th>Unverified or no consent</th><th>Unknown</th></tr></thead>
+          <tbody>
+            <tr><td>llama3.1:8b</td><td>English</td><td>plain</td><td>11</td><td>6</td><td>3</td><td>0</td></tr>
+            <tr><td>llama3.1:8b</td><td>English</td><td>rule</td><td>12</td><td>8</td><td>0</td><td>0</td></tr>
+            <tr><td>llama3.1:8b</td><td>Roman Urdu</td><td>plain</td><td>9</td><td>6</td><td>5</td><td>0</td></tr>
+            <tr><td>llama3.1:8b</td><td>Roman Urdu</td><td>rule</td><td>11</td><td>9</td><td>0</td><td>0</td></tr>
+            <tr><td>qwen2.5:3b</td><td>both</td><td>both</td><td>2 of 80</td><td>2</td><td>0</td><td>71</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Out of 20 questions per row. CONFLICT was never answered. qwen2.5:3b looks perfectly safe on the risk columns only because it almost never answered.</p>
 
-<h2>Results</h2>
-<div class="a-table">
-<table>
-<thead><tr><th>Policy</th><th>Coverage</th><th>Correct, all scenarios</th><th>Stale</th><th>Unsupported</th><th>Non-consensual</th></tr></thead>
-<tbody>
-<tr><td><code>keyword_only</code></td><td>100.00%</td><td>16.17%</td><td>10.17%</td><td>56.50%</td><td>1.67%</td></tr>
-<tr><td><code>latest_relevant</code></td><td>100.00%</td><td>21.33%</td><td>0.00%</td><td>52.17%</td><td>17.00%</td></tr>
-<tr><td><code>provenance_gate</code></td><td>100.00%</td><td>37.17%</td><td>0.00%</td><td>0.00%</td><td>0.00%</td></tr>
-<tr><td><code>strict_evidence</code></td><td>96.83%</td><td>36.00%</td><td>0.00%</td><td>0.00%</td><td>0.00%</td></tr>
-</tbody>
-</table>
-</div>
-<p>These figures are deterministic outputs of a synthetic simulator, not estimates of real-world agent performance. The simulator exposes evidence and consent labels to policies; the zero-risk results therefore reflect the experiment design and do not establish that a deployed system would be risk-free.</p>
+      <h2>What this means</h2>
+      <p>A rule in the prompt can stop a model from using notes that are clearly marked as unverified or private. It did not make the model notice that two trusted notes disagree. That check is easy in code and should live there, and the gate&#39;s labels need their own checks, because a gate is only as good as the labels it reads.</p>
 
-<h2>Limitations and next steps</h2>
-<p>The scenario distribution is hand-designed and may favour policies whose assumptions match it. Authenticity does not guarantee that a record's claim is correct, and a synthetic retrieval score is not a measure of an LLM's semantic understanding. The experiment does not establish safety, privacy compliance or generalisation to real users.</p>
-<p>A stronger follow-up would test multiple real models, preregister scenario families, report uncertainty intervals, and include adversarial cases with missing or forged metadata. Real-system evaluations should also document how provenance and consent are established and enforced.</p>
+      <h2>Limitations</h2>
+      <p>The simulator uses hand-set distributions and flips labels independently, while real label errors are often correlated. The model test used 20 questions, two small local models, one run at temperature 0, and notes written as structured lines rather than natural text. Answers are four status words, so I scored the note each model named. No real people or records were involved.</p>
 
-<h2>Reproducibility</h2>
-<p>The benchmark uses generated data and Python's standard library; it does not use user data or an external corpus. The repository includes tests, dataset documentation, references and plotting code.</p>
-<pre><code>git clone https://github.com/MHKhan50/memorytrace-agent-evidence-benchmark.git
-cd memorytrace-agent-evidence-benchmark
-python3 run_benchmark.py
-python3 -m unittest discover -s tests -v</code></pre>
-<p><a href="https://github.com/MHKhan50/memorytrace-agent-evidence-benchmark">View the MemoryTrace code, dataset and documentation on GitHub</a>.</p>
-</div>
-</main>
+      <h2>What I will test next</h2>
+      <ul>
+        <li>A code-level conflict check in front of the model, with real model answers.</li>
+        <li>Notes written as natural text, where the labels have to be inferred.</li>
+      </ul>
 
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/memorytrace-agent-evidence-benchmark" target="_blank" rel="noopener">Code, data and every answer on GitHub →</a>
+      </div>
+      <p class="a-ref">Related work: Lewis, P. et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. <i>NeurIPS 2020</i>. Packer, C. et al. (2023). MemGPT: towards LLMs as operating systems. arXiv:2310.08560. Models: Qwen2.5 3B and Llama 3.1 8B run locally with Ollama.</p>
+    </div>
+  </main>
 
 <footer>
   <div class="wrap">
