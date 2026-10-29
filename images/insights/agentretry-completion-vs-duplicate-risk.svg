@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="540" viewBox="0 0 920 540">
+<rect width="100%" height="100%" fill="white"/>
+<text x="230" y="38" font-family="Arial" font-size="23" font-weight="bold">AgentRetry: completion vs duplicate-side-effect risk</text>
+<text x="230" y="64" font-family="Arial" font-size="13" fill="#444">Synthetic baseline; duplicate risk denominator = ambiguous non-idempotent scenarios</text>
+<line x1="230.0" y1="100" x2="230.0" y2="430" stroke="#dddddd"/>
+<text x="230.0" y="450" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">0%</text>
+<line x1="350.0" y1="100" x2="350.0" y2="430" stroke="#dddddd"/>
+<text x="350.0" y="450" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">20%</text>
+<line x1="470.0" y1="100" x2="470.0" y2="430" stroke="#dddddd"/>
+<text x="470.0" y="450" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">40%</text>
+<line x1="590.0" y1="100" x2="590.0" y2="430" stroke="#dddddd"/>
+<text x="590.0" y="450" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">60%</text>
+<line x1="710.0" y1="100" x2="710.0" y2="430" stroke="#dddddd"/>
+<text x="710.0" y="450" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">80%</text>
+<line x1="830.0" y1="100" x2="830.0" y2="430" stroke="#dddddd"/>
+<text x="830.0" y="450" text-anchor="middle" font-family="Arial" font-size="11" fill="#444">100%</text>
+<text x="216" y="129" text-anchor="end" font-family="Arial" font-size="13">blind_retry</text>
+<rect x="230" y="105" width="600.0" height="22" rx="3" fill="#3B82F6"/>
+<text x="836.0" y="120" font-family="Arial" font-size="11" fill="#222">100.0%</text>
+<rect x="230" y="131" width="600.0" height="22" rx="3" fill="#DC2626"/>
+<text x="836.0" y="146" font-family="Arial" font-size="11" fill="#222">100.0%</text>
+<text x="216" y="205" text-anchor="end" font-family="Arial" font-size="13">bounded_retry</text>
+<rect x="230" y="181" width="392.3" height="22" rx="3" fill="#3B82F6"/>
+<text x="628.2" y="196" font-family="Arial" font-size="11" fill="#222">65.4%</text>
+<rect x="230" y="207" width="0.0" height="22" rx="3" fill="#DC2626"/>
+<text x="236.0" y="222" font-family="Arial" font-size="11" fill="#222">0.0%</text>
+<text x="216" y="281" text-anchor="end" font-family="Arial" font-size="13">verify_then_act</text>
+<rect x="230" y="257" width="545.2" height="22" rx="3" fill="#3B82F6"/>
+<text x="781.2" y="272" font-family="Arial" font-size="11" fill="#222">90.9%</text>
+<rect x="230" y="283" width="0.0" height="22" rx="3" fill="#DC2626"/>
+<text x="236.0" y="298" font-family="Arial" font-size="11" fill="#222">0.0%</text>
+<text x="216" y="357" text-anchor="end" font-family="Arial" font-size="13">stop_and_escalate</text>
+<rect x="230" y="333" width="247.5" height="22" rx="3" fill="#3B82F6"/>
+<text x="483.5" y="348" font-family="Arial" font-size="11" fill="#222">41.2%</text>
+<rect x="230" y="359" width="0.0" height="22" rx="3" fill="#DC2626"/>
+<text x="236.0" y="374" font-family="Arial" font-size="11" fill="#222">0.0%</text>
+<rect x="230" y="485" width="14" height="14" fill="#3B82F6"/>
+<text x="250" y="497" font-family="Arial" font-size="12">Completion rate</text>
+<rect x="420" y="485" width="14" height="14" fill="#DC2626"/>
+<text x="440" y="497" font-family="Arial" font-size="12">Duplicate risk in ambiguous non-idempotent cases</text>
+<text x="230" y="526" font-family="Arial" font-size="11" fill="#555">Illustrative simulator only; not production-agent evidence.</text>
+</svg>
