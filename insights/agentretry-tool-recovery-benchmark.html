@@ -51,7 +51,7 @@
     <p>AgentRetry generates synthetic scenarios with different operation and outcome classes, then evaluates four deterministic reference policies against the same scenarios. The baseline uses seed <code>20261029</code>, with 800 scenarios and 3,200 policy episodes.</p>
     <ul>
       <li><strong>Blind retry:</strong> repeats the operation without first resolving the ambiguous outcome.</li>
-      <li><strong>Bounded retry:</strong> limits retries and escalates when its recovery path is exhausted.</li>
+      <li><strong>Bounded retry:</strong> retries only after a pre-execution failure and escalates every ambiguous outcome.</li>
       <li><strong>Verify then act:</strong> checks a simulated ledger when available before deciding whether to repeat the operation.</li>
       <li><strong>Stop and escalate:</strong> avoids retrying an ambiguous action and hands the case off instead.</li>
     </ul>
@@ -87,7 +87,7 @@
     </figure>
 
     <h2>Interpretation</h2>
-    <p>Blind retry achieves the highest completion in this particular simulation, but it also incurs the highest duplicate-side-effect risk. Stop and escalate avoids that risk in the model but leaves more tasks incomplete. Verify then act offers a different trade-off in this setup: high completion with no observed duplicate risk under the benchmark's verification assumptions.</p>
+    <p>Blind retry achieves the highest completion in this particular simulation, but it also incurs the highest duplicate-side-effect risk. Stop and escalate avoids that risk in the model but leaves more tasks incomplete. Verify then act offers a different trade-off in this setup: high completion with no duplicates. Both duplicate figures hold by construction: blind retry always repeats an ambiguous non-idempotent action, and the simulated ledger is a perfect oracle, so verify then act cannot duplicate. The informative numbers here are completion and escalation.</p>
     <p>These results do not establish that verification will always be safe or that one policy is universally best. The ranking depends on the scenario generator, operation semantics, verification availability and policy definitions. In particular, the simulated ledger makes verification more reliable than many real systems may permit.</p>
 
     <h2>Limitations</h2>
@@ -109,12 +109,11 @@ python3 -m unittest discover -s tests -v</code></pre>
     <p>Further experiments should vary random seeds and scenario weights, report uncertainty intervals, model delayed and persistent failures, introduce imperfect verification with measurable cost, and test against real tool APIs in a controlled environment.</p>
 
     <h2>Research status</h2>
-    <p>This is an independently developed synthetic benchmark and preprint-style research draft. It has not been peer reviewed. The cited background material provides topic context only and does not imply endorsement of this benchmark.</p>
+    <p>This is an independent synthetic benchmark published as an article. It has not been peer reviewed, and a literature review has not been done yet, so no novelty is claimed.</p>
 
-    <h2>Background reading</h2>
+    <h2>Related work on this site</h2>
     <ul>
-      <li><a href="https://www.gla.ac.uk/news/headline_1256583_en.html">University of Glasgow and Lloyds Banking Group announce agentic AI research programme</a> (30 March 2026).</li>
-      <li><a href="https://phd.leeds.ac.uk/project/2300-long-horizon-robotic-dexterous-manipulation">University of Leeds: Long-Horizon Robotic Dexterous Manipulation</a>.</li>
+      <li><a href="agent-tool-policy-clinic.html">Small local AI agents followed hidden instructions in clinic notes</a>, a test with real local models.</li>
     </ul>
   </div>
 </main>
