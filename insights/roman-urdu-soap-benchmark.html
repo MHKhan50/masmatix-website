@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>In 20 clinic consultations, local AI lost red flags and the injured side when patients spoke Roman Urdu | Masmatix Innovations</title>
+  <meta name="description" content="Two local models drafted physiotherapy notes from 20 consultations in English and Roman Urdu. llama3.1:8b lost 16 of 168 facts from Roman Urdu against 1 from English, and both models almost never wrote the injured side.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/roman-urdu-soap-benchmark.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="In 20 clinic consultations, local AI lost red flags and the injured side when patients spoke Roman Urdu">
+  <meta property="og:description" content="Two local models drafted physiotherapy notes from 20 consultations in English and Roman Urdu. llama3.1:8b lost 16 of 168 facts from Roman Urdu against 1 from English, and both models almost never wrote the injured side.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/roman-urdu-soap-benchmark.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/roman-urdu-soap-benchmark.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Clinical AI · Roman Urdu</p>
+      <h1>In 20 clinic consultations, local AI lost red flags and the injured side when patients spoke Roman Urdu</h1>
+      <p class="a-sub">My two pilots used four consultations. This time I wrote twenty, added a check for left and right, and tested whether the gap is more than chance.</p>
+      <p class="updated">By Muzammal Hussain · 30 October 2026 · 5 min read</p>
+
+      <p class="a-lede">In two earlier pilots, small local models wrote physiotherapy notes from Roman Urdu consultations and got the body part wrong (<a href="clinical-note-hallucination.html">first pilot</a>, <a href="translate-then-draft-roman-urdu.html">translate-first test</a>). Four consultations are too few to separate a real gap from luck, so I wrote sixteen more, each in English and Roman Urdu with the same facts, and ran both models again.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>The same facts were lost far more often in Roman Urdu.</b> llama3.1:8b lost 16 of 168 listed facts from Roman Urdu against 1 from English (exact McNemar p = 0.0003). qwen2.5:3b lost 50 against 6.</li>
+          <li><b>Critical facts were lost only in Roman Urdu:</b> 8 for llama3.1:8b and 26 for qwen2.5:3b, against none in English for either model.</li>
+          <li><b>The injured side was almost never written.</b> In the 14 cases with a side, it was missing from 13 llama3.1:8b and all 14 qwen2.5:3b Roman Urdu notes, and llama3.1:8b turned left into right twice.</li>
+          <li><b>A simple safety gate sent 17 of 20 llama3.1:8b Roman Urdu notes for review</b>, against none of its English notes.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>The 20 consultations are fictional and written by me: back, neck, shoulder, knee, hip and pelvis, ankle and foot, wrist and hand, and elbow problems. Some carry red flags on purpose: saddle numbness with urine problems (cauda equina), a swollen calf after a knee replacement (possible DVT), weight loss with past cancer, and a possible scaphoid fracture in a patient on warfarin. Clinical words that clinicians in Pakistan say in English, such as ligament or ACL, stay in English inside the Roman Urdu. No real patient data was used.</p>
+      <p>Both models ran locally through Ollama on a MacBook M4 (16 GB) at temperature 0, with the same note prompt as the pilots. A script checked 168 listed facts (68 marked critical), whether the note named the right body region, whether it named a region never mentioned, and whether it gave the injured side. A note that failed any check, or lost a critical fact, was flagged for a physiotherapist to read.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/roman-urdu-soap-benchmark.png" alt="Bar chart of listed facts missing, with 95% intervals. qwen2.5:3b: English 3.6%, Roman Urdu 29.8%. llama3.1:8b: English 0.6%, Roman Urdu 9.5%." loading="lazy">
+        <figcaption>Share of listed facts missing from the note, with 95% bootstrap intervals over the 20 consultations (MacBook M4).</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Model</th><th>Language</th><th>Facts missing (of 168)</th><th>Critical missing</th><th>Side missing (of 14)</th><th>Flagged (of 20)</th></tr></thead>
+          <tbody>
+            <tr><td>qwen2.5:3b</td><td>English</td><td>6</td><td>0</td><td>0</td><td>3</td></tr>
+            <tr><td>qwen2.5:3b</td><td>Roman Urdu</td><td>50</td><td>26</td><td>14</td><td>20</td></tr>
+            <tr><td>llama3.1:8b</td><td>English</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>llama3.1:8b</td><td>Roman Urdu</td><td>16</td><td>8</td><td>13</td><td>17</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The paired test compares the same fact in both languages. For llama3.1:8b, 16 facts were missing only in Roman Urdu and 1 only in English; for critical facts it was 8 against 0 (p = 0.0078). For qwen2.5:3b it was 47 against 3, and 26 against 0 for critical facts (both p &lt; 0.0001).</p>
+
+      <h2>What the notes got wrong</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Consultation</th><th>What was said</th><th>What the note said</th></tr></thead>
+          <tbody>
+            <tr><td>Calf swelling after knee replacement</td><td>left knee replaced 2 weeks ago, left calf swollen since yesterday</td><td>llama3.1:8b: "hip replacement surgery", pain in the hip, no calf</td></tr>
+            <tr><td>Hip arthritis</td><td>"baayan koolha" (left hip)</td><td>llama3.1:8b: "osteoarthritis of the lower back"; qwen2.5:3b: knee pain</td></tr>
+            <tr><td>Twisted knee</td><td>"daayan ghutna" (right knee)</td><td>llama3.1:8b: "a strain to the ankle"</td></tr>
+            <tr><td>Fall on the hand</td><td>left hand, possible scaphoid fracture</td><td>llama3.1:8b: "grip strength in the right hand"</td></tr>
+            <tr><td>Saddle numbness (emergency)</td><td>numbness in the saddle area, hard to pass urine</td><td>qwen2.5:3b: numbness not mentioned; added "difficulty in defecation" and "a 45-year-old male"</td></tr>
+            <tr><td>Whiplash</td><td>neck stiff and sore, nothing about the head</td><td>llama3.1:8b: "with a headache"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The knee replacement case worries me most. After knee surgery a swollen calf is the main warning sign of a DVT, and a missed clot can travel to the lungs. The note still said DVT and sent the patient to hospital, but a physiotherapist reading it would look at the wrong joint and could not see why a clot was suspected.</p>
+
+      <h2>Left and right went missing</h2>
+      <p>From Roman Urdu, the models wrote "knee pain" or "shoulder pain" and dropped "daayan" or "baayan". A note without a side is incomplete, and one with the wrong side can lead to treatment of the wrong limb. A model cannot be trusted to keep it, so I plan to check it in code: if the consultation says daayan, baayan, left or right, the note must give the side, otherwise the model is asked once more and the note is then marked incomplete. That rule is a proposal and needs its own test.</p>
+
+      <h2>Is a gate that flags 17 of 20 notes useful?</h2>
+      <p>Every flagged note failed at least one real check, five of them only for the missing side. A gate that sends most Roman Urdu notes to a person is honest about how unreliable these models are in Roman Urdu. Correcting a draft should still be quicker than writing a note from scratch, but I have not measured that, and I have not yet read the three notes that passed, so I do not know what the gate misses.</p>
+
+      <h2>Limitations</h2>
+      <p>Twenty consultations I wrote, two models, one run at temperature 0: bigger than the pilots, but still small and written rather than spoken. The checks use keywords, so a fact in unexpected words counts as missing and a wrong fact can still count as present; the region check also flagged two fair English notes ("calf exercises" for an ankle sprain, "right leg" for a right knee). I wrote the Roman Urdu myself, and spelling varies between speakers.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>Sentence-by-sentence labels for the flagged notes and the notes that passed, to measure what the gate misses.</li>
+        <li>The side rule with one retry.</li>
+        <li>Whisper transcripts in place of clean text.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/roman-urdu-soap-benchmark" target="_blank" rel="noopener">Code, consultations and every note on GitHub →</a>
+      </div>
+      <p class="a-ref">Follows: Asgari E., Montaña-Brown N., Dubois M., Khalil S., Balloch J., Au Yeung J., Pimenta D. (2025). A framework to assess clinical safety and hallucination rates of LLMs for medical text summarisation. <i>npj Digital Medicine</i> 8, 274. <a href="https://doi.org/10.1038/s41746-025-01670-7" target="_blank" rel="noopener">doi:10.1038/s41746-025-01670-7</a>. Models: Qwen2.5 3B and Llama 3.1 8B run locally with Ollama.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
