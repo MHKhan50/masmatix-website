@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ProvenanceFlow: Can tracking data origins help secure AI agent tool chains?</title>
+  <meta name="description" content="A reproducible synthetic benchmark tests five policies for tracking untrusted data and control instructions across multi-step AI agent tool transformations.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/provenanceflow-agent-tool-provenance.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ProvenanceFlow: Can tracking data origins help secure AI agent tool chains?">
+  <meta property="og:description" content="A synthetic benchmark of five provenance and taint policies across 1,500 scenarios and five random seeds.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/provenanceflow-agent-tool-provenance.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+<main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← Back to insights</a>
+    <p class="tag">Experiment · Agentic AI · 30 October 2026</p>
+    <h1>ProvenanceFlow: Can tracking data origins help secure AI agent tool chains?</h1>
+    <p class="updated">Muzammal Hussain, Software Engineer, Data Scientist and AI Researcher · 30 October 2026 · Synthetic benchmark study</p>
+
+    <p class="lead">An AI agent may read external content, transform it, and then use the result to decide what a tool should do. The difficult part is that useful information and malicious instructions can travel through the same chain. ProvenanceFlow is a small reproducible benchmark that tests whether tracking the origin of individual fields can separate those two cases without blocking ordinary work.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>Across 1,500 synthetic scenarios and five seeds, the direct-only taint policy allowed 71.22% of eligible malicious side effects in this simulator.</li>
+        <li>Strict taint blocked all simulated attacks, but primary task completion fell to 14.07% and helpful third-party guidance was never accepted.</li>
+        <li>The field-provenance reference policy recorded 0% attack success and 100% task completion in this setup, conditional on correct and complete provenance labels.</li>
+        <li>That final result is an idealised metadata reference—not evidence that an LLM can reliably infer provenance or that a deployed agent is secure.</li>
+      </ul>
+    </div>
+
+    <h2>What question did I test?</h2>
+    <p>The research question was: how does preserving field-level provenance across multi-step transformations affect the security–utility trade-off in tool-using agent workflows?</p>
+    <p>The benchmark separates two things that are easy to confuse: <strong>data provenance</strong> (where a piece of information came from) and <strong>control provenance</strong> (who authorised an action or changed an action parameter). An external source may provide a useful fact without gaining authority to redirect a tool call.</p>
+
+    <h2>How the benchmark works</h2>
+    <p>ProvenanceFlow generated 1,500 synthetic scenarios across five random seeds: 17, 29, 43, 71 and 101. Each seed contributed 300 scenarios. The scenarios covered trusted-only content, benign untrusted data, helpful third-party guidance, direct injection, transformed injection, and mixed helpful and malicious content.</p>
+    <p>Untrusted content could pass through copy, summarise, translate, extract and merge operations, with transformation-chain depths from zero to four. The simulator then evaluated five policies:</p>
+    <ul>
+      <li><strong>No guard:</strong> no provenance checks.</li>
+      <li><strong>Label only:</strong> records a label but does not enforce it on actions.</li>
+      <li><strong>Direct-only taint:</strong> checks direct taint but assumes it is lost after transformation.</li>
+      <li><strong>Strict taint:</strong> blocks the primary action whenever untrusted taint is present.</li>
+      <li><strong>Field-provenance guard:</strong> uses structured field-level source labels to distinguish user-authorised control fields from externally sourced content.</li>
+    </ul>
+    <p>The fifth policy is a reference implementation with correctly supplied labels. It does not use an LLM to discover provenance. The benchmark contains 7,500 policy evaluations in total.</p>
+
+    <h2>Results</h2>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Policy</th><th>Attack success</th><th>Task completion</th><th>Helpful guidance accepted</th><th>Metadata operations / episode</th></tr></thead>
+        <tbody>
+          <tr><td>No guard</td><td>100%</td><td>100%</td><td>100%</td><td>0.00</td></tr>
+          <tr><td>Label only</td><td>100%</td><td>100%</td><td>100%</td><td>1.00</td></tr>
+          <tr><td>Direct-only taint</td><td>71.22%</td><td>100%</td><td>100%</td><td>2.63</td></tr>
+          <tr><td>Strict taint</td><td>0%</td><td>14.07%</td><td>0%</td><td>2.63</td></tr>
+          <tr><td>Field-provenance guard</td><td>0%</td><td>100%</td><td>100%</td><td>3.63</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Attack success rate (ASR) is the proportion of eligible malicious side-effect opportunities that succeeded. Task completion measures whether the primary task was completed. Helpful-guidance acceptance measures whether benign, useful third-party guidance was retained. Metadata operations are an abstract simulator count, not measured latency, token usage or deployment cost.</p>
+
+    <figure class="a-fig">
+      <img src="../images/insights/provenanceflow-attack-success.svg" alt="ProvenanceFlow attack success rate across five simulated policies." loading="lazy">
+      <figcaption>Figure 1. Attack success rate across the five policies in the synthetic benchmark.</figcaption>
+    </figure>
+    <figure class="a-fig">
+      <img src="../images/insights/provenanceflow-task-completion.svg" alt="Primary task completion rate across five simulated policies." loading="lazy">
+      <figcaption>Figure 2. Primary task completion: strict taint reduces utility in this scenario design.</figcaption>
+    </figure>
+    <figure class="a-fig">
+      <img src="../images/insights/provenanceflow-metadata-operations.svg" alt="Abstract metadata operations per episode for each policy." loading="lazy">
+      <figcaption>Figure 3. Abstract metadata operations per episode. This is not a runtime performance measurement.</figcaption>
+    </figure>
+
+    <h2>Where direct-only taint failed</h2>
+    <p>In the direct-only policy, the attack success rate was 71.22% overall, with a per-seed range of 61.22% to 79.33% (mean 71.22%; standard deviation 6.92 percentage points). In the reported depth breakdown, direct attacks at depth zero were blocked (0 of 215), while all eligible attacks at depths one to four succeeded under the simulator's transformation and taint-loss assumptions.</p>
+    <p>This is a result about the implemented policy and transformation model. It does not show that every real summariser, translator or extraction system removes provenance. A real system may preserve, alter or corrupt metadata in ways this benchmark does not model.</p>
+
+    <h2>Why strict blocking is not enough</h2>
+    <p>Strict taint produced zero successful attacks, but only 14.07% of primary tasks completed. It also rejected all helpful third-party guidance. This illustrates a security–utility trade-off: treating every untrusted input as unusable can prevent legitimate work as well as malicious control changes.</p>
+    <p>The field-provenance reference policy retained task completion in the benchmark because it allowed user-authorised control fields while rejecting attacker-controlled side-effect fields. However, that outcome depends on correct labels being available and propagated. A deliberately corrupted source label can make the guard permit an action it should reject.</p>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>This is a deterministic synthetic simulator, not an evaluation of real LLMs, deployed agents or live tools.</li>
+      <li>Scenario classes and action semantics are simplified and authored by the researcher.</li>
+      <li>The field-provenance policy receives structured labels; provenance extraction is not solved by this experiment.</li>
+      <li>Metadata operations are abstract counts, not measured compute, latency, memory or token overhead.</li>
+      <li>Adaptive attacks, provenance spoofing, partial metadata loss, multi-agent hand-offs and realistic tool environments require further evaluation.</li>
+    </ul>
+
+    <h2>What comes next?</h2>
+    <p>A stronger follow-up would test provenance extraction and propagation independently, deliberately corrupt or omit labels, and evaluate the policies against realistic tool traces and local language models. Multi-agent hand-offs would also test whether provenance survives when one agent summarises or reformats another agent's output.</p>
+
+    <h2>Reproduce the experiment</h2>
+    <p>The repository includes the simulator, scenario data, generated results, charts, dataset card, article draft and unit tests. It uses Python's standard library and does not require API calls or a hosted model.</p>
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-provenance-flow-benchmark">View code and data</a>
+    </div>
+
+    <p class="a-ref">This is an exploratory synthetic benchmark, not a security certification or evidence of a production-ready defence. Related work: <a href="https://aclanthology.org/2024.findings-acl.624/" target="_blank" rel="noopener">InjecAgent (Findings of ACL 2024)</a>; <a href="https://arxiv.org/abs/2406.13352" target="_blank" rel="noopener">AgentDojo</a>; <a href="https://arxiv.org/abs/2503.18813" target="_blank" rel="noopener">Defeating Prompt Injections by Design</a>; and <a href="https://arxiv.org/abs/2602.03117" target="_blank" rel="noopener">AgentDyn</a>.</p>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p></div>
+      <div><h4>Services</h4><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h4>AI &amp; Data</h4><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
