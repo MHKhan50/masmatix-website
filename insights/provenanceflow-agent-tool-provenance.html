@@ -40,20 +40,21 @@
 </header>
 <main class="policy article">
   <div class="wrap">
-    <a class="back" href="./">← Back to insights</a>
-    <p class="tag">Experiment · Agentic AI · 30 October 2026</p>
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Experiment · Agentic AI</p>
     <h1>ProvenanceFlow: Can tracking data origins help secure AI agent tool chains?</h1>
-    <p class="updated">Muzammal Hussain, Software Engineer, Data Scientist and AI Researcher · 30 October 2026 · Synthetic benchmark study</p>
+    <p class="a-sub">A small synthetic benchmark of five policies. Most of its numbers follow from how the scenarios were built, and that is the main lesson.</p>
+    <p class="updated">By Muzammal Hussain · 30 October 2026 · 5 min read</p>
 
-    <p class="lead">An AI agent may read external content, transform it, and then use the result to decide what a tool should do. The difficult part is that useful information and malicious instructions can travel through the same chain. ProvenanceFlow is a small reproducible benchmark that tests whether tracking the origin of individual fields can separate those two cases without blocking ordinary work.</p>
+    <p class="a-lede">An AI agent may read external content, transform it, and then use the result to decide what a tool should do. The difficult part is that useful information and malicious instructions can travel through the same chain. ProvenanceFlow is a small reproducible benchmark that tests whether tracking the origin of individual fields can separate those two cases without blocking ordinary work.</p>
 
     <div class="a-keys">
       <h2>Key findings</h2>
       <ul>
-        <li>Across 1,500 synthetic scenarios and five seeds, the direct-only taint policy allowed 71.22% of eligible malicious side effects in this simulator.</li>
-        <li>Strict taint blocked all simulated attacks, but primary task completion fell to 14.07% and helpful third-party guidance was never accepted.</li>
+        <li>Across 1,500 synthetic scenarios and five seeds, the direct-only taint policy allowed 71.22% of eligible malicious side effects. This equals the share of attacks that passed through at least one transformation (532 of 747).</li>
+        <li>Strict taint blocked all simulated attacks, but primary task completion fell to 14.07%, exactly the share of scenarios with no untrusted content (211 of 1,500), and helpful third-party guidance was never accepted.</li>
         <li>The field-provenance reference policy recorded 0% attack success and 100% task completion in this setup, conditional on correct and complete provenance labels.</li>
-        <li>That final result is an idealised metadata reference—not evidence that an LLM can reliably infer provenance or that a deployed agent is secure.</li>
+        <li>That final result is an idealised metadata reference, not evidence that an LLM can reliably infer provenance or that a deployed agent is secure.</li>
       </ul>
     </div>
 
@@ -109,6 +110,13 @@
     <p>Strict taint produced zero successful attacks, but only 14.07% of primary tasks completed. It also rejected all helpful third-party guidance. This illustrates a security–utility trade-off: treating every untrusted input as unusable can prevent legitimate work as well as malicious control changes.</p>
     <p>The field-provenance reference policy retained task completion in the benchmark because it allowed user-authorised control fields while rejecting attacker-controlled side-effect fields. However, that outcome depends on correct labels being available and propagated. A deliberately corrupted source label can make the guard permit an action it should reject.</p>
 
+    <h2>What these numbers can and cannot show</h2>
+
+    <p>The five policies are fixed rules, so the rates above follow from how the scenarios were generated. Direct-only taint blocks every attack at depth zero and none after a transformation, so its attack success is simply the share of transformed attacks. Strict taint finishes only the trusted-only scenarios, so its completion rate is the share of those scenarios. The field-provenance guard is given correct labels, so it cannot fail here.</p>
+
+    <p>That makes ProvenanceFlow a transparent test harness with reference baselines, not a measurement of how well any defence works. The real questions start when labels are lost or forged, or when a language model has to produce them, and those are the next experiments.</p>
+
+
     <h2>Limitations</h2>
     <ul>
       <li>This is a deterministic synthetic simulator, not an evaluation of real LLMs, deployed agents or live tools.</li>
@@ -122,7 +130,7 @@
     <p>A stronger follow-up would test provenance extraction and propagation independently, deliberately corrupt or omit labels, and evaluate the policies against realistic tool traces and local language models. Multi-agent hand-offs would also test whether provenance survives when one agent summarises or reformats another agent's output.</p>
 
     <h2>Reproduce the experiment</h2>
-    <p>The repository includes the simulator, scenario data, generated results, charts, dataset card, article draft and unit tests. It uses Python's standard library and does not require API calls or a hosted model.</p>
+    <p>The repository includes the simulator, scenario data, generated results, charts, dataset card and unit tests. It uses Python's standard library and does not require API calls or a hosted model.</p>
     <div class="a-links">
       <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-provenance-flow-benchmark">View code and data</a>
     </div>

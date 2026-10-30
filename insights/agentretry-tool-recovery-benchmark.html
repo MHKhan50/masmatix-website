@@ -25,11 +25,13 @@
 
 <main class="policy article">
   <div class="wrap">
-    <p class="tag">Experiment · Agentic AI · 29 October 2026</p>
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Experiment · Agentic AI</p>
     <h1>AgentRetry: Benchmarking Recovery Policies for Ambiguous Tool Outcomes in Agentic Workflows</h1>
-    <p class="updated">By Muzammal Hussain · 29 October 2026</p>
+    <p class="a-sub">A synthetic test of what an agent should do when a tool times out and it cannot tell whether the action happened.</p>
+    <p class="updated">By Muzammal Hussain · 29 October 2026 · 3 min read</p>
 
-    <p class="lead">When a tool call times out, an agent may not know whether the operation failed or succeeded without returning a usable response. Retrying can recover a task, but it can also repeat a non-idempotent action. AgentRetry provides a reproducible synthetic baseline for comparing recovery strategies under this ambiguity.</p>
+    <p class="a-lede">When a tool call times out, an agent may not know whether the operation failed or succeeded without returning a usable response. Retrying can recover a task, but it can also repeat a non-idempotent action. AgentRetry provides a reproducible synthetic baseline for comparing recovery strategies under this ambiguity.</p>
 
     <div class="a-keys">
       <h2>At a glance</h2>
@@ -115,6 +117,9 @@ python3 -m unittest discover -s tests -v</code></pre>
     <ul>
       <li><a href="agent-tool-policy-clinic.html">Small local AI agents followed hidden instructions in clinic notes</a>, a test with real local models.</li>
     </ul>
+      <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/agentretry-tool-recovery-benchmark" target="_blank" rel="noopener">Code and data on GitHub →</a>
+    </div>
   </div>
 </main>
 <footer>
