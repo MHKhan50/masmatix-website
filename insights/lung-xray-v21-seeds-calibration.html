@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Three training runs, one bug and a sicker test set: what the second rebuild of my chest X-ray model showed</title>
+  <meta name="description" content="Three DenseNet121 seeds on NIH ChestX-ray14 scored 0.801 to 0.803 test mean AUROC; averaging them gave 0.814. Calibration fitted on the validation set cut mean ECE from 0.26 to 0.011, but pneumothorax stayed under-predicted on a sicker test set.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/lung-xray-v21-seeds-calibration.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Three training runs, one bug and a sicker test set: what the second rebuild of my chest X-ray model showed">
+  <meta property="og:description" content="Three DenseNet121 seeds on NIH ChestX-ray14 scored 0.801 to 0.803 test mean AUROC; averaging them gave 0.814. Calibration fitted on the validation set cut mean ECE from 0.26 to 0.011, but pneumothorax stayed under-predicted on a sicker test set.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/lung-xray-v21-seeds-calibration.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/lung-v21-calibration.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Experiment · Medical imaging</p>
+    <h1>Three training runs, one bug and a sicker test set: what the second rebuild of my chest X-ray model showed</h1>
+    <p class="a-sub">Yesterday's result held up across seeds and the probabilities can now be corrected properly. Two things did not hold up: one line of my own code, and the assumption that new patients look like old ones.</p>
+    <p class="updated">By Muzammal Hussain · 30 October 2026 · 5 min read</p>
+    <p class="a-lede">Yesterday I wrote about <a href="lung-xray-v2-calibration.html">rebuilding my chest X-ray model</a>: DenseNet121 reached 0.801 mean AUROC on NIH ChestX-ray14, but its probabilities were several times too high. That post ended with a list of weaknesses: one seed, a correction fitted on the test set itself, and no look at who the model works for. Overnight I ran a second Kaggle notebook to deal with them. Most of the answers were reassuring. Two were not.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>Three DenseNet121 training runs with different random seeds scored 0.801, 0.801 and 0.803. The result is stable, and gaps below about 0.003 should be treated as noise.</li>
+        <li>Averaging the three runs' predictions gave 0.814, the largest gain in this round, with no extra training.</li>
+        <li>A per-class correction fitted on the validation set, not the test set, cut the mean calibration error from 0.26 to 0.011 on the test set without changing the AUROC.</li>
+        <li>The test set is much sicker than the validation set, and the correction did not fully carry over: pneumothorax came out under-predicted.</li>
+        <li>Referring the least certain images to a person helped far less once the probabilities were corrected. A bug in my notebook first made it look harmful.</li>
+      </ul>
+    </div>
+
+    <h2>Does the result survive a different seed?</h2>
+    <p>A seed fixes the random choices in training: the starting weights of the new layer and the order in which images are shown. A result that moves a lot with the seed is luck, not method. I trained DenseNet121 twice more with the same data, split and settings, and added EfficientNet-B0, a smaller and faster network, in the same pipeline.</p>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Model</th><th>Test mean AUROC</th><th>95% interval (by patient)</th></tr></thead>
+        <tbody>
+          <tr><td>DenseNet121, seed 42 (yesterday)</td><td>0.801</td><td>0.796 to 0.806 (by image)</td></tr>
+          <tr><td>DenseNet121, seed 1</td><td>0.801</td><td>0.795 to 0.806</td></tr>
+          <tr><td>DenseNet121, seed 2</td><td>0.803</td><td>0.797 to 0.808</td></tr>
+          <tr><td>EfficientNet-B0</td><td>0.790</td><td>0.784 to 0.795</td></tr>
+          <tr><td>Average of the three DenseNet121 runs</td><td>0.814</td><td>not computed</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The three DenseNet121 runs differ by 0.002 at most. This time the intervals come from resampling patients rather than images, because one patient can have many X-rays, and they are only slightly wider than yesterday's. EfficientNet-B0 trained in about half the time but finished 0.012 lower. Simply averaging the three DenseNet121 runs beat every single run by about 0.012. Each run makes slightly different mistakes, and averaging cancels some of them out.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/lung-v21-per-class-auroc.png" alt="Grouped bar chart of test AUROC for 14 chest X-ray labels for three DenseNet121 runs and EfficientNet-B0. The DenseNet121 runs are close together for every label; EfficientNet-B0 is slightly lower for most labels.">
+      <figcaption>Figure 1. Per-class test AUROC for each run on the official patient-wise test split.</figcaption>
+    </figure>
+
+    <h2>Correcting the probabilities the clean way</h2>
+    <p>Yesterday I corrected the probabilities with Platt scaling, a small logistic fit for each label, fitted on half of the test set and checked on the other half. That works, but the test set should only be used for the final check. This time the correction was fitted on the 8,805 validation images and applied unchanged to the 25,596 test images. Mean calibration error fell from 0.26–0.29 to 0.011 for all three models, and the mean Brier score from 0.17–0.20 to 0.058. The AUROC did not move, because the correction keeps the order of the scores.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/lung-v21-calibration.png" alt="Bar chart for 14 labels comparing the share of test images with each label, the raw mean probability and the calibrated mean probability. Raw probabilities are several times too high; calibrated ones are close to the real share for most labels but lower for pneumothorax.">
+      <figcaption>Figure 2. Real share of test images with each label against the raw and the validation-calibrated mean probability, DenseNet121 seed 2.</figcaption>
+    </figure>
+    <p>One label stands out. For pneumothorax, air leaking around the lung, the corrected model says 6.5% on average, but 10.4% of test images have it. The reason is in the data: 62% of test images have at least one finding against 43% of validation images, and pneumothorax is 3.4 times as common in the test set. A correction learned on one group of patients assumes the next group is similar. Here it mostly was, but not for pneumothorax. A hospital using a model like this would need to recalibrate it on its own patients, and keep checking.</p>
+
+    <h2>The bug, and what referral really does</h2>
+    <p>I also tested a simple safety idea again: let the model keep the images it is most certain about and refer the rest to a person. The notebook's first output said this made things worse, from 0.801 down to 0.771. That made no sense, so I read the code. The line that sorts images by uncertainty reversed the list a second time, so the model was keeping its <em>least</em> certain images. I fixed the line, added a test that checks the order, and re-scored the saved predictions without retraining.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/lung-v21-referral.png" alt="Line chart of mean AUROC on the images kept as fewer images are kept, for three models with calibrated probabilities. AUROC rises only slightly for DenseNet121 and stays flat for EfficientNet-B0.">
+      <figcaption>Figure 3. Mean AUROC on the kept images when the rest are referred, using calibrated probabilities (corrected code).</figcaption>
+    </figure>
+    <p>With the raw probabilities, keeping the 50% most certain images raises DenseNet121 seed 2 from 0.803 to 0.822. With the corrected probabilities the gain shrinks to 0.807, and for EfficientNet-B0 it almost disappears. The corrected probabilities are honest about how common each finding is, but their uncertainty says little about which images are hard. Disagreement between the three seeds may be a better signal. I have not tested that yet.</p>
+
+    <h2>Who does it work for?</h2>
+    <figure class="a-fig">
+      <img src="../images/insights/lung-v21-subgroups.png" alt="Bar chart of mean test AUROC by sex and age band for three models. Men and women are within 0.006. Patients under 40 have the lowest and most variable scores: 0.767, 0.796 and 0.741.">
+      <figcaption>Figure 4. Mean test AUROC by sex and age band.</figcaption>
+    </figure>
+    <p>Men and women came out within 0.006 of each other for every model. Age was different. For patients under 40 (8,290 test images) the score was lower and jumped between runs: 0.767 and 0.796 for the two DenseNet121 seeds and 0.741 for EfficientNet-B0. No other group moved that much. My guess is that some findings are rare in younger patients, so a handful of cases decide the score for those labels. I have not counted them yet, and until I do, I would not trust any single number for this group.</p>
+
+    <h2>Where the model looks</h2>
+    <figure class="a-fig">
+      <img src="../images/insights/lung-v21-gradcam.jpg" alt="Six chest X-rays with heatmaps for cardiomegaly, effusion, pneumothorax, mass, edema and emphysema. The cardiomegaly heatmap covers the heart and the effusion heatmap the lower lungs; the pneumothorax heatmap spreads over both lungs.">
+      <figcaption>Figure 5. Grad-CAM heatmaps for the highest-scoring correct test image per label, DenseNet121 seed 1. Red marks the regions that pushed the score up most.</figcaption>
+    </figure>
+    <p>For cardiomegaly the heatmap sits on the heart, and for effusion on the bottom of both lungs, where fluid collects. That is reassuring. For pneumothorax it spreads over both lungs instead of the lung edge where the air would be. Many pneumothorax patients in this dataset already have a chest drain, and models are known to learn the drain instead of the disease. These heatmaps cannot prove or rule that out. They are also the six easiest cases, picked because the model was most confident, so they show the best case, not the typical one.</p>
+
+    <h2>What I take from it</h2>
+    <ul>
+      <li>The headline number was not luck. 0.80 is what this set-up gives, and averaging a few runs is a cheap way to do better.</li>
+      <li>Calibrated probabilities are only as good as the match between the patients they were fitted on and the patients they are used on.</li>
+      <li>A result that looks wrong usually is. Reading my own code found the bug faster than any new experiment would have.</li>
+      <li>Averages hide groups. The overall score says nothing about how unstable the model is for patients under 40.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>Several seeds only for DenseNet121. EfficientNet-B0 and ResNet50 have one run each.</li>
+      <li>Subgroup scores have no intervals, and I have not yet counted positive cases per age group.</li>
+      <li>224x224 images with flips only, labels mined from radiology report text, and all images from one hospital.</li>
+      <li>This is a research experiment, not a medical device, and must not be used for diagnosis.</li>
+    </ul>
+
+    <h2>Reproduce the experiment</h2>
+    <p>The repository has both Kaggle notebooks, the saved validation and test predictions of every run, the analysis script and its unit tests. All tables and figures here come from <code>python3 analyze_v21.py</code>, which runs on a laptop in under a minute. Training the three new models took about four hours on a free Kaggle T4 GPU.</p>
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/lung-disease-classification">View code and data</a>
+    </div>
+    <p class="a-ref">Data: NIH ChestX-ray14 (Wang et al., 2017), from the Kaggle dataset nih-chest-xrays/data. Related reading: Guo et al., 2017, on calibration of modern neural networks; Oakden-Rayner et al., 2020, on hidden stratification in medical imaging. This is a small engineering experiment, not a peer-reviewed paper.</p>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
