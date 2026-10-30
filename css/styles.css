@@ -1800,7 +1800,8 @@ footer .wrap {
   min-width: 0;
 }
 
-.fcols h4 {
+.fcols h2.fh {
+  line-height: inherit;
   font-family: var(--f-mono);
   font-weight: 500;
   font-size: 11.5px;
