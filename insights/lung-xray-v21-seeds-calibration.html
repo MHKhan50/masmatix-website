@@ -128,11 +128,15 @@
       <li>This is a research experiment, not a medical device, and must not be used for diagnosis.</li>
     </ul>
 
+    <h2>Try it</h2>
+    <p>The seed 2 model now runs as a <a href="https://huggingface.co/spaces/MHkhan50/chest-xray-14-findings" target="_blank" rel="noopener">live demo</a>. It shows the calibrated probabilities and a heatmap for any frontal chest X-ray, and everything runs inside your browser, so the image is never uploaded. It is a research demo, not a diagnostic tool.</p>
+
     <h2>Reproduce the experiment</h2>
     <p>The repository has both Kaggle notebooks, the saved validation and test predictions of every run, the analysis script and its unit tests. All tables and figures here come from <code>python3 analyze_v21.py</code>, which runs on a laptop in under a minute. Training the three new models took about four hours on a free Kaggle T4 GPU.</p>
     <div class="a-links">
       <a class="btn btn-grad" href="https://github.com/MHKhan50/lung-disease-classification">View code and data</a>
       <a class="btn btn-grad" href="https://www.kaggle.com/code/muzammalhussain11/chestx-ray14-v2-1-seeds-calibration-subgroups" target="_blank" rel="noopener">Run it on Kaggle →</a>
+      <a class="btn btn-grad" href="https://huggingface.co/spaces/MHkhan50/chest-xray-14-findings" target="_blank" rel="noopener">Try the live demo →</a>
     </div>
     <p class="a-ref">Data: NIH ChestX-ray14 (Wang et al., 2017), from the Kaggle dataset nih-chest-xrays/data. Related reading: Guo et al., 2017, on calibration of modern neural networks; Oakden-Rayner et al., 2020, on hidden stratification in medical imaging. This is a small engineering experiment, not a peer-reviewed paper.</p>
   </div>
