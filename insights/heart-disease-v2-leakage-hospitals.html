@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>My 2022 heart disease model scored 92%. Duplicate rows and one hospital explain why that number meant little</title>
+  <meta name="description" content="On the widely shared 1,025-row heart disease file, 97% of test rows also sit in the training set and a Random Forest scores 99.5%. Without duplicates it scores 83%. At an unseen hospital, all six models, including TabPFN, fell to about 0.72 AUROC and their probabilities stopped matching reality.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/heart-disease-v2-leakage-hospitals.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="My 2022 heart disease model scored 92%. Duplicate rows and one hospital explain why that number meant little">
+  <meta property="og:description" content="On the widely shared 1,025-row heart disease file, 97% of test rows also sit in the training set and a Random Forest scores 99.5%. Without duplicates it scores 83%. At an unseen hospital, all six models, including TabPFN, fell to about 0.72 AUROC and their probabilities stopped matching reality.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/heart-disease-v2-leakage-hospitals.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/heart-v2-leakage.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Experiment · Clinical prediction</p>
+    <h1>My 2022 heart disease model scored 92%. Duplicate rows and one hospital explain why that number meant little</h1>
+    <p class="a-sub">I rebuilt an old project with six models, four hospitals and a stricter test. The models were fine. The way I had tested them was not.</p>
+    <p class="updated">By Muzammal Hussain · 31 October 2026 · 6 min read</p>
+    <p class="a-lede">In 2022 I compared Random Forest, XGBoost and a neural network for predicting heart disease from 13 routine measurements: age, chest pain type, blood pressure, cholesterol, an exercise test and so on. Random Forest won with 92% accuracy. This week I rebuilt the project from scratch to see whether that number still stands. It does not, and the reasons are more useful than the number was.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>In the 1,025-row heart disease file widely shared on Kaggle, 97% of test rows also appear in the training set after a random split. A Random Forest scores 99.5% accuracy on it. With the duplicates removed it scores 83%.</li>
+        <li>On clean data from four hospitals, plain logistic regression (AUROC 0.904) was level with TabPFN, a 2025 tabular foundation model (0.907), and ahead of XGBoost, LightGBM and CatBoost.</li>
+        <li>Tested on a hospital it had never seen, every model dropped to about 0.70 to 0.73 AUROC at VA Long Beach, against about 0.90 in internal testing.</li>
+        <li>Predicted risks did not carry over between hospitals: they were too high in Hungary and too low in Switzerland and VA.</li>
+        <li>The models partly learned which hospital a patient came from, through which measurements were missing.</li>
+      </ul>
+    </div>
+
+    <h2>The data</h2>
+    <p>The heart disease databases on the UCI Machine Learning Repository come from four hospitals around 1988: the Cleveland Clinic, the Hungarian Institute of Cardiology in Budapest, the VA Medical Center in Long Beach and University Hospital Zurich. The label is whether an angiogram showed a major blood vessel narrowed by more than 50%. I used the original four files, kept the hospital on every row and removed 2 exact duplicates, leaving 918 patients. A cholesterol or blood pressure of 0 was treated as missing, because that is how the Switzerland and VA files record "not measured".</p>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Hospital</th><th>Patients</th><th>With disease</th></tr></thead>
+        <tbody>
+          <tr><td>Cleveland</td><td>303</td><td>46%</td></tr>
+          <tr><td>Hungary</td><td>293</td><td>36%</td></tr>
+          <tr><td>Switzerland</td><td>123</td><td>93%</td></tr>
+          <tr><td>VA Long Beach</td><td>199</td><td>74%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Why 99.5% means nothing</h2>
+    <p>The most popular heart disease file on Kaggle has 1,025 rows, but only 302 of them are different. The rest are copies. Split it at random into training and test sets, and almost every test patient already has an identical twin in the training set. The model does not need to predict anything; it only needs to remember. I repeated a random 80/20 split 20 times with and without the copies, using the same Random Forest each time.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/heart-v2-leakage.png" alt="Bar chart: with duplicates a Random Forest scores 0.995 accuracy and 0.999 AUROC; with duplicates removed 0.833 accuracy and 0.909 AUROC.">
+      <figcaption>Figure 1. Mean accuracy and AUROC over 20 random splits, with and without duplicate rows. Error bars show one standard deviation.</figcaption>
+    </figure>
+    <p>With the copies, 97.1% of test rows were already in training, and accuracy reached 99.5%. Without them, accuracy fell to 83.3%. The features and labels in my 2022 slides match this file, so my 92% was most likely inflated in the same way, though I can no longer re-run that exact code. Published papers still report results on this 1,025-row file, so it is worth counting unique rows before trusting any score on it.</p>
+
+    <h2>Six models, tested properly</h2>
+    <p>I compared logistic regression, Random Forest, XGBoost, LightGBM, CatBoost and TabPFN, a transformer pre-trained on millions of synthetic tables and published in <em>Nature</em> in 2025. Each model kept fixed default settings, and all data preparation, such as filling in missing values, was learned only from the training part of each split. First, a normal internal test: 5-fold cross-validation repeated 5 times on all 918 patients.</p>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Model</th><th>AUROC</th><th>Calibration error</th></tr></thead>
+        <tbody>
+          <tr><td>TabPFN</td><td>0.907 ± 0.018</td><td>0.062</td></tr>
+          <tr><td>Logistic regression</td><td>0.904 ± 0.015</td><td>0.066</td></tr>
+          <tr><td>Random Forest</td><td>0.895 ± 0.023</td><td>0.073</td></tr>
+          <tr><td>CatBoost</td><td>0.894 ± 0.024</td><td>0.075</td></tr>
+          <tr><td>XGBoost</td><td>0.893 ± 0.020</td><td>0.070</td></tr>
+          <tr><td>LightGBM</td><td>0.882 ± 0.022</td><td>0.097</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The whole spread, 0.88 to 0.91, is about as large as the variation from one fold to the next. TabPFN was marginally first, but the oldest and simplest model was level with it. With 13 features and under a thousand patients, there is not much for a complex model to find that a straight line misses.</p>
+
+    <h2>A new hospital is a different test</h2>
+    <p>Internal cross-validation mixes patients from all four hospitals into every training set. A model used in a new hospital does not get that luxury. So I trained on three hospitals and tested on the fourth, once for each hospital, and put 95% confidence intervals on every result by resampling patients.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/heart-v2-internal-vs-external.png" alt="Grouped bar chart of AUROC for six models: internal cross-validation about 0.88 to 0.91; Cleveland and Hungary held out about 0.85 to 0.90; Switzerland and VA Long Beach about 0.70 to 0.73 with wide error bars for Switzerland.">
+      <figcaption>Figure 2. Internal cross-validation against each held-out hospital. Error bars are 95% bootstrap intervals.</figcaption>
+    </figure>
+    <p>Cleveland and Hungary held up at 0.85 to 0.90. VA Long Beach did not: every model fell to between 0.70 and 0.73, and even the top of each interval (0.79 to 0.82) stayed below the internal scores. Specificity there, the share of healthy patients correctly cleared, dropped to about 0.56. Switzerland looks similar, but I would not read anything into it: 115 of its 123 patients had disease, so its score rests on 8 healthy people and its interval runs from about 0.47 to 0.97.</p>
+
+    <h2>The risks stop meaning what they say</h2>
+    <p>A model that says "70% risk" should be right about 70% of the time for such patients. That roughly held inside the pooled data, with calibration errors of 0.06 to 0.10. It broke between hospitals, because they differ so much in how many patients are ill: 36% in Hungary, 93% in Switzerland.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/heart-v2-calibration.png" alt="Calibration curves for logistic regression on four held-out hospitals. Hungary lies below the diagonal, Switzerland far above it, VA Long Beach above it and Cleveland above it.">
+      <figcaption>Figure 3. Predicted risk against the real share with disease on each held-out hospital, logistic regression. The dashed line is perfect calibration.</figcaption>
+    </figure>
+    <p>Across the six models, the real number of patients with disease was 0.65 to 0.79 times the predicted number in Hungary, so risks were too high, and 1.31 to 1.48 times in Switzerland and 1.05 to 1.23 times at VA, so risks were too low. A hospital that took one of these models would need to recalibrate it on its own patients before trusting any single percentage.</p>
+
+    <h2>The model learned where patients came from</h2>
+    <p>SHAP values show how much each input pushed a prediction up or down. For XGBoost, the strongest signals were the ones a cardiologist would expect: chest pain with no typical symptoms, chest pain brought on by exercise, ST depression on the exercise test, male sex, a flat ST segment and the number of narrowed vessels.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/heart-v2-shap.png" alt="SHAP summary plot for XGBoost. Top features: chest pain type 4, exercise-induced angina, ST depression, sex, flat ST slope and number of vessels. Indicators for missing cholesterol, missing vessel count and missing fasting blood sugar also appear.">
+      <figcaption>Figure 4. SHAP values for XGBoost trained on all 918 patients. Names starting with "missingindicator" mark whether a value was recorded.</figcaption>
+    </figure>
+    <p>But three of the top 15 inputs say only whether a value was missing: cholesterol, vessel count and fasting blood sugar. No Switzerland patient has a cholesterol value, and 93% of them have disease, so "cholesterol not recorded" mostly means "this patient is from Zurich". The model picked up the hospital's record-keeping, not the patient's heart. When I removed the three measurements that are mostly missing outside Cleveland (ST slope, vessel count and thallium test), the score fell at Cleveland, which records them, and rose slightly at Switzerland and VA for most models. The intervals overlap, so this is a hint rather than proof.</p>
+
+    <h2>Who does it work for?</h2>
+    <p>For logistic regression, the model with the best average score across held-out hospitals, AUROC was 0.916 for the 193 women and 0.882 for the 725 men, with overlapping intervals. It was lowest for patients aged 60 and over, 0.837 (0.774 to 0.893), the group in which 73% had disease.</p>
+
+    <h2>What I take from it</h2>
+    <ul>
+      <li>Count unique rows before believing a score. Duplicates turned 83% into 99.5% here.</li>
+      <li>On small tables, a simple model is a serious baseline. A newer model needs to beat it clearly, and here none did.</li>
+      <li>Internal cross-validation answers "how well does this work on patients like these?", not "how well will it work in another hospital?".</li>
+      <li>When data from several sources are pooled, missing values can quietly tell the model where each row came from.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>The data are from the 1980s, from four hospitals, and the label is an angiogram result rather than a modern clinical outcome.</li>
+      <li>Model settings were fixed in advance, not tuned. Tuning might change the ranking slightly, but not the size of the drop at a new hospital.</li>
+      <li>Switzerland's results are too uncertain to interpret, and subgroup results come from one model only.</li>
+      <li>This is a research experiment, not a medical device, and must not be used for diagnosis.</li>
+    </ul>
+
+    <h2>Reproduce the experiment</h2>
+    <p>The repository has the full pipeline as a Python package with tests, the Kaggle notebook, and every table and figure in this article. The whole notebook runs on a free Kaggle CPU; TabPFN is the slowest part.</p>
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/heart-disease">View code and results</a>
+      <a class="btn btn-grad" href="https://www.kaggle.com/code/muzammalhussain11/heart-disease-v2-leakage-audit-hospital-split" target="_blank" rel="noopener">Run it on Kaggle →</a>
+    </div>
+    <p class="a-ref">Data: UCI Heart Disease databases (Janosi, Steinbrunn, Pfisterer and Detrano, 1988), described in Detrano et al., <em>American Journal of Cardiology</em>, 1989; leakage audit on the Kaggle dataset johnsmith88/heart-disease-dataset. TabPFN: Hollmann et al., <em>Nature</em>, 2025. This is a small engineering experiment, not a peer-reviewed paper.</p>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
