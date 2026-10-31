@@ -47,6 +47,7 @@
     <h1>Three training runs, one bug and a sicker test set: what the second rebuild of my chest X-ray model showed</h1>
     <p class="a-sub">Yesterday's result held up across seeds and the probabilities can now be corrected properly. Two things did not hold up: one line of my own code, and the assumption that new patients look like old ones.</p>
     <p class="updated">By Muzammal Hussain · 30 October 2026 · 5 min read</p>
+    <p><strong>Correction, 31 October:</strong> an earlier version said the model was less reliable for patients under 40. That came from a single hernia case in that group; with enough positive cases per label, under-40 results match the rest. The section "Who does it work for?" has been updated.</p>
     <p class="a-lede">Yesterday I wrote about <a href="lung-xray-v2-calibration.html">rebuilding my chest X-ray model</a>: DenseNet121 reached 0.801 mean AUROC on NIH ChestX-ray14, but its probabilities were several times too high. That post ended with a list of weaknesses: one seed, a correction fitted on the test set itself, and no look at who the model works for. Overnight I ran a second Kaggle notebook to deal with them. Most of the answers were reassuring. Two were not.</p>
 
     <div class="a-keys">
@@ -98,10 +99,11 @@
 
     <h2>Who does it work for?</h2>
     <figure class="a-fig">
-      <img src="../images/insights/lung-v21-subgroups.png" alt="Bar chart of mean test AUROC by sex and age band for three models. Men and women are within 0.006. Patients under 40 have the lowest and most variable scores: 0.767, 0.796 and 0.741.">
-      <figcaption>Figure 4. Mean test AUROC by sex and age band.</figcaption>
+      <img src="../images/insights/lung-v21-subgroups.png" alt="Bar chart of mean test AUROC by sex and age band for three models, averaged over labels with at least 10 positive cases in the group. All groups lie between about 0.78 and 0.81; patients aged 60 to 100 are slightly lower.">
+      <figcaption>Figure 4. Mean test AUROC by sex and age band, over labels with at least 10 positive cases in the group.</figcaption>
     </figure>
-    <p>Men and women came out within 0.006 of each other for every model. Age was different. For patients under 40 (8,290 test images) the score was lower and jumped between runs: 0.767 and 0.796 for the two DenseNet121 seeds and 0.741 for EfficientNet-B0. No other group moved that much. My guess is that some findings are rare in younger patients, so a handful of cases decide the score for those labels. I have not counted them yet, and until I do, I would not trust any single number for this group.</p>
+    <p>Men and women came out within 0.006 of each other for every model. The first version of this table also showed something alarming: for patients under 40 the score was lower and jumped between runs, from 0.741 to 0.796. When I counted the positive cases behind it, the explanation was simple. The under-40 test group contains exactly one image with a hernia. Its hernia AUROC is therefore decided by where one image lands in the ranking, anywhere from 0.14 to 0.69 across the runs, and that single number dragged the average of 14 labels around.</p>
+    <p>Averaging only over labels with at least 10 positive cases in the group, patients under 40 score 0.804, 0.804 and 0.788, the same as the test set as a whole. The oldest band, 60 to 100, is the lowest, by about 0.01. Sex and age make little difference to this model's ranking.</p>
 
     <h2>Where the model looks</h2>
     <figure class="a-fig">
@@ -115,13 +117,13 @@
       <li>The headline number was not luck. 0.80 is what this set-up gives, and averaging a few runs is a cheap way to do better.</li>
       <li>Calibrated probabilities are only as good as the match between the patients they were fitted on and the patients they are used on.</li>
       <li>A result that looks wrong usually is. Reading my own code found the bug faster than any new experiment would have.</li>
-      <li>Averages hide groups. The overall score says nothing about how unstable the model is for patients under 40.</li>
+      <li>Check the counts before reading a subgroup score. One rare case can make a whole group look unreliable when it is not.</li>
     </ul>
 
     <h2>Limitations</h2>
     <ul>
       <li>Several seeds only for DenseNet121. EfficientNet-B0 and ResNet50 have one run each.</li>
-      <li>Subgroup scores have no intervals, and I have not yet counted positive cases per age group.</li>
+      <li>Subgroup scores have no intervals, and labels with fewer than 10 positive cases in a group are left out of its average.</li>
       <li>224x224 images with flips only, labels mined from radiology report text, and all images from one hospital.</li>
       <li>This is a research experiment, not a medical device, and must not be used for diagnosis.</li>
     </ul>
