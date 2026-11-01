@@ -110,6 +110,23 @@
     <p>Running YOLOv8n three ways lets the gap be split into parts. Read the table from the bottom up: lowering the input from 640 to 256 pixels costs 0.035 AP. Removing COCO pretraining costs another 0.032. Swapping YOLOv8n's design and training recipe for JerseyNet's, with both trained from scratch at 256 pixels, costs 0.111.</p>
     <p>I expected pretraining to be the main reason my model was behind. It was the smallest of the three. A YOLOv8n that had never seen COCO still beat JerseyNet comfortably. The difference is in the detector itself: YOLOv8n predicts at three scales, uses stronger box losses and heavy augmentation such as mosaic, while JerseyNet has one high-resolution head, a simple L1 size loss and light augmentation. Those are now being tested one at a time.</p>
 
+    <h2>Update: closing part of the gap</h2>
+    <p>After publishing, I tested three parts of a modern recipe on JerseyNet, one at a time: mosaic augmentation (four training images stitched together), a GIoU box loss, and a larger 384-pixel input. Each variant trained once; the one with the best validation score was then trained twice more. The test split played no part in the choice.</p>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>JerseyNet variant</th><th>Val AP50:95</th><th>Test AP50:95</th></tr></thead>
+        <tbody>
+          <tr><td>Baseline, 256 px</td><td>0.259</td><td>0.235</td></tr>
+          <tr><td>+ GIoU loss</td><td>0.256</td><td>0.255</td></tr>
+          <tr><td>+ mosaic</td><td>0.288</td><td>0.273</td></tr>
+          <tr><td>384 px input</td><td>0.304</td><td>0.277</td></tr>
+          <tr><td>+ mosaic + GIoU</td><td>0.293</td><td>0.258</td></tr>
+          <tr><td>+ mosaic + GIoU, 384 px</td><td>0.337</td><td>0.303</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Over three seeds the combined recipe reached 0.308 ± 0.005 AP50:95, up from 0.241: a 28% gain, still with no pretraining. Mosaic and the larger input each helped on their own; the GIoU loss alone did little. Differences between single runs are within their error margins, so only the repeated combined result should be taken as firm. It narrows the gap to the from-scratch YOLOv8n (0.352), though that model ran at 256 pixels, so a matched 384-pixel run is next. Training time per seed rose from 22 to 65 minutes.</p>
+
     <h2>What I take from it</h2>
     <ul>
       <li>A falling loss is not a working model. Compare against the dumbest possible baseline before anything else.</li>
