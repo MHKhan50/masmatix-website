@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>My jersey-number detector learned nothing. Its rebuild showed that pretraining was not the gap</title>
+  <meta name="description" content="My 2025 jersey-number model scored no better than drawing the same box on every image. A detector trained from scratch reached 0.241 AP. Against YOLOv8n in three settings, COCO pretraining was worth only 0.03 AP; the detector design and training recipe were worth 0.11.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/jersey-number-detection-v2.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="My jersey-number detector learned nothing. Its rebuild showed that pretraining was not the gap">
+  <meta property="og:description" content="My 2025 jersey-number model scored no better than drawing the same box on every image. A detector trained from scratch reached 0.241 AP. Against YOLOv8n in three settings, COCO pretraining was worth only 0.03 AP; the detector design and training recipe were worth 0.11.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/jersey-number-detection-v2.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/jersey-header.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Experiment · Computer vision</p>
+    <h1>My jersey-number detector learned nothing. Its rebuild showed that pretraining was not the gap</h1>
+    <p class="a-sub">I rebuilt a 2025 coursework model as a detector trained from scratch, then measured it against YOLOv8n with and without pretraining. The result surprised me.</p>
+    <p class="updated">By Muzammal Hussain · 1 November 2026 · 6 min read</p>
+    <p class="a-lede">In 2025 I built a small convolutional network to find jersey numbers in ice-hockey images. It trained, its loss went down, and it produced a box on every image. This week I measured it properly. It was no better than drawing the same box in the same place on every picture. So I rebuilt it, trained the new model from scratch, and compared it with a modern pretrained detector to see where the remaining gap comes from.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>The 2025 network scored a mean IoU of 0.051 with the first annotated box on the test images. A constant "average box" scored 0.016. Under standard detection metrics both score zero.</li>
+        <li>JerseyNet, a detector I trained from random weights, reached AP50:95 of 0.241 and AP50 of 0.495 over three seeds, with a standard deviation under 0.01.</li>
+        <li>YOLOv8n trained from scratch at the same input size reached 0.352. With COCO pretraining it reached 0.384, and at its usual 640 px input 0.419.</li>
+        <li>So COCO pretraining added only about 0.03 AP on this task, and a larger input another 0.035. The detector design and training recipe accounted for 0.11.</li>
+        <li>The same YOLOv8n run reproduced my earlier result exactly (0.581 first-box IoU), which cross-checks the new evaluation code.</li>
+      </ul>
+    </div>
+
+    <h2>The data</h2>
+    <p>The dataset is a public Roboflow export of ice-hockey images, mostly broadcast frames and press photos, with a box around every visible jersey number. All images are 128 × 128 pixels, and the numbers are small: the median box side is about 10 pixels, and one in ten is under 4.</p>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Split</th><th>Images</th><th>Boxes</th><th>Most numbers in one image</th></tr></thead>
+        <tbody>
+          <tr><td>Train</td><td>3,165</td><td>4,941</td><td>9</td></tr>
+          <tr><td>Validation</td><td>301</td><td>485</td><td>6</td></tr>
+          <tr><td>Test</td><td>147</td><td>234</td><td>9</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Before training I checked for the same picture in more than one split, using a 64-bit image hash. One test image and nine validation images are near-identical to a training image. That is small enough to keep the official splits, so other work can be compared with mine, but I report it.</p>
+
+    <h2>Why the first model could not work</h2>
+    <p>The 2025 network was three convolution layers, then global average pooling, then four numbers for one box. Global average pooling throws away where in the image each feature was found, and the network could only ever output one box, although training images hold up to nine numbers. On top of that, each image was squashed to 128 pixels, leaving the smallest numbers a few pixels wide. Longer training and a better box loss did not help; I had tried both.</p>
+
+    <h2>JerseyNet: a detector trained from scratch</h2>
+    <p>JerseyNet follows the CenterNet idea (Zhou et al., 2019): instead of regressing one box, it predicts a heat map with a peak at the centre of every number, plus the width, height and a small offset at each peak. Reading the boxes off is simple: keep the local peaks, no anchor boxes and no non-maximum suppression needed. The network has a residual backbone and a feature pyramid that brings every level back to a quarter of the input resolution, because the numbers are small. It has about 4.7 million parameters and starts from random weights. Each seed trained for 140 epochs in about 22 minutes on one free Kaggle T4 GPU.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/jersey-val-curves.png" alt="Line chart of validation AP50:95 against epoch for three seeds. All rise to about 0.23 by epoch 25 and level off between 0.24 and 0.26.">
+      <figcaption>Figure 1. Validation AP50:95 every five epochs for three seeds. The large marker is the checkpoint used for testing, chosen on validation only.</figcaption>
+    </figure>
+
+    <h2>How everything was scored</h2>
+    <p>Every model, including the YOLO runs, was scored by the same code on the same 147 test images. The main metric is COCO-style average precision over every annotated box: AP50:95 averages ten overlap thresholds from 0.50 to 0.95, and a box predicted on an image with no number counts as a mistake. My implementation matches the reference <code>pycocotools</code> library to six decimal places in the tests. I also kept the simpler first-box IoU from the old project so the two can be compared, and added 95% bootstrap intervals, because 147 images is not many. Checkpoints were always picked on the validation split; the test split was only used once per trained model.</p>
+
+    <h2>Results</h2>
+    <figure class="a-fig">
+      <img src="../images/insights/jersey-ap-comparison.png" alt="Horizontal bar chart of test AP50:95: mean-box 0.000, v1 CNN 0.000, JerseyNet 0.241, YOLOv8n from scratch 256 px 0.352, YOLOv8n COCO 256 px 0.384, YOLOv8n COCO 640 px 0.419.">
+      <figcaption>Figure 2. Test AP50:95. Detectors are the mean of three seeds with one standard deviation; the two baselines are single runs.</figcaption>
+    </figure>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Model</th><th>Pretrained</th><th>Input</th><th>AP50:95</th><th>AP50</th><th>Box IoU</th></tr></thead>
+        <tbody>
+          <tr><td>Mean-box baseline</td><td>–</td><td>–</td><td>0.000</td><td>0.000</td><td>0.016</td></tr>
+          <tr><td>v1 CNN (2025)</td><td>no</td><td>128</td><td>0.000</td><td>0.000</td><td>0.051</td></tr>
+          <tr><td>JerseyNet</td><td>no</td><td>256</td><td>0.241 ± 0.006</td><td>0.495 ± 0.004</td><td>0.476</td></tr>
+          <tr><td>YOLOv8n</td><td>no</td><td>256</td><td>0.352 ± 0.013</td><td>0.629 ± 0.019</td><td>0.544</td></tr>
+          <tr><td>YOLOv8n</td><td>COCO</td><td>256</td><td>0.384 ± 0.003</td><td>0.675 ± 0.004</td><td>0.576</td></tr>
+          <tr><td>YOLOv8n</td><td>COCO</td><td>640</td><td>0.419 ± 0.012</td><td>0.701 ± 0.008</td><td>0.590</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Where the gap comes from</h2>
+    <p>Running YOLOv8n three ways lets the gap be split into parts. Read the table from the bottom up: lowering the input from 640 to 256 pixels costs 0.035 AP. Removing COCO pretraining costs another 0.032. Swapping YOLOv8n's design and training recipe for JerseyNet's, with both trained from scratch at 256 pixels, costs 0.111.</p>
+    <p>I expected pretraining to be the main reason my model was behind. It was the smallest of the three. A YOLOv8n that had never seen COCO still beat JerseyNet comfortably. The difference is in the detector itself: YOLOv8n predicts at three scales, uses stronger box losses and heavy augmentation such as mosaic, while JerseyNet has one high-resolution head, a simple L1 size loss and light augmentation. Those are now being tested one at a time.</p>
+
+    <h2>What I take from it</h2>
+    <ul>
+      <li>A falling loss is not a working model. Compare against the dumbest possible baseline before anything else.</li>
+      <li>Pretraining is not automatically the big win. On this small, narrow task it was worth about 0.03 AP.</li>
+      <li>Design and recipe matter most here, which is good news for training from scratch: that part can be improved without anyone else's weights.</li>
+      <li>One evaluator for every model, checked against a reference library, is what makes the comparison mean anything.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>One dataset, from one sport, with 147 test images. The intervals are wide, and results may not carry over to football or basketball, where kits and camera views differ.</li>
+      <li>YOLOv8n used its own default recipe, so the from-scratch comparison is between complete systems, not architectures alone.</li>
+      <li>The model finds where a number is; it does not read the digits.</li>
+      <li>The images are broadcast and press photos whose rights belong to others; the dataset is used for research only.</li>
+    </ul>
+
+    <h2>Reproduce the experiment</h2>
+    <p>The repository has the full pipeline as a tested Python package, the Kaggle notebooks for JerseyNet and the YOLOv8n baselines, and the complete outputs of every run reported here.</p>
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/jersey-number-detection">View code and results</a>
+    </div>
+    <p class="a-ref">Method: Zhou, Wang and Krähenbühl, "Objects as Points", 2019; Law and Deng, "CornerNet", ECCV 2018. Training from scratch: He, Girshick and Dollár, "Rethinking ImageNet Pre-training", ICCV 2019. Baseline: Ultralytics YOLOv8 (Jocher, Chaurasia and Qiu, 2023). Metric: COCO, Lin et al., ECCV 2014. This is a small engineering experiment, not a peer-reviewed paper.</p>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
