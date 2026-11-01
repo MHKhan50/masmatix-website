@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>A small local AI checked clinic notes for missing facts. It caught lost urgency, and passed two missing red flags | Masmatix Innovations</title>
+  <meta name="description" content="I asked qwen2.5:3b and llama3.1:8b to find the facts missing from 80 physiotherapy notes, as GPT-4 does in the MED-OMIT method. Agreement with keyword checks was only moderate, and one judge marked two missing red-flag answers as present.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/llm-omission-judge.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A small local AI checked clinic notes for missing facts. It caught lost urgency, and passed two missing red flags">
+  <meta property="og:description" content="I asked qwen2.5:3b and llama3.1:8b to find the facts missing from 80 physiotherapy notes, as GPT-4 does in the MED-OMIT method. Agreement with keyword checks was only moderate, and one judge marked two missing red-flag answers as present.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/llm-omission-judge.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/llm-omission-judge.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Clinical AI · Evaluation</p>
+      <h1>A small local AI checked clinic notes for missing facts. It caught lost urgency, and passed two missing red flags</h1>
+      <p class="a-sub">A published method uses GPT-4 to find what a medical summary left out. A clinic that keeps data on its own computers cannot do that, so I tried two small local models on my own notes.</p>
+      <p class="updated">By Muzammal Hussain · 1 November 2026 · 4 min read</p>
+
+      <p class="a-lede">MED-OMIT, from Schumacher and colleagues, splits a doctor-patient conversation into facts and asks GPT-4, one fact at a time, whether each one made it into the summary. It then weights every missing fact by how much it matters for a diagnosis. My <a href="roman-urdu-soap-benchmark.html">20-consultation benchmark</a> already had 80 physiotherapy notes and a keyword checker. Here I asked whether qwen2.5:3b or llama3.1:8b, running locally, can do the GPT-4 part.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Agreement with the keyword checker was moderate.</b> Cohen's kappa was 0.43 to 0.48 on notes drafted from Roman Urdu and 0.28 to 0.46 on English notes, where very few facts were missing at all.</li>
+          <li><b>The judge caught what keywords cannot.</b> For a possible blood clot, the notes said "hospital" but never "today" or "urgent". The keywords passed it; the judge called it missing.</li>
+          <li><b>The judge also hid two red flags.</b> A Roman Urdu note never mentioned numbness or urine problems, both critical answers, and the qwen2.5:3b judge marked both as present.</li>
+          <li><b>Roman Urdu notes still scored worse with every checker</b>, but the size of the gap changed with the checker.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>No new notes were written. I reused the 80 notes from the benchmark: 20 fictional consultations I wrote, each drafted from English and from Roman Urdu by qwen2.5:3b and llama3.1:8b. Each case has a list of facts I wrote, 168 in total and 68 marked critical. Each judge got one note and its numbered fact list and had to answer "present" or "missing" for every fact in JSON. Both ran through Ollama on a MacBook M4 (16 GB) at temperature 0. All 1,344 judgements parsed.</p>
+      <p>Neither the judge nor the keyword checker is ground truth, so I compared them fact by fact and then read some of the disagreements myself.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/llm-omission-judge.png" alt="Bar chart of Cohen's kappa between each judge and the keyword checker. llama3.1:8b: English 0.28, Roman Urdu 0.48. qwen2.5:3b: English 0.46, Roman Urdu 0.43." loading="lazy">
+        <figcaption>Agreement between each local judge and the keyword checker, as Cohen's kappa (MacBook M4, one run).</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Judge</th><th>Notes from</th><th>Agreement</th><th>Kappa</th><th>Missing (keywords)</th><th>Missing (judge)</th><th>Only judge</th><th>Only keywords</th></tr></thead>
+          <tbody>
+            <tr><td>qwen2.5:3b</td><td>English</td><td>96.7%</td><td>0.46</td><td>7</td><td>14</td><td>9</td><td>2</td></tr>
+            <tr><td>qwen2.5:3b</td><td>Roman Urdu</td><td>81.2%</td><td>0.43</td><td>66</td><td>73</td><td>35</td><td>28</td></tr>
+            <tr><td>llama3.1:8b</td><td>English</td><td>95.8%</td><td>0.28</td><td>7</td><td>13</td><td>10</td><td>4</td></tr>
+            <tr><td>llama3.1:8b</td><td>Roman Urdu</td><td>83.3%</td><td>0.48</td><td>66</td><td>70</td><td>30</td><td>26</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Each row covers 336 facts from 40 notes. The 96% agreement on English notes is misleading: only 7 facts were missing by keywords, so a checker that always said "present" would also agree about 98% of the time. Kappa removes that luck. On Roman Urdu notes the judges flagged about as many facts as the keywords did, but largely different ones.</p>
+      <p>With MED-OMIT's weights (1 for a critical fact, 0.1 for any other), qwen2.5:3b's Roman Urdu notes averaged 1.42 weighted omissions by keywords against 0.03 for its English notes. The qwen2.5:3b judge gave 0.96 against 0.10, and the llama3.1:8b judge 0.75 against 0.12. Every checker sees the gap; they disagree on its size.</p>
+
+      <h2>What the disagreements showed</h2>
+      <p>I read 10 of the 144 disagreements against the notes.</p>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Case</th><th>What the note said</th><th>Keywords</th><th>Judge</th></tr></thead>
+          <tbody>
+            <tr><td>Possible DVT after knee replacement</td><td>"referred to the hospital", no today or urgent</td><td>present</td><td>missing (right)</td></tr>
+            <tr><td>Possible scaphoid fracture</td><td>"refer for an X-ray", no today</td><td>present</td><td>missing (right)</td></tr>
+            <tr><td>Tendon risk from an antibiotic</td><td>"Inform GP about potential tendon effect of ciprofloxacin"</td><td>present (right)</td><td>missing</td></tr>
+            <tr><td>Twisted knee, from Roman Urdu</td><td>patient said it swelled; note says "There is no swelling"</td><td>present</td><td>missing</td></tr>
+            <tr><td>Back pain red flags, from Roman Urdu</td><td>numbness and urine problems never mentioned</td><td>missing (right)</td><td>present</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The swelling case is not really an omission. The note says the opposite of what the patient said, and the keyword "swell" let it pass. MED-OMIT has no label for a fact stated wrongly either, which matters because wrong details, like the wrong side or the wrong joint, were the most common Roman Urdu error in my benchmark.</p>
+      <p>The red-flag case worries me most. Numbness in the saddle area and trouble passing urine can mean cauda equina, an emergency, so the note must show that the physiotherapist asked. A judge that marks those answers present when they are absent hides exactly what it should protect. Of the 10 rows, the judge was right in 5, the keywords in 4, and one was borderline. That is too few to call either checker better. What it does show is that a small local judge cannot replace the keyword check; at most it is a second opinion.</p>
+
+      <h2>Limitations</h2>
+      <p>80 notes from 20 consultations I wrote, one run per judge. I labelled only 10 disagreements. Each judge also judged its own notes. I asked about all facts of a note in one call, while MED-OMIT asks about one at a time, and I used my own critical and other tiers instead of its diagnosis-based weights. The judges saw the note and the facts, not the conversation, so they could not catch invented details.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>Label all 144 disagreements, plus a sample where both checkers agree.</li>
+        <li>Add a third answer, "contradicted", for facts stated wrongly.</li>
+        <li>One fact per call, as in MED-OMIT.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/llm-omission-judge" target="_blank" rel="noopener">Code, prompts and every judgement on GitHub →</a>
+      </div>
+      <p class="a-ref">Follows: Schumacher E., Rosenthal D., Nair V., Price L., Tso G., Kannan A. (2023). MED-OMIT: Extrinsically-Focused Evaluation of Omissions in Medical Summarization. <a href="https://arxiv.org/abs/2311.08303" target="_blank" rel="noopener">arXiv:2311.08303</a>. Later version in Proceedings of the 4th Machine Learning for Health Symposium, PMLR 259, 2025. Models: Qwen2.5 3B and Llama 3.1 8B run locally with Ollama.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
