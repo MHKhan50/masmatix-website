@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>A 30-line TextRank beat every model I fine-tuned on BBC News Summary. The reference summaries explain why</title>
+  <meta name="description" content="On BBC News Summary, a length-matched TextRank scored 82.9 ROUGE-Lsum against 72.7 for the best fine-tuned transformer, PEGASUS-large. 95% of reference sentences are copied word for word from the article, so the benchmark rewards picking sentences, not summarising.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/newssum-textrank-bbc-news-summary.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A 30-line TextRank beat every model I fine-tuned on BBC News Summary. The reference summaries explain why">
+  <meta property="og:description" content="On BBC News Summary, a length-matched TextRank scored 82.9 ROUGE-Lsum against 72.7 for the best fine-tuned transformer, PEGASUS-large. 95% of reference sentences are copied word for word from the article, so the benchmark rewards picking sentences, not summarising.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/newssum-textrank-bbc-news-summary.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/newssum-rouge-by-system.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Experiment · Natural language processing</p>
+    <h1>A 30-line TextRank beat every model I fine-tuned on BBC News Summary. The reference summaries explain why</h1>
+    <p class="a-sub">I rebuilt my news summarisation project with twelve systems, three seeds and a clean test set. The best result came from a method that needs no training at all.</p>
+    <p class="updated">By Muzammal Hussain · 1 November 2026 · 7 min read</p>
+    <p class="a-lede">BBC News Summary is a popular dataset for teaching and testing text summarisation: 2,225 BBC articles, each paired with a summary. My first version of this project fine-tuned five transformer models on it. This week I rebuilt it from scratch, added simple baselines, a small language model and proper uncertainty, and ran everything on Kaggle GPUs. The fine-tuned models did well. A ranking algorithm from 2004 did better, and the reason says more about the dataset than about the models.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>TextRank, given the same length budget as the reference, scored 82.9 ROUGE-Lsum and 77.3 ROUGE-2. The best fine-tuned model, PEGASUS-large, scored 72.7 and 64.5.</li>
+        <li>95% of the sentences in the reference summaries appear word for word in the article, and a summary is on average 45% as long as its article. The task is closer to picking sentences than to summarising.</li>
+        <li>All fine-tuned models beat simply taking the first sentences of the article, but Flan-T5-base only by a margin within the noise on ROUGE-Lsum (+0.4, 95% CI −1.3 to 2.0).</li>
+        <li>Summarisers trained on other news (CNN/DailyMail) and a zero-shot Qwen2.5-1.5B scored only 25 to 38, mostly because they write much shorter or freer summaries than this dataset expects. The zero-shot Qwen also wrote numbers that were not in the article (7.8% of its numbers).</li>
+        <li>154 of the 2,225 articles are near-duplicates. Under a naive random split, 11.5% of test articles would have a copy in the training set.</li>
+      </ul>
+    </div>
+
+    <h2>What went wrong the first time</h2>
+    <p>Rebuilding the project started with re-reading my own code, and it did not survive. In the preprocessed file I had trained on, the column named <code>title</code> held the full article and the column named <code>text</code> held the summary. So my models had learned the task backwards: summary in, article out. ROUGE, the standard overlap score, had then been computed against the article, with its arguments reversed, on test rows that partly overlapped the training set. Those scores cannot be used, and I have withdrawn them. Everything below comes from new code with tests, run from a public notebook.</p>
+
+    <h2>The data, checked first</h2>
+    <p>The BBC articles come from 2004 and 2005 and cover five topics: business, entertainment, politics, sport and tech. Before training anything I removed near-duplicate articles (word 5-gram overlap of at least 90%), 154 in all, 138 of them exact copies. That left 2,071 articles, split once into 1,449 for training, 311 for validation and 311 for testing, stratified by topic. Every system was scored on the same 311 test articles, and the headline was removed from every input.</p>
+    <p>Then I looked at the reference summaries themselves. 94.8% of their sentences occur unchanged in the article. The median article has 329 words and the median summary 149. And the summaries prefer early sentences, though not strongly: 62% of sentences from the first tenth of an article are kept, against 31% from the last tenth.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/newssum-reference-position.png" alt="Bar chart: share of article sentences that appear in the reference summary, by position in the article. 62% in the first tenth, falling to about 40% in the middle and 31% in the last tenth.">
+      <figcaption>Figure 1. Share of article sentences copied into the reference summary, by where the sentence sits in the article. All 2,071 articles.</figcaption>
+    </figure>
+    <p>So a "summary" here is roughly the most central half of the article, copied out in order. I could not find a description of how the summaries were made, but this profile is what an automatic sentence-scoring method would produce.</p>
+
+    <h2>Twelve systems on the same test set</h2>
+    <p>I compared four groups. <strong>Extractive baselines</strong> pick sentences from the article: the first three sentences (Lead-3), the first sentences up to a length budget, and TextRank, which ranks sentences by how similar they are to the rest of the article. The length budget is the median summary-to-article ratio in the training set, 0.455, so no system ever sees the reference length. An <strong>oracle</strong> picks the sentences that best match each reference, which gives the ceiling for any sentence-picking method. <strong>Zero-shot models</strong> are used as they are: BART-large-CNN and PEGASUS-CNN, both trained to summarise CNN and Daily Mail news, and Qwen2.5-1.5B-Instruct, a small chat model, asked for a summary of the same length. <strong>Fine-tuned models</strong> were trained on the 1,449 training articles: BART-base, T5-base, Flan-T5-base, PEGASUS-large, and Qwen2.5-1.5B with LoRA, a method that trains a small add-on instead of the whole model. Each fine-tuned model was trained three times with different random seeds, with settings fixed in advance and early stopping on the validation set.</p>
+    <figure class="a-fig">
+      <img src="../images/insights/newssum-rouge-by-system.png" alt="Horizontal bar chart of ROUGE-Lsum: oracle 99.8, TextRank 82.9, PEGASUS-large 72.7, BART-base 67.8, T5-base 66.2, Qwen2.5-1.5B with LoRA 64.9, Flan-T5-base 63.1, length-matched Lead 62.7, Lead-3 43.0, zero-shot Qwen 38.3, BART-large-CNN 35.7, PEGASUS-CNN 25.2.">
+      <figcaption>Figure 2. ROUGE-Lsum on the 311 test articles. Fine-tuned models are averaged over three seeds. Error bars are 95% bootstrap intervals over articles.</figcaption>
+    </figure>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>System</th><th>ROUGE-2</th><th>ROUGE-Lsum</th><th>BERTScore</th><th>Words</th></tr></thead>
+        <tbody>
+          <tr><td>Oracle (upper bound)</td><td>97.0</td><td>99.8</td><td>83.1</td><td>178</td></tr>
+          <tr><td>TextRank, length-matched</td><td>77.3</td><td>82.9</td><td>67.1</td><td>179</td></tr>
+          <tr><td>PEGASUS-large</td><td>64.5</td><td>72.7 ± 0.5</td><td>59.0</td><td>144</td></tr>
+          <tr><td>BART-base</td><td>59.0</td><td>67.8 ± 1.3</td><td>54.5</td><td>135</td></tr>
+          <tr><td>T5-base</td><td>57.9</td><td>66.2 ± 1.8</td><td>54.1</td><td>121</td></tr>
+          <tr><td>Qwen2.5-1.5B + LoRA</td><td>53.8</td><td>64.9 ± 0.5</td><td>48.0</td><td>160</td></tr>
+          <tr><td>Flan-T5-base</td><td>55.6</td><td>63.1 ± 1.7</td><td>52.6</td><td>107</td></tr>
+          <tr><td>Lead, length-matched</td><td>50.5</td><td>62.7</td><td>44.5</td><td>179</td></tr>
+          <tr><td>Lead-3</td><td>35.4</td><td>43.0</td><td>37.3</td><td>62</td></tr>
+          <tr><td>Qwen2.5-1.5B, zero-shot</td><td>16.2</td><td>38.3</td><td>25.8</td><td>149</td></tr>
+          <tr><td>BART-large-CNN, zero-shot</td><td>25.8</td><td>35.7</td><td>30.0</td><td>53</td></tr>
+          <tr><td>PEGASUS-CNN, zero-shot</td><td>18.4</td><td>25.2</td><td>22.1</td><td>31</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Scores are F1 on a 0 to 100 scale; "± " is the standard deviation across the three seeds. TextRank finished about 10 ROUGE-Lsum points ahead of PEGASUS-large, and its lead held on BERTScore, which compares meaning rather than exact words. PEGASUS-large was the best trained model by a clear margin, and every fine-tuned model beat the length-matched Lead baseline on ROUGE-2. On ROUGE-Lsum, Flan-T5-base's advantage over Lead was within the noise.</p>
+
+    <h2>Why a simple ranking wins</h2>
+    <p>Two things work in TextRank's favour. First, its output has the same shape as the reference: whole sentences from the article, in order, at the right length. The fine-tuned models learned to copy too (over 99% of their words come from the article, and only 4 to 5% of their word pairs are new), but they write shorter summaries, 107 to 160 words where the length-matched baselines write about 179, so they miss sentences the reference keeps. Second, TextRank chooses sentences by centrality, and the reference summaries look as if they were chosen the same way. Taking the first sentences at the same length scored 20 points lower, so length alone does not explain TextRank's score.</p>
+    <p>This does not mean TextRank writes better summaries than PEGASUS. It means this benchmark mostly measures how well a system reproduces a particular sentence-selection rule. A paper that reports a fine-tuned transformer on BBC News Summary without a TextRank baseline is missing the most informative comparison.</p>
+
+    <h2>Models trained on other news, and a chat model</h2>
+    <p>BART-large-CNN and PEGASUS-CNN are strong summarisers on their own data, where summaries are three or four short highlights. Here they wrote 31 to 53 words for references of about 150, so ROUGE punished them. Qwen2.5-1.5B, asked for a summary of the right length, wrote about the right length but in its own words: 73% of its word pairs were not in the article, and 7.8% of the numbers it wrote did not appear in the article either, against under 1% for every fine-tuned model. Fine-tuning the same Qwen model with LoRA for about 70 minutes per seed on one T4 GPU removed both problems and lifted it from 38.3 to 64.9.</p>
+
+    <h2>A topic the model never saw</h2>
+    <p>I also trained BART-base five more times, each time leaving one topic out of training, and tested it on that topic. Compared with the same model trained on all topics, ROUGE-Lsum fell by 1.0 to 3.4 points. Only the business drop had an interval that excluded zero (−3.4, 95% CI −5.9 to −0.6). Within BBC news, the topic matters less than the house style.</p>
+
+    <h2>What I take from it</h2>
+    <ul>
+      <li>Read the reference summaries before choosing a model. If they are copied sentences, an extractive baseline belongs in every comparison.</li>
+      <li>Match the length budget, or the comparison mostly measures length. Lead-3 and Lead at the right length differ by 20 points.</li>
+      <li>Remove duplicates before splitting. Here one test article in nine would otherwise have a copy in training.</li>
+      <li>A small instruction-tuned model used zero-shot invents numbers; a short LoRA fine-tune on in-domain data fixed that in this test.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>ROUGE and BERTScore measure overlap with one reference per article, not whether a summary is accurate or useful. The unsupported-number rate is only a rough check of factual errors.</li>
+      <li>The dataset is small and comes from one publisher over two years.</li>
+      <li>Model settings were fixed in advance, not tuned. Tuning could narrow the gap to TextRank, but is unlikely to close a 10-point difference.</li>
+      <li>Two larger models, BART-large and Flan-T5-large, are still training. I will add them here when they finish.</li>
+    </ul>
+
+    <h2>Reproduce the experiment</h2>
+    <p>The repository has the full pipeline as a tested Python package, the Kaggle notebook, the fixed data split and every table in this article. The notebook resumes where it stopped, so the whole study fits in free Kaggle GPU sessions.</p>
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/NewsSum-Bench">View code and results</a>
+    </div>
+    <p class="a-ref">Data: BBC News Summary on Kaggle (pariza/bbc-news-summary), built on the BBC news dataset of Greene and Cunningham, ICML 2006. TextRank: Mihalcea and Tarau, EMNLP 2004. ROUGE: Lin, 2004. BERTScore: Zhang et al., ICLR 2020. Models: BART (Lewis et al., 2020), T5 (Raffel et al., 2020), Flan-T5 (Chung et al., 2022), PEGASUS (Zhang et al., 2020), Qwen2.5 (Qwen team, 2024), LoRA (Hu et al., 2022). Code archived on Zenodo: <a href="https://doi.org/10.5281/zenodo.23264727">doi:10.5281/zenodo.23264727</a>. This is a small engineering experiment, not a peer-reviewed paper.</p>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
