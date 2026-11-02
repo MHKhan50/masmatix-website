@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Agent Memory Integrity Benchmark: Testing Persistent Memory Security</title>
+  <meta name="description" content="AMIB v0.2.0 evaluates five persistent-memory governance policies across 150,000 synthetic policy evaluations, measuring poisoning, contamination and utility trade-offs.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/agent-memory-integrity-benchmark.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Agent Memory Integrity Benchmark: Testing Persistent Memory Security">
+  <meta property="og:description" content="A reproducible synthetic evaluation of persistent-memory poisoning controls, cross-task contamination and utility.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/agent-memory-integrity-benchmark.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+<main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Research · Agentic AI · Security</p>
+    <h1>Agent Memory Integrity Benchmark: Testing Persistent-Memory Security and Utility</h1>
+    <p class="a-sub">A reproducible synthetic evaluation of five memory-governance policies, examining poisoning risk, cross-task contamination and the cost of restrictive controls.</p>
+    <p class="updated">By Muzammal Hussain · 2 November 2026 · 7 min read</p>
+
+    <p class="a-lede">Persistent memory can help an AI agent maintain continuity across tasks. It can also create a route through which poisoned, misleading or task-inappropriate information influences later decisions. The security problem is not simply whether an agent should remember something: it is whether a memory should be accepted, retained and retrieved in the right context. The Agent Memory Integrity Benchmark (AMIB) compares five governance policies in a controlled synthetic environment.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>The benchmark evaluated 150,000 policy-episode combinations across five random seeds and 6,000 synthetic episodes per seed.</li>
+        <li>Unrestricted memory had a 13.56% attack success rate and 27.88% cross-task contamination rate.</li>
+        <li>Write filtering reduced attack success to 2.42%, while task completion reached 70.77%, the highest rate among the tested policies.</li>
+        <li>Combining verified writes with task-scoped retrieval produced a 1.82% attack success rate and zero simulated cross-task contamination, but benign-memory retention fell to 40.46%.</li>
+        <li>These are simulator results, not measurements of deployed agents or language models.</li>
+      </ul>
+    </div>
+
+    <h2>Research question</h2>
+    <p>How do write-time filtering and task-scoped retrieval affect memory-poisoning risk, cross-task contamination and benign-memory utility in a controlled synthetic environment?</p>
+    <p>The benchmark treats memory governance as a security–utility trade-off. A policy that blocks more suspicious writes may also reject useful information. A policy that restricts retrieval by task can limit cross-task leakage, but does not necessarily detect malicious content that belongs to the active task.</p>
+
+    <h2>Experimental design</h2>
+    <p>AMIB v0.2.0 generates synthetic task episodes containing an active task, a candidate memory's task label, a poison indicator, benign-memory availability, a detector flag and task difficulty. Five policies are evaluated against the same episode sets using seeds 11, 23, 37, 53 and 71. Each seed contains 6,000 episodes.</p>
+    <p>The five policies are:</p>
+    <ul>
+      <li><strong>Unrestricted:</strong> memory is accepted and retrieved without the additional governance controls tested here.</li>
+      <li><strong>Write filter:</strong> a simulated write-time filter can reject candidate memories.</li>
+      <li><strong>Task-scoped:</strong> retrieval is restricted to memories associated with the active task.</li>
+      <li><strong>Verified write + task-scoped:</strong> combines simulated write verification with task-scoped retrieval.</li>
+      <li><strong>No persistent memory:</strong> disables persistent memory and serves as a control for memory-mediated effects.</li>
+    </ul>
+    <p>The five policies across 30,000 generated episodes result in 150,000 policy evaluations. The experiment is reproducible using the supplied Python benchmark, fixed seeds and generated CSV/JSON outputs.</p>
+
+    <h2>Measures</h2>
+    <ul>
+      <li><strong>Attack success rate:</strong> proportion of simulated attack opportunities that succeed.</li>
+      <li><strong>Benign-memory retention:</strong> proportion of useful benign memory retained by the policy.</li>
+      <li><strong>Task completion rate:</strong> proportion of simulated tasks completed.</li>
+      <li><strong>Cross-task contamination rate:</strong> rate at which memory from another task influences the active task.</li>
+      <li><strong>False rejection rate:</strong> proportion of benign writes incorrectly rejected.</li>
+    </ul>
+
+    <h2>Results</h2>
+    <div class="a-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Policy</th>
+            <th>Attack success</th>
+            <th>Benign retention</th>
+            <th>Task completion</th>
+            <th>Cross-task contamination</th>
+            <th>False rejection</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Unrestricted</td><td>13.56%</td><td>62.27%</td><td>65.09%</td><td>27.88%</td><td>0.00%</td></tr>
+          <tr><td>Write filter</td><td>2.42%</td><td>56.10%</td><td>70.77%</td><td>21.05%</td><td>6.17%</td></tr>
+          <tr><td>Task-scoped</td><td>9.74%</td><td>45.00%</td><td>63.83%</td><td>0.00%</td><td>0.00%</td></tr>
+          <tr><td>Verified write + task-scoped</td><td>1.82%</td><td>40.46%</td><td>67.66%</td><td>0.00%</td><td>6.17%</td></tr>
+          <tr><td>No persistent memory</td><td>0.00%</td><td>0.00%</td><td>60.51%</td><td>0.00%</td><td>0.00%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>All percentages are calculated from the benchmark's generated summary metrics and rounded to two decimal places.</p>
+
+    <h2>Interpreting the trade-offs</h2>
+    <p>Write filtering achieved the highest task completion rate in this simulation (70.77%) and reduced attack success relative to unrestricted memory. It did not eliminate cross-task contamination: the measured rate remained 21.05%. Its false rejection rate was 6.17%, indicating that the simulated filter also rejected some benign writes.</p>
+    <p>Task-scoped retrieval reduced cross-task contamination to zero under the benchmark's task-label assumptions. However, attack success remained 9.74%. This illustrates an important distinction in the simulator: restricting where memory is retrieved from does not, by itself, establish that the content is trustworthy.</p>
+    <p>The combined verified-write and task-scoped policy recorded the lowest non-zero attack success rate (1.82%) among the memory-retaining policies, with zero simulated cross-task contamination. That reduction came with lower benign-memory retention (40.46%) and a 6.17% false rejection rate. It therefore represents a different operating point, not an unconditional winner.</p>
+    <p>The no-persistent-memory control recorded zero attack success and zero contamination, but it also retained no benign memory and had a 60.51% task completion rate. Its zero-risk figures must be interpreted alongside the complete removal of persistent-memory utility.</p>
+
+    <h2>Limitations</h2>
+    <p>AMIB is a synthetic simulator. It does not execute an LLM, implement semantic memory in a deployed agent, measure real-world attack rates, or model adaptive adversaries. Its probabilities and scenario rules are explicit simulator assumptions rather than empirical estimates. Zero contamination under task scoping depends on the benchmark's task-label and retrieval assumptions. Results should therefore be interpreted as properties of this experimental design and its policy implementations, not as evidence of production security.</p>
+
+    <h2>Conclusion and next steps</h2>
+    <p>AMIB provides a reproducible baseline for examining how memory write controls and retrieval boundaries interact. The results show why memory security should be assessed alongside retention and task utility: aggressive restrictions can suppress simulated attacks while also removing useful information. A subsequent research stage should implement these policies in a real agent memory stack, document the threat model, and evaluate them on independently constructed tasks with empirical measurements.</p>
+
+    <h2>Reproducibility</h2>
+    <p>The benchmark repository includes the source code, fixed seeds, experimental outputs, dataset card, protocol and tests. It requires Python 3.9+ and the standard library.</p>
+    <p><strong>Code:</strong> <a href="https://github.com/MHKhan50/agent-memory-integrity-benchmark">Agent Memory Integrity Benchmark on GitHub</a></p>
+    <p><strong>Version:</strong> 0.2.0 · <strong>Evaluation type:</strong> Synthetic simulation · <strong>Author:</strong> Muzammal Hussain</p>
+  </div>
+</main>
+<footer class="footer">
+  <div class="wrap"><p>© Masmatix Innovations</p></div>
+</footer>
+</body>
+</html>
