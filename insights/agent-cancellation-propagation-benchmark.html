@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Agent Cancellation Propagation: what happens after an AI agent is told to stop?</title>
+  <meta name="description" content="A deterministic synthetic benchmark tests four cancellation policies across 6,000 workflow scenarios and measures post-cancellation dispatches, orphaned calls, latency and side effects.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/agent-cancellation-propagation-benchmark.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Agent Cancellation Propagation: what happens after an AI agent is told to stop?">
+  <meta property="og:description" content="Four cancellation policies, 6,000 synthetic scenarios and 24,000 policy evaluations.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/agent-cancellation-propagation-benchmark.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+<main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Research benchmark · Agentic AI</p>
+    <h1>Agent Cancellation Propagation: what happens after an AI agent is told to stop?</h1>
+    <p class="a-sub">Four cancellation policies tested across 6,000 synthetic workflows, measuring work that continues after a stop signal.</p>
+    <p class="updated">By Muzammal Hussain · 1 November 2026 · 6 min read</p>
+
+    <p class="a-lede">An agent workflow may involve several steps and tool calls. A user can cancel the task, a parent workflow can time out, or a budget can run out. But receiving a cancellation signal is not necessarily the same as stopping every downstream action. This benchmark asks a narrow question: under different cancellation policies, how much work continues after cancellation, and what side effects can still occur?</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>The cooperative policy produced zero new post-cancellation dispatches and zero orphaned calls in this simulator, but its post-cancellation side-effect rate was still 19% because previously in-flight work could have an effect.</li>
+        <li>The cancellation-blind policy had the highest mean post-cancellation dispatch count: 2.0098 per episode, with 1.519 orphaned calls on average.</li>
+        <li>Polling reduced post-cancellation side effects to 12.15%, the lowest observed rate, but still averaged one new dispatch per episode and had zero strict-compliance episodes.</li>
+        <li>The shielded-section policy achieved a 75.28% strict-compliance rate, but its modeled protected section could still allow residual work and side effects.</li>
+      </ul>
+    </div>
+
+    <h2>What was tested?</h2>
+    <p>Agent Cancellation Propagation Benchmark (ACPB) v0.1.0 is a deterministic synthetic simulator. Its default run creates 6,000 scenarios using five fixed random seeds. Each scenario varies workflow depth, the step at which cancellation arrives, the number of in-flight calls, a possible side-effect location and the cancellation source. The cancellation sources are user cancellation, parent timeout and budget exhaustion.</p>
+    <p>Each scenario is evaluated under four policies, producing 24,000 policy-episode records:</p>
+    <ul>
+      <li><strong>Cooperative:</strong> stops new tool dispatches immediately when cancellation is observed. Already in-flight work may still produce a modeled side effect.</li>
+      <li><strong>Polling:</strong> checks for cancellation periodically, allowing a limited amount of residual work before observing the signal.</li>
+      <li><strong>Cancellation-blind:</strong> continues the remaining workflow without responding to cancellation.</li>
+      <li><strong>Shielded section:</strong> completes a modeled protected section before observing cancellation.</li>
+    </ul>
+
+    <h2>How were outcomes measured?</h2>
+    <ul>
+      <li><strong>Post-cancellation dispatches:</strong> new tool dispatches after cancellation.</li>
+      <li><strong>Orphaned calls:</strong> calls still represented as orphaned under the simulator's policy rules.</li>
+      <li><strong>Cancellation latency:</strong> modeled steps between cancellation and the policy's stop point.</li>
+      <li><strong>Post-cancellation side-effect rate:</strong> proportion of episodes in which a side effect occurs after cancellation.</li>
+      <li><strong>Strict cancellation compliance:</strong> an episode counts as compliant only when it has both zero post-cancellation dispatches and zero post-cancellation side effects.</li>
+    </ul>
+
+    <h2>Results</h2>
+    <p>All figures below are averages or rates across 6,000 synthetic episodes per policy. Lower values are preferable for dispatches, orphaned calls, latency and side effects; higher is preferable for strict compliance.</p>
+    <div class="a-table">
+      <table>
+        <thead>
+          <tr><th>Policy</th><th>Mean post-cancel dispatches</th><th>Mean orphaned calls</th><th>Mean latency (steps)</th><th>Side-effect rate</th><th>Strict compliance</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Cooperative</td><td>0.0000</td><td>0.0000</td><td>1.0000</td><td>19.00%</td><td>81.00%</td></tr>
+          <tr><td>Polling</td><td>1.0000</td><td>0.7553</td><td>2.0000</td><td>12.15%</td><td>0.00%</td></tr>
+          <tr><td>Cancellation-blind</td><td>2.0098</td><td>1.5190</td><td>4.0098</td><td>24.72%</td><td>0.00%</td></tr>
+          <tr><td>Shielded section</td><td>0.2472</td><td>0.7637</td><td>2.2472</td><td>24.72%</td><td>75.28%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>What do the results mean?</h2>
+    <p>The cooperative policy illustrates why stopping new work and stopping all effects are different engineering requirements. It dispatched no new tools after cancellation in the model, but an already in-flight call could still reach a side-effect point. That is why its strict compliance rate was 81%, rather than 100%.</p>
+    <p>Polling had the lowest modeled side-effect rate, but it did not achieve strict compliance: its periodic check allowed residual dispatches. This is a useful distinction. A policy can reduce one undesirable outcome without satisfying a stricter definition of cancellation.</p>
+    <p>Cancellation-blind execution performed worst on dispatches, orphaned calls and latency. The shielded-section policy reduced new dispatches substantially compared with cancellation-blind execution, but completing a protected section did not guarantee that no side effect would occur after cancellation.</p>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>This is a deterministic, stylized synthetic simulator, not a measurement of deployed AI agents or production workflows.</li>
+      <li>The model does not implement real concurrency, cancellation races, network timing, distributed task queues, rollback or framework-specific cancellation semantics.</li>
+      <li>Policy behaviour is explicitly encoded in the simulator. The results therefore describe those rules, not every implementation of cooperative cancellation, polling or protected sections.</li>
+      <li>Side effects are modeled events; they are not actual external transactions, emails, payments or tool executions.</li>
+      <li>Runtime adapters, trace-based experiments and fault-injection tests are needed before drawing conclusions about real agent frameworks.</li>
+    </ul>
+
+    <h2>Reproduce the benchmark</h2>
+    <p>The repository includes the scenario dataset, benchmark implementation, runner, episode-level outputs, policy summary, dataset card and automated tests. On macOS with Python 3, run:</p>
+    <pre><code>python3 run_benchmark.py
+python3 -m unittest discover -s tests -v</code></pre>
+    <p>The default experiment generates 6,000 scenarios and evaluates all four policies, producing 24,000 policy-episode records. The published v0.1.0 run passed all five automated tests.</p>
+
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-cancellation-propagation-benchmark">View code and data on GitHub</a>
+    </div>
+    <p class="a-ref">Research note: ACPB v0.1.0 is a reproducible synthetic baseline. It does not establish real-world cancellation reliability, production safety or a guarantee that a particular agent framework will stop work. All reported values are generated by the published simulator.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a>
+        <p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p>
+      </div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
