@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Agent Retry Amplification: when a failed tool response repeats a successful side effect</title>
+  <meta name="description" content="ARAM v0.1.0 evaluates four retry policies across 6,000 synthetic scenarios, measuring task success, retry amplification, latency and duplicate side effects.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/agent-retry-amplification-benchmark.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Agent Retry Amplification: when a failed tool response repeats a successful side effect">
+  <meta property="og:description" content="Four retry policies, 6,000 synthetic scenarios and 24,000 policy evaluations.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/agent-retry-amplification-benchmark.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+<main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Research benchmark · Agentic AI</p>
+    <h1>Agent Retry Amplification: when a failed tool response repeats a successful side effect</h1>
+    <p class="a-sub">Four retry policies tested across 6,000 synthetic scenarios to measure reliability, retry amplification and duplicate side effects.</p>
+    <p class="updated">By Muzammal Hussain · 2 November 2026 · 6 min read</p>
+
+    <p class="a-lede">A tool call can succeed at the remote system while its response is lost or reported as a transient error. An agent that interprets the response as proof of failure may retry an operation that has already taken effect. For operations such as creating a ticket, sending a notification or submitting a payment, that retry can produce a duplicate. The Agent Retry Amplification Benchmark (ARAM) examines this failure pattern and compares four retry strategies in a deterministic synthetic simulator.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>Naive retry achieved a 94.32% task-success rate, but 30.27% of episodes contained duplicate side effects.</li>
+        <li>Bounded backoff reduced mean attempts compared with naive retry, but its duplicate-side-effect episode rate remained 30.27%.</li>
+        <li>The idempotency-key policy retained the modeled 94.32% task-success rate while reducing duplicate side effects to zero under the simulator's idealised server-side deduplication assumption.</li>
+        <li>No retry produced no duplicate effects, but task success was only 29.13%.</li>
+      </ul>
+    </div>
+
+    <h2>What was tested?</h2>
+    <p>ARAM v0.1.0 generates 6,000 synthetic scenarios using five fixed random seeds. Each scenario represents a tool operation with a number of transient failures, a possibility that an operation commits before its error response, and a base latency. Four policies are evaluated on every scenario, producing 24,000 policy-episode records.</p>
+    <p>The modeled operations are sending a notification, creating a ticket, submitting a payment and updating a record. These are labels in the simulator; no real external services or transactions are executed.</p>
+
+    <h2>Policies compared</h2>
+    <ul>
+      <li><strong>No retry:</strong> makes one attempt and does not repeat an operation after an error.</li>
+      <li><strong>Naive retry:</strong> retries transient failures up to the configured five-attempt limit, without a backoff delay beyond the simple modeled retry cost.</li>
+      <li><strong>Bounded backoff:</strong> caps attempts at three and applies an increasing modeled backoff delay.</li>
+      <li><strong>Idempotency key:</strong> uses the same retry limit as naive retry, but assumes the server deduplicates repeated committed operations under a stable idempotency key.</li>
+    </ul>
+
+    <h2>How outcomes were measured</h2>
+    <ul>
+      <li><strong>Task success rate:</strong> proportion of episodes in which the policy receives a successful response within its attempt limit.</li>
+      <li><strong>Mean attempts:</strong> average number of tool attempts per episode.</li>
+      <li><strong>Retry amplification:</strong> mean additional attempts beyond the first attempt.</li>
+      <li><strong>Duplicate-side-effect episode rate:</strong> proportion of episodes that produce more than one modeled side effect.</li>
+      <li><strong>Mean duplicate side effects:</strong> average number of side effects beyond the first per episode.</li>
+      <li><strong>Mean latency:</strong> modeled latency steps, including attempt costs and policy backoff.</li>
+    </ul>
+
+    <h2>Results</h2>
+    <p>All values below are generated by the published v0.1.0 simulator and aggregated over 6,000 episodes per policy. Lower duplicate-effect rates, retry amplification and latency are generally preferable; task success is preferable when higher.</p>
+    <div class="a-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Policy</th>
+            <th>Task success</th>
+            <th>Mean attempts</th>
+            <th>Retry amplification</th>
+            <th>Episodes with duplicates</th>
+            <th>Mean duplicates</th>
+            <th>Mean latency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>No retry</td><td>29.13%</td><td>1.0000</td><td>0.0000</td><td>0.00%</td><td>0.0000</td><td>2.0063</td></tr>
+          <tr><td>Naive retry</td><td>94.32%</td><td>2.6168</td><td>1.6168</td><td>30.27%</td><td>0.6783</td><td>6.8792</td></tr>
+          <tr><td>Bounded backoff</td><td>71.40%</td><td>2.1763</td><td>1.1763</td><td>30.27%</td><td>0.4987</td><td>6.0162</td></tr>
+          <tr><td>Idempotency key</td><td>94.32%</td><td>2.6168</td><td>1.6168</td><td>0.00%</td><td>0.0000</td><td>9.2863</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Interpretation</h2>
+    <p>The central failure mode is ambiguity between operation outcome and response outcome. A transient error response does not necessarily mean that the remote operation failed to commit. When the client retries without deduplication, a previously committed operation can be repeated. In this simulator, naive retry improves task success compared with no retry, but introduces duplicate effects in a material fraction of episodes.</p>
+    <p>Bounded backoff reduces the number of attempts and the mean number of duplicate effects relative to naive retry. However, its duplicate-side-effect episode rate is unchanged in this run. Backoff changes when retries occur; by itself, it does not establish whether an earlier attempt committed.</p>
+    <p>The idempotency-key policy demonstrates the value of server-side deduplication in the modeled setting. It produces the same task-success rate as naive retry and zero modeled duplicates, but has higher modeled latency because it uses the same retry count with exponential backoff. The zero-duplicate result depends on an idealised deduplication contract; it is not evidence that all real idempotency implementations provide exactly-once execution.</p>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>This is a deterministic synthetic simulator, not a measurement of deployed AI agents, payment systems or production tool APIs.</li>
+      <li>The model does not implement real network partitions, concurrent requests, distributed transaction protocols, idempotency-key expiry, key-scope errors or database consistency anomalies.</li>
+      <li>The idempotency policy assumes idealised server-side deduplication. Real systems must define key scope, retention, payload matching and behaviour for concurrent duplicate requests.</li>
+      <li>Latency values are abstract simulation steps, not milliseconds or observed service response times.</li>
+      <li>Policy behaviour is encoded in the benchmark. The findings describe these modeled rules and should not be generalised to every retry implementation.</li>
+      <li>Further work should test real tool adapters with controlled response loss, commit-before-error fault injection and trace-based duplicate detection.</li>
+    </ul>
+
+    <h2>Reproduce the benchmark</h2>
+    <p>The repository contains the scenario dataset, benchmark implementation, runner, episode-level results, policy summary, dataset card and automated tests. Run with Python 3:</p>
+    <pre><code>python3 run_benchmark.py
+
+python3 -m unittest discover -s tests -v</code></pre>
+    <p>The published v0.1.0 run generated 6,000 scenarios, 24,000 policy evaluations and passed all eight automated tests.</p>
+
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-retry-amplification-benchmark">View code and data on GitHub</a>
+    </div>
+    <p class="a-ref">Research note: ARAM v0.1.0 is a reproducible synthetic baseline. It does not establish real-world retry reliability, exactly-once execution or production payment safety. All reported values are generated by the published simulator.</p>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a>
+        <p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p>
+      </div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
