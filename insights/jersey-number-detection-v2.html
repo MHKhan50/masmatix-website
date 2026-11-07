@@ -46,7 +46,7 @@
     <p class="a-kicker">Experiment · Computer vision</p>
     <h1>My jersey-number detector learned nothing. Its rebuild showed that pretraining was not the gap</h1>
     <p class="a-sub">I rebuilt a 2025 coursework model as a detector trained from scratch, then measured it against YOLOv8n with and without pretraining. The result surprised me.</p>
-    <p class="updated">By Muzammal Hussain · 1 November 2026 · 6 min read</p>
+    <p class="updated">By Muzammal Hussain · 1 November 2026 · updated 7 November 2026 · 8 min read</p>
     <p class="a-lede">In 2025 I built a small convolutional network to find jersey numbers in ice-hockey images. It trained, its loss went down, and it produced a box on every image. This week I measured it properly. It was no better than drawing the same box in the same place on every picture. So I rebuilt it, trained the new model from scratch, and compared it with a modern pretrained detector to see where the remaining gap comes from.</p>
 
     <div class="a-keys">
@@ -125,13 +125,32 @@
         </tbody>
       </table>
     </div>
-    <p>Over three seeds the combined recipe reached 0.308 ± 0.005 AP50:95, up from 0.241: a 28% gain, still with no pretraining. Mosaic and the larger input each helped on their own; the GIoU loss alone did little. Differences between single runs are within their error margins, so only the repeated combined result should be taken as firm. It narrows the gap to the from-scratch YOLOv8n (0.352), though that model ran at 256 pixels, so a matched 384-pixel run is next. Training time per seed rose from 22 to 65 minutes.</p>
+    <p>Over three seeds the combined recipe reached 0.308 ± 0.005 AP50:95, up from 0.241: a 28% gain, still with no pretraining. Mosaic and the larger input each helped on their own; the GIoU loss alone did little. Differences between single runs are within their error margins, so only the repeated combined result should be taken as firm. Training time per seed rose from 22 to 65 minutes. To compare like with like, I also trained YOLOv8n from scratch at 384 pixels: it reached 0.366 ± 0.005. At equal input size and with no pretraining on either side, the gap is now 0.058, half of what it was.</p>
+
+    <h2>Update 2: most of the gap is augmentation</h2>
+    <p>Two more experiments pinned down where the rest of the gap comes from. First, I trained YOLOv8n from scratch with augmentation close to JerseyNet's light recipe: no mosaic, no flips, milder scaling. Its score fell from 0.352 to 0.280 ± 0.012. So about two-thirds of the 0.111 gap between the two detectors is augmentation alone; only 0.039 is down to the architecture and losses.</p>
+    <p>Second, I asked whether pretraining matters more when data are scarce. All three detectors were retrained on 10% and 25% of the training images, for the same number of training steps.</p>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Test AP50:95, 256 px</th><th>10% (317 images)</th><th>25% (792)</th><th>100% (3,165)</th></tr></thead>
+        <tbody>
+          <tr><td>JerseyNet, from scratch</td><td>0.124</td><td>0.183</td><td>0.241</td></tr>
+          <tr><td>YOLOv8n, from scratch</td><td>0.265</td><td>0.305</td><td>0.352</td></tr>
+          <tr><td>YOLOv8n, COCO-pretrained</td><td>0.302</td><td>0.349</td><td>0.384</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>COCO pretraining stayed worth about 0.04 AP even with only 317 images. The from-scratch detectors differed far more: JerseyNet lost half its accuracy at 10%, YOLOv8n only a quarter. YOLOv8n trained on 317 images even beat JerseyNet trained on all 3,165. Heavy augmentation such as mosaic works like extra data, and that matters most when real data are scarce.</p>
+    <p>Splitting the scores by number size showed one more thing: very small numbers, under 8 pixels, are hard for every model (below 0.13 AP). At 384 pixels JerseyNet matches YOLOv8n on them; what remains of the gap is on medium and large numbers.</p>
+
+    <h2>The paper and a live demo</h2>
+    <p>The full study, with every number above, its confidence intervals and the limitations, is now a preprint on Zenodo. I have also put the best JerseyNet in a browser demo: upload an image and it draws a box around each jersey number. The model runs on your own device, so the image is never uploaded.</p>
 
     <h2>What I take from it</h2>
     <ul>
       <li>A falling loss is not a working model. Compare against the dumbest possible baseline before anything else.</li>
       <li>Pretraining is not automatically the big win. On this small, narrow task it was worth about 0.03 AP.</li>
-      <li>Design and recipe matter most here, which is good news for training from scratch: that part can be improved without anyone else's weights.</li>
+      <li>Design and recipe matter most here, and augmentation most of all. That is good news for training from scratch: it can be improved without anyone else's weights.</li>
       <li>One evaluator for every model, checked against a reference library, is what makes the comparison mean anything.</li>
     </ul>
 
@@ -146,9 +165,11 @@
     <h2>Reproduce the experiment</h2>
     <p>The repository has the full pipeline as a tested Python package, the Kaggle notebooks for JerseyNet and the YOLOv8n baselines, and the complete outputs of every run reported here.</p>
     <div class="a-links">
+      <a class="btn btn-grad" href="https://doi.org/10.5281/zenodo.24040745">Read the preprint</a>
+      <a class="btn btn-grad" href="https://huggingface.co/spaces/MHkhan50/jersey-number-detection">Try the live demo</a>
       <a class="btn btn-grad" href="https://github.com/MHKhan50/jersey-number-detection">View code and results</a>
     </div>
-    <p class="a-ref">Method: Zhou, Wang and Krähenbühl, "Objects as Points", 2019; Law and Deng, "CornerNet", ECCV 2018. Training from scratch: He, Girshick and Dollár, "Rethinking ImageNet Pre-training", ICCV 2019. Baseline: Ultralytics YOLOv8 (Jocher, Chaurasia and Qiu, 2023). Metric: COCO, Lin et al., ECCV 2014. This is a small engineering experiment, not a peer-reviewed paper.</p>
+    <p class="a-ref">Method: Zhou, Wang and Krähenbühl, "Objects as Points", 2019; Law and Deng, "CornerNet", ECCV 2018. Training from scratch: He, Girshick and Dollár, "Rethinking ImageNet Pre-training", ICCV 2019. Baseline: Ultralytics YOLOv8 (Jocher, Chaurasia and Qiu, 2023). Metric: COCO, Lin et al., ECCV 2014. Full study: Hussain, "Localising jersey numbers without pretraining: how much of the gap to YOLOv8n is pretraining?", Zenodo preprint, 2026, doi:10.5281/zenodo.24040745 (not peer reviewed).</p>
   </div>
 </main>
 <footer>
