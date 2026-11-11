@@ -46,7 +46,7 @@
     <p class="a-kicker">Experiment · Speech deepfake detection</p>
     <h1>My fake-voice detector called my own WhatsApp voice note AI-generated. What it gets right on phone audio, and what it does not</h1>
     <p class="a-sub">I built a detector for AI-generated voices, tested it on simulated phone lines, and put it in the browser. The benchmark numbers looked good. My own voice notes told a different story.</p>
-    <p class="updated">By Muzammal Hussain · 9 November 2026 · 9 min read</p>
+    <p class="updated">By Muzammal Hussain · 9 November 2026, updated 11 November 2026 · 9 min read</p>
     <p class="a-lede">Voice cloning now takes a few seconds of someone's speech, and the calls that use it arrive over phone lines and messaging apps, not in studio quality. VoiceGuard is my research project on detecting fake voices in exactly those conditions. This first stage uses one well-known dataset, a self-supervised speech model and a small classifier, and asks two questions: does the detector survive a phone line, and when it says "95% sure", can you believe it? Along the way I found a bug in my own feature extraction, and a real-world failure that the benchmark did not predict.</p>
 
     <div class="a-keys">
@@ -56,7 +56,7 @@
         <li>Which layer you take matters more than which classifier you train. With noise added to the phone line, layers 3 and 12 rose to 24-27% EER while layers 6 and 9 stayed at 8-9%. A classic MFCC baseline was close to chance on the phone line (41%).</li>
         <li>The scores still ranked clips well under noise, but the confidence did not transfer: in 12 of 40 model and condition pairs, the calibrated scores were worse than always answering "I don't know" (Cllr above 1).</li>
         <li>Zero padding in batched feature extraction had silently changed the features of short clips. For clips under 2 seconds, the score moved by 2.98 on average (in log-likelihood ratio); for clips that were never padded, by 0.01. I fixed it and re-ran everything.</li>
-        <li>In my own informal tests with the first browser demo, my voice recorded on a laptop scored 0.3% "AI voice", but a real English WhatsApp voice note scored 97.4%. Simulated Opus compression did not reproduce this failure.</li>
+        <li>In my own informal tests with the first browser demo, my voice recorded on a laptop scored 0.3% "AI voice", but a real English WhatsApp voice note scored 97.4% (93.6% after the padding fix). Simulated Opus compression did not reproduce this failure.</li>
       </ul>
     </div>
 
@@ -97,19 +97,19 @@
     <p>The pattern was clean: the more padding a clip had received, the further its score moved, and clips cut at exactly 4 seconds, which were never padded, matched to 0.01. For clips under 2 seconds the verdict changed on 11% of them. I changed the pipeline so that each batch holds only clips of equal length, re-extracted every feature and re-ran every experiment; the numbers in this article are from the fixed run. The conclusions did not change, but the headline did move (layer 6, clean, seed 42: 1.8% before, 2.1% after). After the fix, browser and pipeline agree on 100% of verdicts in every length group, with identical EER on the check clips. If you batch audio through a self-supervised model, check whether padding changes your features.</p>
 
     <h2>The browser demo, and my own voice notes</h2>
-    <p>The demo runs the whole detector, from waveform to calibrated score, as one ONNX model in the browser, so the audio never leaves the device; it took about 0.75 seconds per clip on my laptop. Then I tried it on my own voice, with the first version of the demo (before the padding fix):</p>
+    <p>The demo runs the whole detector, from waveform to calibrated score, as one ONNX model in the browser, so the audio never leaves the device; it took about 0.75 seconds per clip on my laptop. Then I tried it on my own voice, first with the original demo and again after the padding fix:</p>
     <div class="a-table">
       <table>
-        <thead><tr><th>Clip (my own voice, all real)</th><th>Verdict</th><th>Probability of AI voice</th><th>Log-likelihood ratio</th></tr></thead>
+        <thead><tr><th>Clip (my own voice, all real)</th><th>First demo: verdict (AI probability, LLR)</th><th>After the fix: verdict (AI probability, LLR)</th></tr></thead>
         <tbody>
-          <tr><td>Recorded on a laptop microphone</td><td>Likely real</td><td>0.3%</td><td>-5.79</td></tr>
-          <tr><td>English WhatsApp voice note, uploaded as a file</td><td>Likely AI-generated</td><td>97.4%</td><td>+3.64</td></tr>
-          <tr><td>The same voice note, played through a speaker and recorded again</td><td>Likely AI-generated</td><td>99.9%</td><td>+7.52</td></tr>
-          <tr><td>A different voice note, in Urdu, uploaded as a file</td><td>Uncertain</td><td>5.3%</td><td>-2.87</td></tr>
+          <tr><td>Recorded on a laptop microphone</td><td>Likely real (0.3%, -5.79)</td><td>Likely real (0.0%, -8.23)*</td></tr>
+          <tr><td>English WhatsApp voice note, uploaded as a file</td><td>Likely AI-generated (97.4%, +3.64)</td><td>Uncertain (93.6%, +2.67)</td></tr>
+          <tr><td>The same voice note, played through a speaker and recorded again</td><td>Likely AI-generated (99.9%, +7.52)</td><td>Likely AI-generated (95.5%, +3.06)*</td></tr>
+          <tr><td>A different voice note, in Urdu, uploaded as a file</td><td>Uncertain (5.3%, -2.87)</td><td>not retested</td></tr>
         </tbody>
       </table>
     </div>
-    <p>A real English voice note, sent through WhatsApp, was called AI-generated with 97.4% confidence. That is exactly the false alarm a tool like this must not raise. My first guess was the codec, so I added the Opus condition to the experiments. It did not explain it: at 16 kbps, Opus barely moved the error rate or the calibration of the layer 6 model (Cllr 0.13). Whatever pushed my voice note over the line, whether the phone's microphone and processing, the app's settings, or simply a voice and room unlike the studio recordings of ASVspoof 2019, a clean simulation did not capture it. These are four clips, not a benchmark, but the lesson is the same as for the calibration results: a detector trained on one corpus should be tested on real recordings from the channel where it will be used.</p>
+    <p>* New recordings made the same way, so not the identical clip. A real English voice note, sent through WhatsApp, was called AI-generated with 97.4% confidence by the first demo. After the padding fix the same file scored 93.6%, which the demo reports as "Uncertain", and the replayed note still crossed the 95% line. That is exactly the false alarm a tool like this must not raise. My first guess was the codec, so I added the Opus condition to the experiments. It did not explain it: at 16 kbps, Opus barely moved the error rate or the calibration of the layer 6 model (Cllr 0.13). Whatever pushed my voice note over the line, whether the phone's microphone and processing, the app's settings, or simply a voice and room unlike the studio recordings of ASVspoof 2019, a clean simulation did not capture it. These are four clips, not a benchmark, but the lesson is the same as for the calibration results: a detector trained on one corpus should be tested on real recordings from the channel where it will be used.</p>
 
     <h2>What I take from it</h2>
     <ul>
