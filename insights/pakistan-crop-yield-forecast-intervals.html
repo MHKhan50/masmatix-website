@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pakistan crop yield forecasts were 90% sure and right 75% of the time</title>
+  <meta name="description" content="One-year-ahead yield forecasts for 122 Pakistani districts and 105 crops from official PBS statistics. A simple ridge model had the lowest error, but its 90% intervals held only 74.6% of the time from 2020 to 2024, and a plain last-year rule caught yield shocks better.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/pakistan-crop-yield-forecast-intervals.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Pakistan crop yield forecasts were 90% sure and right 75% of the time">
+  <meta property="og:description" content="One-year-ahead yield forecasts for 122 Pakistani districts and 105 crops from official PBS statistics. A simple ridge model had the lowest error, but its 90% intervals held only 74.6% of the time from 2020 to 2024, and a plain last-year rule caught yield shocks better.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/pakistan-crop-yield-forecast-intervals.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+  <div class="wrap">
+    <a class="back" href="./">← All insights</a>
+    <p class="a-kicker">Data science · Agriculture</p>
+    <h1>Pakistan crop yield forecasts were 90% sure and right 75% of the time</h1>
+    <p class="a-sub">A leakage-safe benchmark on official district crop statistics, 1981-82 to 2024-25, tested on the five most recent years.</p>
+    <p class="updated">By Muzammal Hussain · 11 November 2026 · 6 min read</p>
+    <p class="a-lede">If a district's wheat or cotton yield is going to drop next year, the earlier someone knows, the better. I wanted to see how well simple methods forecast next year's yield for every district and crop in Pakistan's official statistics, and, more importantly, whether their stated uncertainty can be trusted. The short answer: the best model was only modestly better than "same as last year", and its "90% sure" ranges were right about three times in four.</p>
+
+    <div class="a-keys">
+      <h2>Key findings</h2>
+      <ul>
+        <li>Data: 74,803 district-crop-year rows from Pakistan Bureau of Statistics tables (122 districts, 105 crop labels). Tested on 19,177 forecasts for 2020-21 to 2024-25.</li>
+        <li>A pooled ridge model had the lowest RMSE (0.414 on the log scale) against 0.448 for a three-year median and 0.464 for last year's yield. The gain is real (95% CI for the difference -0.043 to -0.027) but small.</li>
+        <li>Last year's yield still had the lowest typical (absolute) error. Ridge mainly cut the large misses.</li>
+        <li>Intervals built to hold 90% of the time held only <strong>74.6%</strong> of the time in the test years.</li>
+        <li>For yield shocks (15% or more below the recent median), a plain last-year rule beat ridge: F1 0.309 against 0.195.</li>
+      </ul>
+    </div>
+
+    <h2>Data and method</h2>
+    <p>The data are district crop area, production and yield tables published by the Pakistan Bureau of Statistics, in the machine-readable extract packaged by Data Darbar. I downloaded it on 10 November 2026 and recorded its SHA-256 hash so the run can be repeated on exactly the same file. Rows with missing values or unlabelled crops were dropped and never filled with zero.</p>
+    <p>Each forecast predicts one district-crop yield one year ahead using only earlier years. The split is by time: training up to 2015-16, calibration 2016-17 to 2019-20, test 2020-21 to 2024-25. Three forecasters were compared:</p>
+    <ul>
+      <li><strong>Persistence:</strong> next year equals this year.</li>
+      <li><strong>Rolling median:</strong> the median of the last three yields.</li>
+      <li><strong>Pooled ridge:</strong> one linear model with nine lagged features, shared by all crops.</li>
+    </ul>
+    <p>Around the ridge forecast I built a split-conformal interval. Conformal prediction looks at how wrong the model was on the calibration years and sets the width of the range so that, if the future behaves like those years, the true value falls inside 90% of the time. A yield shock was defined as a yield at least 15% below the median of the previous three years.</p>
+
+    <h2>Results</h2>
+    <div class="a-table">
+      <table>
+        <thead><tr><th>Forecaster</th><th>RMSE (log yield)</th><th>MAE (log yield)</th><th>Shock alerts F1</th></tr></thead>
+        <tbody>
+          <tr><td>Persistence</td><td>0.464</td><td>0.200</td><td>0.309</td></tr>
+          <tr><td>Rolling median</td><td>0.448</td><td>0.217</td><td>n/a</td></tr>
+          <tr><td>Pooled ridge</td><td>0.414</td><td>0.209</td><td>0.195</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Test shock rate: 10.4%. Persistence alerts had precision 0.392 and recall 0.255; ridge alerts had precision 0.338 and recall 0.138. Conformal interval: nominal 90%, observed 74.6%, mean width 0.477 on the log scale.</p>
+
+    <figure class="a-fig">
+      <img src="../images/insights/harvestguard-error-and-shocks-by-year.png" alt="Left: forecast error by target year for persistence, rolling median and pooled ridge; all three peak in 2022-23 and persistence stays high in 2023-24 while the other two fall. Right: share of yield shocks by year, 7.7%, 8.6%, 16.8%, 7.6% and 10.5%, with 2022-23 highlighted." loading="lazy">
+      <figcaption>Figure 1. Error and yield-shock rate for each test year. The share of shocks doubled in 2022-23.</figcaption>
+    </figure>
+
+    <h2>What I noticed</h2>
+    <ul>
+      <li>2022-23 stands out. The shock rate was 16.8% against 7.6% to 10.5% in the other test years, and all three forecasters had their highest or second-highest error that year. It is the season of the 2022 monsoon floods, which caused heavy agricultural losses, although this analysis does not show that the floods caused these particular errors.</li>
+      <li>The next year shows why last-year rules are fragile: in 2023-24 persistence carried the bad year forward and its error was 0.585, while ridge and the rolling median were at 0.413.</li>
+      <li>The interval result matters most to me. A range that says "90%" but holds 75% of the time gives false confidence. The calibration years before 2020 simply did not look like the years after, so the guarantee broke. Fixing this, for example by recalibrating on recent years, is the next step.</li>
+      <li>Smoothing models are slow to see sudden drops. Ridge was better on average but missed more shocks than the plain last-year rule.</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>District yields are administrative estimates, and district boundaries and codes changed over four decades. Some districts and regions are missing from the extract.</li>
+      <li>This run still has known label issues: one crop appears under two spellings that differ only by case, and some labels are aggregates (for example "Fodders Total") pooled with single crops. Dates and grapes show unusually large errors that may come from reporting or unit changes. These will be cleaned before any further study, and the numbers may move.</li>
+      <li>One pooled model covers crops as different as sugarcane and pulses, and no weather or satellite data were used.</li>
+      <li>The 15% shock threshold is an operational choice, not an official definition.</li>
+      <li>These are statistical forecasts of published aggregates, not farm-level advice or official PBS estimates.</li>
+    </ul>
+
+    <h2>Reproduce the analysis</h2>
+    <p>The repository downloads the data, records its hash, runs the forecasts and writes the per-crop and per-year tables. It has 15 tests and runs on Python 3.9.</p>
+    <div class="a-links">
+      <a class="btn btn-grad" href="https://github.com/MHKhan50/harvestguard-pk-v0.1.0">View code</a>
+    </div>
+    <p class="a-ref">Data: Pakistan Bureau of Statistics district crop statistics, machine-readable extract by <a href="https://darbar.adaad.org/">Data Darbar</a> (derived data labelled CC BY 4.0 by Data Darbar; not official PBS estimates). Context: UNDP (2022), <a href="https://www.undp.org/node/361696">Pakistan: flood damages and economic losses over USD 30 billion and reconstruction needs over USD 16 billion</a>. Method: Lei, G'Sell, Rinaldo, Tibshirani and Wasserman (2018), <a href="https://arxiv.org/abs/1604.04173">Distribution-free predictive inference for regression</a>, <em>Journal of the American Statistical Association</em>.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
