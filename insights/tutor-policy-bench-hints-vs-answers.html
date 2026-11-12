@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>An adaptive AI tutor did not beat a simple hint rule in my simulator | Masmatix Innovations</title>
+  <meta name="description" content="TutorPolicyBench follows 810 simulated learners per policy over three sessions with forgetting. Giving the answer scored 100% in session and lowest later; adaptive policies tied a fixed hint rule.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/tutor-policy-bench-hints-vs-answers.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="An adaptive AI tutor did not beat a simple hint rule in my simulator">
+  <meta property="og:description" content="TutorPolicyBench follows 810 simulated learners per policy over three sessions with forgetting. Giving the answer scored 100% in session and lowest later; adaptive policies tied a fixed hint rule.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/tutor-policy-bench-hints-vs-answers.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · AI in education · Simulation</p>
+      <h1>An adaptive AI tutor did not beat a simple hint rule in my simulator</h1>
+      <p class="a-sub">TutorPolicyBench: which move should a tutor make next when it has a fixed budget and the learner forgets between sessions?</p>
+      <p class="updated">By Muzammal Hussain · 12 November 2026 · Research update</p>
+
+      <p class="a-lede">Most tests of AI tutors score one reply. A tutor really makes a series of choices: give a hint, show a worked example, ask a recall question, go back to a prerequisite, or just give the answer. I built a small simulator that follows a learner over three sessions, lets them forget in between, and then tests them without help. Every learner here is synthetic, so the results show what my assumptions imply, not how real students learn.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Giving the answer looks perfect and teaches least:</b> 100% correct during sessions, 42.5% on the delayed test, against 67.1% for the multi-agent policy. The simulator assumes revealing answers teaches little, so this is a sanity check rather than a discovery.</li>
+          <li><b>Adaptive did not clearly win:</b> the multi-agent policy beat a fixed hint rule by 0.4 points on the delayed test (paired 95% interval −0.1 to +0.9). For novice learners the hint rule was best.</li>
+          <li><b>Noise barely mattered:</b> with a quarter of answers misread, the hint and adaptive policies stayed within about 1 point of each other.</li>
+          <li><b>The winner depends on forgetting:</b> with forgetting switched off, the threshold policy came first (76.6% against 75.2%).</li>
+        </ol>
+      </div>
+
+      <h2>How the simulator works</h2>
+      <p>Each learner has three maths skills and meets the tutor for three sessions of eight turns. The tutor has a budget of 24 cost units; worked examples and prerequisite reviews cost 2, every other move costs 1. Learners start as novice, intermediate or advanced, with starting mastery of 0.25, 0.45 or 0.65, and lose some mastery at each session break. Some start with a misconception that halves their learning until a prerequisite review clears it.</p>
+      <p>The tutor never sees mastery directly. It sees answers, and each one is misread with probability 0, 10% or 25%. Its starting guess about the learner is too optimistic by 0, 0.15 or 0.30. After the last session the learner forgets once more and answers five questions per skill with no help.</p>
+      <p>I ran 30 seeds across every profile, noise and mismatch setting: 810 learners per policy. Every policy meets the same learners with the same random draws, so a difference comes from the moves it chose.</p>
+
+      <h2>Results</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Policy</th><th>Correct during sessions</th><th>Correct on delayed test</th><th>Mastery gain</th></tr></thead>
+          <tbody>
+            <tr><td>Always give the answer</td><td>100.0%</td><td>42.5%</td><td>−0.022</td></tr>
+            <tr><td>Fixed hint rule</td><td>67.9%</td><td>66.7%</td><td>0.219</td></tr>
+            <tr><td>Mastery threshold</td><td>67.4%</td><td>66.3%</td><td>0.214</td></tr>
+            <tr><td>Multi-agent (rule-based)</td><td>64.7%</td><td>67.1%</td><td>0.224</td></tr>
+            <tr><td>Random move</td><td>71.6%</td><td>63.0%</td><td>0.183</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The policy that looked best during sessions was the worst afterwards, and the order flipped again among the rest: the multi-agent policy had the lowest in-session score of the non-answer policies and the highest delayed score. Its lead over the fixed hint rule, though, was 0.4 points with an interval that includes zero.</p>
+
+      <h3>By learner profile (delayed test)</h3>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Profile</th><th>Give answer</th><th>Hint rule</th><th>Threshold</th><th>Multi-agent</th></tr></thead>
+          <tbody>
+            <tr><td>Novice</td><td>24.2%</td><td>50.4%</td><td>48.8%</td><td>48.8%</td></tr>
+            <tr><td>Intermediate</td><td>41.8%</td><td>67.3%</td><td>67.0%</td><td>67.8%</td></tr>
+            <tr><td>Advanced</td><td>61.4%</td><td>82.3%</td><td>83.0%</td><td>84.6%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The adaptive policies helped most where they were least needed. For novices, who most need the right move, a rule that ignores the mastery estimate did slightly better.</p>
+
+      <h2>What this means</h2>
+      <p>An AI tutor that is judged on whether the student got today's question right will drift toward giving answers. The simulator makes that cost visible, but only because I wrote it in. The more useful result is the near tie: a plain hint rule was as good as the adaptive policies, and the top place changed when one assumption changed. Before claiming an adaptive tutor is better, it has to beat a simple rule, and the claim has to survive changes to the learning model.</p>
+
+      <h2>Limitations</h2>
+      <p>The learners are synthetic and the effect of each move is my assumption, not a measurement. The multi-agent policy is four hand-written rules, not a language model. The confidence intervals treat the 810 matched cells as independent although they share seeds. Nothing here shows that any tutor helps real students, and the benchmark is not mapped to the Pakistani curriculum or to Urdu material.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>A local language model choosing the moves, compared with the rules above.</li>
+        <li>Sensitivity runs over the action effects, not just forgetting.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/tutor-policy-bench" target="_blank" rel="noopener">Code and every episode on GitHub →</a>
+      </div>
+      <p class="a-ref">Background: Corbett, A. T. and Anderson, J. R. (1994). Knowledge tracing: modeling the acquisition of procedural knowledge. <i>User Modeling and User-Adapted Interaction</i> 4(4), 253–278.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
