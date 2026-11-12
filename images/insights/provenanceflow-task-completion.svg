@@ -14,18 +14,18 @@
 <line x1="865.0" y1="70" x2="865.0" y2="405" stroke="#dddddd"/>
 <text x="865.0" y="429" text-anchor="middle" font-size="13" font-family="Arial">100%</text>
 <text x="218" y="108" text-anchor="end" font-size="14" font-family="Arial">no_guard</text>
-<rect x="230" y="78" width="635.0" height="48" fill="#4c78a8"/>
+<rect x="230" y="78" width="635.0" height="48" fill="#1F4E9C"/>
 <text x="873.0" y="108" font-size="14" font-family="Arial">100.0%</text>
 <text x="218" y="181" text-anchor="end" font-size="14" font-family="Arial">label_only</text>
-<rect x="230" y="151" width="635.0" height="48" fill="#4c78a8"/>
+<rect x="230" y="151" width="635.0" height="48" fill="#1F4E9C"/>
 <text x="873.0" y="181" font-size="14" font-family="Arial">100.0%</text>
 <text x="218" y="254" text-anchor="end" font-size="14" font-family="Arial">direct_only_taint</text>
-<rect x="230" y="224" width="635.0" height="48" fill="#4c78a8"/>
+<rect x="230" y="224" width="635.0" height="48" fill="#1F4E9C"/>
 <text x="873.0" y="254" font-size="14" font-family="Arial">100.0%</text>
 <text x="218" y="327" text-anchor="end" font-size="14" font-family="Arial">strict_taint</text>
-<rect x="230" y="297" width="89.3" height="48" fill="#4c78a8"/>
+<rect x="230" y="297" width="89.3" height="48" fill="#1F4E9C"/>
 <text x="327.3" y="327" font-size="14" font-family="Arial">14.1%</text>
 <text x="218" y="400" text-anchor="end" font-size="14" font-family="Arial">field_provenance_guard</text>
-<rect x="230" y="370" width="635.0" height="48" fill="#4c78a8"/>
+<rect x="230" y="370" width="635.0" height="48" fill="#1F4E9C"/>
 <text x="873.0" y="400" font-size="14" font-family="Arial">100.0%</text>
 </svg>
