@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Small local AI agents almost never found a button that had no name, and one time in ten clicked the risky one | Masmatix Innovations</title>
+  <meta name="description" content="A11yBridge: five local LLMs acting as web agents on 168 clinic pages. Unnamed buttons were chosen 3 to 4% of the time against 97% with a name; about one run in ten picked a risky look-alike such as Delete.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/a11ybridge-unnamed-buttons-web-agents.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Small local AI agents almost never found a button that had no name, and one time in ten clicked the risky one">
+  <meta property="og:description" content="A11yBridge: five local LLMs acting as web agents on 168 clinic pages. Unnamed buttons were chosen 3 to 4% of the time against 97% with a name; about one run in ten picked a risky look-alike such as Delete.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/a11ybridge-unnamed-buttons-web-agents.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Web accessibility</p>
+      <h1>Small local AI agents almost never found a button that had no name, and one time in ten clicked the risky one</h1>
+      <p class="a-sub">A11yBridge: what happens to small local language models acting as web agents when the control they need has an accessibility defect.</p>
+      <p class="updated">By Muzammal Hussain · 12 November 2026 · Research update</p>
+
+      <p class="a-lede">Many web agents read a page through its accessibility tree, the same list of roles and names a screen reader uses. If a button has no name, a screen-reader user cannot tell what it does, and neither can the agent. I built 168 fictional clinic pages, each with one target control, one risky look-alike and two neutral controls, and gave the same one-step task to five local models in English and in Roman Urdu: 1,680 calls in total.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>No name, no click:</b> a button with only an icon was chosen 3.1% of the time, and an image button with no alt text 3.8%, against 96.9% for the same button with its name.</li>
+          <li><b>The risky look-alike got picked:</b> on unnamed or generically named buttons, about one run in ten chose the dangerous neighbour, such as "Delete report" when asked to save the report.</li>
+          <li><b>Visible text rescued the wrong role:</b> a "button" built from a plain <code>div</code> was still found 94.4% of the time; an exact role-and-name script found it 0% of the time.</li>
+          <li><b>Roman Urdu mostly did not change the outcome:</b> three of fifteen model and element comparisons were clearly worse in Roman Urdu, one was better, and the other eleven included zero in their intervals.</li>
+        </ol>
+      </div>
+
+      <h2>Setup</h2>
+      <p>Sixteen tasks (8 buttons, 4 links, 4 text fields) were each rendered with and without element-specific defects in two layouts, giving 168 pages. Chromium rendered every page with Playwright, and the model saw the page's accessibility snapshot as numbered lines. It had to reply with the number of the line to act on, or 0 if nothing fitted. The models were qwen2.5:3b, llama3.2:3b, qwen2.5:7b, mistral:7b and llama3.1:8b, run locally with Ollama at temperature 0. Each defect page was compared with the same task and layout without the defect.</p>
+
+      <h2>Results</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Control and defect</th><th>Right element</th><th>Risky look-alike</th><th>Other wrong element</th><th>Said "none"</th></tr></thead>
+          <tbody>
+            <tr><td>Button, named (baseline)</td><td>96.9%</td><td>1.2%</td><td>1.9%</td><td>0.0%</td></tr>
+            <tr><td>Button built from a <code>div</code></td><td>94.4%</td><td>0.0%</td><td>5.0%</td><td>0.6%</td></tr>
+            <tr><td>Button with a duplicate name</td><td>66.9%</td><td>2.5%</td><td>30.6%</td><td>0.0%</td></tr>
+            <tr><td>Button named "Action"</td><td>25.0%</td><td>10.6%</td><td>28.8%</td><td>35.6%</td></tr>
+            <tr><td>Icon button, no name</td><td>3.1%</td><td>11.9%</td><td>40.6%</td><td>44.4%</td></tr>
+            <tr><td>Image button, no alt text</td><td>3.8%</td><td>9.4%</td><td>45.0%</td><td>41.9%</td></tr>
+            <tr><td>Link, named (baseline)</td><td>86.2%</td><td>2.5%</td><td>10.0%</td><td>1.2%</td></tr>
+            <tr><td>Link named "Click here"</td><td>3.8%</td><td>1.2%</td><td>60.0%</td><td>35.0%</td></tr>
+            <tr><td>Text field, labelled (baseline)</td><td>93.8%</td><td>–</td><td>6.2%</td><td>0.0%</td></tr>
+            <tr><td>Text field, no label</td><td>16.2%</td><td>–</td><td>37.5%</td><td>46.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Pooled over five models and both instruction languages; 160 runs per button row and 80 per link or text-field row. Text fields had no risky look-alike.</p>
+      <p>The models failed in different ways. Faced with a button named only "Action", mistral:7b said nothing fitted in 75% of English runs, while qwen2.5:3b chose the risky look-alike in 44%. Saying "none" is the safer failure: the user can be asked, whereas a wrong click on Delete may not be undoable.</p>
+      <p>Roman Urdu instructions were clearly worse for llama3.2:3b on buttons (−14.6 percentage points, 95% interval −22.9 to −7.3), for mistral:7b on links (−17.5, −30.0 to −7.5) and for qwen2.5:3b on links (−10.0, −20.0 to −2.5), and better for llama3.1:8b on text fields (+12.5, +3.1 to +25.0). The other eleven comparisons had intervals that included zero.</p>
+
+      <h2>What this means</h2>
+      <p>For an agent that reads the accessibility tree, an unnamed control is invisible, just as it is to a screen-reader user. Fixing accessible names therefore helps two groups at once. For agents themselves, the risky look-alike result matters more than the miss rate: an agent that cannot find the right button should stop and ask, and a destructive action should never be taken on a guess.</p>
+
+      <h2>Limitations</h2>
+      <p>The pages are fictional, written by one person, with one defect at a time; real pages combine many. The task is a single element choice, not a full multi-step agent, and the model sees only the accessibility tree, not the screen. The models are small open models at default quantisation, with one answer per page. An agent finding a control is not evidence that the page is usable for people who rely on assistive technology.</p>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/a11ybridge-accessibility-benchmark" target="_blank" rel="noopener">Code, pages and every model call on GitHub →</a>
+        <a class="btn btn-grad" href="https://doi.org/10.5281/zenodo.24045501" target="_blank" rel="noopener">Read the paper →</a>
+      </div>
+      <p class="a-ref">Paper: Hussain, M. (2026). Missing Names, Wrong Clicks: Accessibility Defects and Element Choice by Small Local LLM Web Agents. Zenodo. doi:10.5281/zenodo.24045501. Background: W3C Web Content Accessibility Guidelines (WCAG) 2.2, success criterion 4.1.2 Name, Role, Value.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
