@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Retrying fixed timeouts but not wrong answers when an agent's tools changed | Masmatix Innovations</title>
+  <meta name="description" content="AgentShiftBench: 16,200 runs of three agent policies against nine kinds of tool drift. A contract check cut wrong-but-reported answers from 18.5% to 3.7%; an unannounced change fooled every policy.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/agent-tool-drift-contract-guard.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Retrying fixed timeouts but not wrong answers when an agent's tools changed">
+  <meta property="og:description" content="AgentShiftBench: 16,200 runs of three agent policies against nine kinds of tool drift. A contract check cut wrong-but-reported answers from 18.5% to 3.7%; an unannounced change fooled every policy.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/agent-tool-drift-contract-guard.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Reliability</p>
+      <h1>Retrying fixed timeouts but not wrong answers when an agent's tools changed</h1>
+      <p class="a-sub">AgentShiftBench: what happens to a tool-using agent when the tool changes after the agent was built.</p>
+      <p class="updated">By Muzammal Hussain · 12 November 2026 · Research update</p>
+      <p class="a-lede">An agent is set up against a tool, and then the tool changes: an argument is renamed, a number starts meaning something else, a write times out after it has already gone through. I built a small simulator with six mock tools and nine kinds of drift, and compared three ways an agent can react. No policy is told which drift happened; it only sees the tool's replies. Everything is synthetic, so the numbers follow from my rules and show how the mechanisms play out, not how often this happens in real systems.</p>
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>Retrying helped, and also did harm:</b> it fixed timeouts and rate limits, but every time a write had gone through before its reply was lost, retrying sent it a second time.</li>
+          <li><b>A contract check caught most wrong answers:</b> wrong or stale values reported as done fell from 18.5% to 3.7%.</li>
+          <li><b>One change fooled everyone:</b> when the tool changed what a number meant and the reply gave no sign of it, all three policies reported the wrong number. That is the whole remaining 3.7%.</li>
+          <li><b>The check was cheap:</b> 1.63 tool calls per task against 1.41 for plain retrying, all of the difference from re-reading the schema after a rename.</li>
+        </ol>
+      </div>
+
+      <h2>Setup</h2>
+      <p>Six mock tasks (two reads, two calculations, two writes) meet nine conditions: no change, a renamed argument, a changed meaning with a version bump, the same change with no signal, stale data, 1 to 3 timeouts, 1 to 3 rate-limit errors, a write whose reply is lost, and a revoked permission. Every task and condition pair appears equally often across 5 seeds and 5,400 episodes, and each episode is run by all three policies.</p>
+      <ul>
+        <li><b>Naive:</b> one call, accepts whatever comes back.</li>
+        <li><b>Retry only:</b> up to 3 attempts on timeouts and rate limits.</li>
+        <li><b>Contract guard:</b> the same 3 attempts, plus it re-reads the schema once after an unknown-argument error, refuses replies marked stale or carrying a new contract version, sends an idempotency key with writes, and stops on a permission error.</li>
+      </ul>
+
+      <h2>Results</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Policy</th><th>Task done correctly</th><th>Wrong or stale value reported</th><th>Duplicate write</th><th>Tool calls per task</th></tr></thead>
+          <tbody>
+            <tr><td>Naive</td><td>33.3%</td><td>18.5%</td><td>0.0%</td><td>1.00</td></tr>
+            <tr><td>Retry only</td><td>48.2%</td><td>18.5%</td><td>3.7%</td><td>1.41</td></tr>
+            <tr><td>Contract guard</td><td>63.0%</td><td>3.7%</td><td>0.0%</td><td>1.63</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>No policy could finish a task after a revoked permission or with only stale data on offer. The difference is in what they said: the naive and retrying policies reported the stale value as the answer, while the guard reported nothing.</p>
+
+      <h2>What this means</h2>
+      <p>Retrying is not a safety measure. It is right for timeouts and wrong for writes without an idempotency key. Checking what comes back is what stops an agent from confidently reporting a wrong value, but only for changes the tool admits to. A provider that changes the meaning of a field without changing its version defeats every check that only looks at the reply, so the version number in an API contract carries real weight.</p>
+
+      <h2>Limitations</h2>
+      <p>Six hand-written mock tools and rules I chose; real APIs drift in more and messier ways. The guard is hand-coded and no language model is involved. Latency is in abstract units. Idempotency is ideal here: the server always recognises a repeated key.</p>
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agent-shift-bench" target="_blank" rel="noopener">Code and results on GitHub →</a>
+      </div>
+      <p class="a-ref">Background: Fielding, R. T. (2000). <i>Architectural Styles and the Design of Network-based Software Architectures</i>, PhD thesis, University of California, Irvine. See also RFC 9110 on idempotent HTTP methods.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
