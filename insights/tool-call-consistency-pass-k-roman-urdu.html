@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Right once, wrong next time: small AI models got Roman Urdu clinic bookings right all five times on only 13-38% of tasks | Masmatix Innovations</title>
+  <meta name="description" content="Five tries of the same clinic tool call with qwen2.5:3b and llama3.1:8b. In English 75-88% of tasks were right every time; in Roman Urdu 13-38%, even when single tries of reworded requests were right 63-80% of the time.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/tool-call-consistency-pass-k-roman-urdu.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Right once, wrong next time: small AI models got Roman Urdu clinic bookings right all five times on only 13-38% of tasks">
+  <meta property="og:description" content="Five tries of the same clinic tool call with qwen2.5:3b and llama3.1:8b. In English 75-88% of tasks were right every time; in Roman Urdu 13-38%, even when single tries of reworded requests were right 63-80% of the time.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/tool-call-consistency-pass-k-roman-urdu.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Roman Urdu</p>
+      <h1>Right once, wrong next time: small AI models got Roman Urdu clinic bookings right all five times on only 13-38% of tasks</h1>
+      <p class="a-sub">A pass^k follow-up to tau-bench: how repeatable are clinic tool calls from two local models, in English and Roman Urdu?</p>
+      <p class="updated">By Muzammal Hussain · 14 November 2026 · Research update</p>
+
+      <p class="a-lede">An AI agent that books the right appointment four times out of five is not one you can leave alone at a clinic desk. Most tool-use scores give each task one try. The tau-bench paper (Yao et al., 2024) proposed pass^k instead: the chance that k tries of the same task are all correct. I applied it to eight clinic tool calls from my earlier <a href="tool-call-self-correction.html">self-correction test</a>, with two small local models, in English and in Roman Urdu as people actually type it.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>English calls were mostly repeatable:</b> 87.5% of tasks were right all five times for llama3.1:8b and 75% for qwen2.5:3b.</li>
+          <li><b>Roman Urdu calls were not:</b> only 12.5% to 37.5% of tasks were right all five times.</li>
+          <li><b>One try hides the problem:</b> with five wordings of each request, qwen2.5:3b got 62.5% of single tries right but only 12.5% of tasks right every time.</li>
+          <li><b>Rewording and resampling fail differently:</b> new wordings made Roman Urdu tasks right some of the time; resampling the same wording left some tasks wrong every time, so a retry would not have helped.</li>
+        </ol>
+      </div>
+
+      <h2>Setup</h2>
+      <p>The eight tasks are clinic tool calls: booking an appointment, recording vitals, a pain score, a reminder, a refund, a cancellation, a patient search and an exercise log. Each has a fixed schema and a known correct answer. A try passes only if the JSON is valid and every value is right.</p>
+      <p>Each task was repeated five times in two ways. In the <b>wording</b> condition the model saw the original request and four rewordings with the same meaning, at temperature 0; the Roman Urdu wordings use the spellings people really type, such as kr and kar, or nai and nahi. In the <b>sampling</b> condition it saw the original wording five times at temperature 0.7 with five seeds. That is 2 models × 8 tasks × 2 languages × 2 conditions × 5 tries = 320 calls, run with Ollama on a MacBook M4.</p>
+
+      <figure class="a-fig">
+        <img src="../images/insights/tool-call-consistency-pass-k.png" alt="Two line charts of pass^k from k equals 1 to 5. Left: five wordings at temperature 0. Right: same wording, temperature 0.7, five seeds. English lines for llama3.1:8b (blue) and qwen2.5:3b (yellow) stay between 75% and 98%. Roman Urdu lines for llama3.1:8b (red, dashed) and qwen2.5:3b (green, dashed) start between 48% and 80% and fall to between 12% and 38% at k equals 5." loading="lazy">
+        <figcaption>pass^k: the chance that all k tries of a task are fully correct, averaged over eight tasks.</figcaption>
+      </figure>
+
+      <h2>Results</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Model</th><th>Language</th><th>Condition</th><th>One try right</th><th>All five right</th><th>Tasks always / sometimes / never right</th></tr></thead>
+          <tbody>
+            <tr><td>llama3.1:8b</td><td>English</td><td>Wording</td><td>97.5%</td><td>87.5%</td><td>7 / 1 / 0</td></tr>
+            <tr><td>llama3.1:8b</td><td>English</td><td>Sampling</td><td>97.5%</td><td>87.5%</td><td>7 / 1 / 0</td></tr>
+            <tr><td>llama3.1:8b</td><td>Roman Urdu</td><td>Wording</td><td>80.0%</td><td>37.5%</td><td>3 / 5 / 0</td></tr>
+            <tr><td>llama3.1:8b</td><td>Roman Urdu</td><td>Sampling</td><td>47.5%</td><td>37.5%</td><td>3 / 1 / 4</td></tr>
+            <tr><td>qwen2.5:3b</td><td>English</td><td>Wording</td><td>95.0%</td><td>75.0%</td><td>6 / 2 / 0</td></tr>
+            <tr><td>qwen2.5:3b</td><td>English</td><td>Sampling</td><td>85.0%</td><td>75.0%</td><td>6 / 1 / 1</td></tr>
+            <tr><td>qwen2.5:3b</td><td>Roman Urdu</td><td>Wording</td><td>62.5%</td><td>12.5%</td><td>1 / 7 / 0</td></tr>
+            <tr><td>qwen2.5:3b</td><td>Roman Urdu</td><td>Sampling</td><td>52.5%</td><td>25.0%</td><td>2 / 3 / 3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Eight tasks give wide intervals: the 95% bootstrap interval for "all five right" spans 37 to 75 points in every row. The gap between English and Roman Urdu is clear; the differences between the two models and between the two conditions are not.</p>
+
+      <h2>Which fields broke</h2>
+      <p>The failures sat in fields that need interpretation rather than copying: the appointment time ("dhai baje dopehar" for 2:30 pm), the pulse, the pain score, the refund amount, the cancellation reason and the city. The exercise log was right in every one of its 40 tries. With the original Roman Urdu wording and resampling, llama3.1:8b got four tasks wrong all five times: the time, the pulse, the amount and the reason. Those are systematic misreadings, not bad luck, so asking again with a new seed would not have fixed them.</p>
+      <p>One smaller finding: 150 of the 320 replies wrapped the JSON in code fences although the instruction said not to. The JSON could still be read, but a strict parser would have rejected almost half the replies.</p>
+
+      <h2>What this means</h2>
+      <p>A single-try accuracy of 80% on Roman Urdu requests sounds usable. Asked whether the same request comes back right every time, the answer for these models is "for about one task in three". For a clinic agent that will see each kind of request many times a day, that second number is the one that matters. Checking the values in code, and sending uncertain Roman Urdu calls to a person, is still needed with models of this size.</p>
+
+      <h2>Limitations</h2>
+      <p>Eight tasks only, so this is a pilot. I wrote the four extra wordings myself; they are not a sample of real clinic messages. Each call is a single turn, while tau-bench scores whole conversations with a simulated user. Scoring is exact match after light normalisation, so a free-text field written differently but acceptably counts as wrong. Results can differ with other Ollama versions or hardware.</p>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/tool-call-consistency" target="_blank" rel="noopener">Code and results on GitHub →</a>
+      </div>
+      <p class="a-ref">Reference: Yao, S., Shinn, N., Razavi, P. and Narasimhan, K. (2024). τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains. arXiv:2406.12045.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
