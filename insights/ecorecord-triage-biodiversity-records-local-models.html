@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Small AI models checking biodiversity records found every listed issue when the checks were run for them, and almost none without | Masmatix Innovations</title>
+  <meta name="description" content="EcoRecordTriageBench tests local AI agents on 114 synthetic occurrence records. With the validators run, issue sets were 90-100% correct; without tools, 7-10%. Choosing the right curator action was harder.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/ecorecord-triage-biodiversity-records-local-models.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Small AI models checking biodiversity records found every listed issue when the checks were run for them, and almost none without">
+  <meta property="og:description" content="EcoRecordTriageBench tests local AI agents on 114 synthetic occurrence records. With the validators run, issue sets were 90-100% correct; without tools, 7-10%. Choosing the right curator action was harder.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/ecorecord-triage-biodiversity-records-local-models.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Agentic AI · Biodiversity data</p>
+      <h1>Small AI models checking biodiversity records found every listed issue when the checks were run for them, and almost none without</h1>
+      <p class="a-sub">EcoRecordTriageBench: can a small local AI agent run the right data-quality checks on a citizen-science record and send it to the right curator queue?</p>
+      <p class="updated">By Muzammal Hussain · 14 November 2026 · Research update</p>
+
+      <p class="a-lede">Millions of wildlife sightings reach biodiversity databases every year, and each one has to be checked before scientists use it: are the coordinates possible, does the date make sense, is there a photo, do identifiers agree? GBIF and iNaturalist already have mature automatic checks for this. The question here is narrower. If an AI agent is given those checks as tools, does it use them properly, and does it then choose the right next step for the record? I built EcoRecordTriageBench to test that with two small models running on a laptop.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>The checks did the detecting.</b> With every validator run, the exact list of issues was right for 100% (llama3.1:8b) and 90% (qwen2.5:3b) of records. With no tools it fell to 7% and 10%.</li>
+          <li><b>Finding the issues was not the same as acting on them.</b> llama3.1:8b listed the correct issues for all 114 records but chose the correct curator action for only 84%.</li>
+          <li><b>The smaller model lost more when it chose its own checks.</b> qwen2.5:3b ran 87% of the checks it needed and its exact issue sets dropped from 90% to 79%; llama3.1:8b ran 96% and lost nothing.</li>
+          <li><b>Museum specimens were judged like field photos.</b> Before filtering, llama3.1:8b gave a photo or identification issue to a third of the records that are not field observations, and no setting got the specimen control right.</li>
+        </ol>
+      </div>
+
+      <h2>Setup</h2>
+      <p>The benchmark has 114 synthetic records written in Darwin Core fields: 19 scenario families, six variants each. Families cover clean field observations, impossible or missing coordinates, bad or future dates, missing photos, captive animals, weak identification agreement, conflicting species names, records with two problems, and preserved museum specimens, which should not be held to field-photo rules. Each record has a known set of issues and one correct action from a fixed policy: ready for research, request a correction, send to community identification, or send to expert review.</p>
+      <p>The agent has five read-only checking tools (record type, coordinates, dates, verifiability, identification) and was tested in three ways. In <i>all tools</i>, every check that applies to the record runs and the model reads the results. In <i>model picks tools</i>, the model first decides which checks to run. In <i>no tools</i>, it reads the record and the issue definitions and decides on its own. I ran qwen2.5:3b and llama3.1:8b through Ollama on a Mac at temperature 0: 912 model calls, none with an unreadable reply. Intervals are 95% bootstrap intervals that resample the 19 families, so they are wide.</p>
+
+      <figure class="a-fig">
+        <img src="../images/insights/ecorecord-triage-biodiversity-records-local-models.png" alt="Grouped bar chart with all tools run (blue), model picks tools (yellow) and no tools (red). Exact issue set: llama3.1:8b 100, 100 and 7 percent; qwen2.5:3b 90, 79 and 10 percent. Triage action: llama3.1:8b 84, 79 and 26 percent; qwen2.5:3b 90, 84 and 25 percent. Error bars are wide." loading="lazy">
+        <figcaption>Share of 114 records with the exact issue set and the correct action, with 95% cluster-bootstrap intervals.</figcaption>
+      </figure>
+
+      <h2>Results</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Measure</th><th>llama3.1:8b all tools</th><th>llama3.1:8b picks</th><th>llama3.1:8b no tools</th><th>qwen2.5:3b all tools</th><th>qwen2.5:3b picks</th><th>qwen2.5:3b no tools</th></tr></thead>
+          <tbody>
+            <tr><td>Exact issue set</td><td>100%</td><td>100%</td><td>7.0%</td><td>89.5%</td><td>78.9%</td><td>9.6%</td></tr>
+            <tr><td>Correct action</td><td>84.2%</td><td>78.9%</td><td>26.3%</td><td>89.5%</td><td>84.2%</td><td>24.6%</td></tr>
+            <tr><td>Issue recall</td><td>100%</td><td>100%</td><td>31.6%</td><td>89.5%</td><td>78.9%</td><td>31.6%</td></tr>
+            <tr><td>Issue precision</td><td>100%</td><td>100%</td><td>20.6%</td><td>100%</td><td>100%</td><td>12.9%</td></tr>
+            <tr><td>Clean records left clean</td><td>100%</td><td>100%</td><td>0%</td><td>100%</td><td>100%</td><td>41.7%</td></tr>
+            <tr><td>Needed checks it chose to run</td><td>–</td><td>96.1%</td><td>–</td><td>–</td><td>86.5%</td><td>–</td></tr>
+            <tr><td>Field-photo rule given to non-observations</td><td>33.3%</td><td>33.3%</td><td>0%</td><td>0%</td><td>22.2%</td><td>100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>For comparison, a rule agent that simply runs every applicable check and applies the policy scores 100% on every measure; that is a test of the software, not of a model.</p>
+
+      <h2>Where the models went wrong</h2>
+      <p>Without tools, both models guessed. llama3.1:8b put an issue on every clean record, and both found only about a third of the real problems. The gap to the all-tools condition was 93 points of exact issue sets for llama3.1:8b and 80 points for qwen2.5:3b.</p>
+      <p>With tools, the errors moved from finding problems to deciding what to do. llama3.1:8b's wrong actions came from three whole families: the museum-specimen control, a specimen with an impossible latitude, and a field record with both a date mismatch and weak identifier agreement. qwen2.5:3b missed issues instead, such as a zero coordinate or low agreement, and when it picked its own checks it failed every record with missing or non-numeric coordinates.</p>
+
+      <h2>What this means</h2>
+      <p>On this test, the value comes from the deterministic checks, which already exist at GBIF and iNaturalist. A small model can read their results reliably, but mapping a set of issues to the right curator queue was the weaker step, and specimens exposed it. If an agent is used here, the checks to run should be fixed by record type, and the policy step should be checked by rules or by a person rather than left to the model.</p>
+
+      <h2>Limitations</h2>
+      <p>The records are synthetic and the triage policy is my own simplification, not GBIF or iNaturalist policy. Labels come from the same recipes that create the records. Two small models, one seed and one machine were tested. Nineteen families give wide intervals, and only three families are not field observations. Biodiversity curators have not yet reviewed the rules, and the results say nothing about real submissions or about species identification.</p>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/ecorecord-triage-benchmark" target="_blank" rel="noopener">Code and results on GitHub →</a>
+      </div>
+      <p class="a-ref">Background: GBIF, Occurrence issues and flags (technical documentation); iNaturalist, Data Quality Assessment and Research Grade criteria; Campbell et al. (2023), Identifying the identifiers: how iNaturalist facilitates collaborative, research-relevant data generation, <i>BioScience</i> 73(7), 533–541; Dorm et al. (2026), Large language models possess some ecological knowledge, but how much?, <i>Ecological Informatics</i> 95, 103699.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
