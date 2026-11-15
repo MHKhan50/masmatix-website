@@ -89,7 +89,7 @@
       <p>* Almost all of this is unreadable output: of 240 comparisons, only 3 were a change between two valid decisions. For comparison, a rule-following agent scores 100% on every correct-behaviour measure, and an unsafe baseline that excludes on any warning sign leaks 68.8% and asserts misconduct 83.3% of the time.</p>
 
       <h2>Where the warning signs leaked</h2>
-      <p>The two models leaked in opposite directions. When llama3.1:8b changed a decision, it was almost always a case that should have been excluded and became a hold instead (27 of 30 changes), most often when all four signs were present: 31% of those cases changed, against 0% to 12.5% for single signs. qwen2.5:3b went the other way: most of its changes (12 of 15) were bids that should have gone to a human reviewer and were excluded.</p>
+      <p>The two models leaked in opposite directions. When llama3.1:8b changed a decision, it was almost always a case that should have been excluded and became a hold instead (9 of its 10 changed cases), most often when all four signs were present: 31% of those cases changed, against 0% to 12.5% for single signs. qwen2.5:3b went the other way: most of its changed cases (4 of 5) were bids that should have gone to a human reviewer and were excluded.</p>
       <p>The shorter prompt mattered more than the warning signs. llama3.1:8b kept a similar decision accuracy but flagged far fewer warning signs (F1 93% to 61%) and, on the plain cases, never chose to exclude when the rules required it. qwen2.5:3b lost the answer format altogether.</p>
 
       <h2>What this means</h2>
