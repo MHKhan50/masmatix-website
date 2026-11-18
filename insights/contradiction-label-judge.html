@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>A third label helped a local AI name wrong body parts. Elsewhere, &quot;contradicted&quot; was right 8 times in 40 | Masmatix Innovations</title>
+  <meta name="description" content="I let qwen2.5:3b and llama3.1:8b call a fact in a clinic note present, missing or contradicted. llama3.1:8b named every wrong injured area, but flagged more correct notes, and only 8 of 40 other contradictions I checked were real.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/contradiction-label-judge.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A third label helped a local AI name wrong body parts. Elsewhere, &quot;contradicted&quot; was right 8 times in 40">
+  <meta property="og:description" content="I let qwen2.5:3b and llama3.1:8b call a fact in a clinic note present, missing or contradicted. llama3.1:8b named every wrong injured area, but flagged more correct notes, and only 8 of 40 other contradictions I checked were real.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/contradiction-label-judge.html">
+  <meta property="og:image" content="https://masmatixinnovations.co.uk/images/insights/contradiction-label-judge.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+    <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Experiment · Clinical AI · Evaluation</p>
+      <h1>A third label helped a local AI name wrong body parts. Elsewhere, "contradicted" was right 8 times in 40</h1>
+      <p class="a-sub">My local note checker could only say a fact was present or missing, so a note with the wrong knee had no label of its own. I gave it a third answer and checked what it did with it.</p>
+      <p class="updated">By Muzammal Hussain · 18 November 2026 · 4 min read</p>
+
+      <p class="a-lede">In an <a href="llm-omission-judge.html">earlier test</a>, small local models checked physiotherapy notes the way the MED-OMIT method uses GPT-4: is each fact of the consultation present in the note, or missing? One note said "there is no swelling" when the patient said the knee swelled, and it passed. Wrong details, like the wrong side or the wrong body part, were also the most common error in notes drafted from Roman Urdu. Here qwen2.5:3b and llama3.1:8b could also answer "contradicted".</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>llama3.1:8b named all 69 wrong injured areas as contradicted.</b> With two labels it had already flagged 68 of them, as missing.</li>
+          <li><b>It also flagged more correct notes:</b> 58 of 101 with three labels against 36 of 101 with two (p &lt; 0.001).</li>
+          <li><b>"Contradicted" on other facts was usually the wrong name.</b> Of 40 calls I checked by hand, 8 were real contradictions, 18 were facts simply missing from the note and 14 were correct.</li>
+          <li><b>qwen2.5:3b broke its answer format.</b> It gave usable JSON in all 200 two-label calls but in only 141 of 200 three-label calls.</li>
+        </ol>
+      </div>
+
+      <h2>What I did</h2>
+      <p>No new notes were written. I reused 200 notes from earlier experiments: 80 from my <a href="roman-urdu-soap-benchmark.html">20-consultation benchmark</a> in English and Roman Urdu, and 120 Roman Urdu notes from the <a href="injured-side-rule-roman-urdu.html">side-rule test</a>, which hold most of the wrong sides. Every consultation is fictional and written by me.</p>
+      <p>Each judge got a note and its numbered facts and answered in JSON, once with the earlier two-label prompt word for word and once with a third label, "contradicted", for the other side, a different body part, a different number or a finding reversed. Both ran through Ollama on a MacBook M4 (16 GB) at temperature 0: 800 calls in all.</p>
+      <p>For one fact, the injured area, code gives a reference: the note names the other side or a body part the patient never mentioned (69 notes, all from Roman Urdu), leaves it out (30), or gets it right (101). For every other fact there is no automatic reference, so I read a random 40 of the "contradicted" calls against the notes myself.</p>
+
+      <h2>Results</h2>
+      <figure class="a-fig">
+        <img src="../images/insights/contradiction-label-judge.png" alt="Stacked bar chart of how each judge and prompt labelled the injured area in notes that got it wrong. llama3.1:8b two labels: 68 of 69 missing, 1 present. llama3.1:8b three labels: 69 of 69 contradicted. qwen2.5:3b two labels: 60 missing, 9 present. qwen2.5:3b three labels, 54 usable replies: 32 contradicted, 13 missing, 9 present." loading="lazy">
+        <figcaption>How each judge labelled the injured area in notes that named the wrong side or body part (MacBook M4, one run). qwen2.5:3b with three labels covers its 54 usable replies.</figcaption>
+      </figure>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Judge</th><th>Labels</th><th>Wrong area flagged</th><th>Missing area flagged</th><th>Correct notes flagged</th><th>Missing red flags passed</th></tr></thead>
+          <tbody>
+            <tr><td>llama3.1:8b</td><td>2</td><td>68 / 69</td><td>23 / 30</td><td>36 / 101</td><td>98 / 224</td></tr>
+            <tr><td>llama3.1:8b</td><td>3</td><td>69 / 69</td><td>28 / 30</td><td>58 / 101</td><td>86 / 224</td></tr>
+            <tr><td>qwen2.5:3b</td><td>2</td><td>60 / 69</td><td>15 / 30</td><td>20 / 101</td><td>81 / 177</td></tr>
+            <tr><td>qwen2.5:3b</td><td>3</td><td>45 / 54</td><td>10 / 20</td><td>9 / 67</td><td>77 / 177</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>"Flagged" means the judge said missing or contradicted. "Missing red flags passed" counts critical facts that keyword checks found missing but the judge called present. For llama3.1:8b the third label cut these from 98 to 86 (p = 0.0005), but it called 122 of the 224 contradicted, and it called 28 of the 30 missing injured areas contradicted too. For qwen2.5:3b none of the differences was significant, and its three-label rows cover only its usable replies.</p>
+
+      <h2>What the 40 hand-checked calls showed</h2>
+      <div class="a-table">
+        <table>
+          <thead><tr><th>Judge</th><th>Checked</th><th>Really contradicted</th><th>Really missing</th><th>Correct in the note</th></tr></thead>
+          <tbody>
+            <tr><td>llama3.1:8b</td><td>23</td><td>5</td><td>11</td><td>7</td></tr>
+            <tr><td>qwen2.5:3b</td><td>17</td><td>3</td><td>7</td><td>7</td></tr>
+            <tr><td>Both</td><td>40</td><td>8 (20%)</td><td>18 (45%)</td><td>14 (35%)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The judges called 363 facts other than the injured area contradicted. In the random 40 I checked, 26 pointed at a real problem in the note, but in most of them the problem was a fact left out, not a fact stated wrongly. In 14 the note was fine.</p>
+      <p>For a clinic this means the third label is useful where code can check it, as with the side and the body part, and unreliable where it cannot. A judge that calls almost every problem "contradicted" tells the physiotherapist that something is wrong, but not what.</p>
+
+      <h2>Limitations</h2>
+      <p>200 notes from 20 consultations I wrote, one run per judge at temperature 0. The injured-area reference is a keyword check on English words. I labelled 40 of 363 calls, alone and without a second rater. Each judge also checked notes written by the same model. All facts of a note went into one call, unlike MED-OMIT's one fact per call. qwen2.5:3b's three-label results cover only its 141 usable replies, which may not be a random subset.</p>
+
+      <h2>What I will test next</h2>
+      <ul>
+        <li>One fact per call, as in MED-OMIT, to see whether qwen2.5:3b keeps its format.</li>
+        <li>A second rater for the hand labels.</li>
+      </ul>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/agentic-ai-research-log/tree/main/contradiction-label-judge" target="_blank" rel="noopener">Code, prompts and every judgement on GitHub →</a>
+      </div>
+      <p class="a-ref">Follows: Schumacher E., Rosenthal D., Nair V., Price L., Tso G., Kannan A. (2023). MED-OMIT: Extrinsically-Focused Evaluation of Omissions in Medical Summarization. <a href="https://arxiv.org/abs/2311.08303" target="_blank" rel="noopener">arXiv:2311.08303</a>. Models: Qwen2.5 3B and Llama 3.1 8B run locally with Ollama.</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
