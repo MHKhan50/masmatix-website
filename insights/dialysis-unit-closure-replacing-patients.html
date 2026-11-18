@@ -53,6 +53,7 @@
         <p class="a-keys-h">Key findings</p>
         <ol>
           <li><b>Units deciding separately lost patients.</b> In one round of separate offers, 70.4% of displaced patients were placed, against 83.6% at the optimum, and nearly half of the plans booked more transport seats than existed.</li>
+          <li><b>More rounds or fixed quotas did not fix it either.</b> Letting units re-offer lapsed chairs placed 85%, but most of those plans overbooked transport; giving each unit a fixed share of seats kept plans workable but placed only 67%.</li>
           <li><b>A safety check did not fix it.</b> Checking bookings against the shared fleet before confirming them made every plan workable but placed even fewer patients (67.6%).</li>
           <li><b>Coordination recovered almost everything.</b> Rounds of offers against one shared record of chairs and seats placed 83.0%, within half a point of the optimum.</li>
           <li><b>Simple rules placed enough patients but not fairly.</b> Greedy planners matched the optimum on numbers but left a 15–17 point gap between patients who need transport and those who do not. A plan that protected the worse-off group first cut that to 10 points, and to 4 when chairs were scarcest, at no cost in patients placed.</li>
@@ -61,7 +62,7 @@
 
       <h2>Setup</h2>
       <p>Each of 1,200 scenarios is a network of four to six receiving units, each with 8 to 16 chairs in four shifts. Between 60% and 95% of chairs are already in use, at three levels of scarcity. The closed unit loses two or all four of its shifts, displacing 16 to 62 patients. About a third need transport: they can travel at most 45 minutes and need a seat in a fleet shared by the whole network. The others can travel up to 75 minutes. Everyone keeps their weekday pattern; a move between morning and afternoon adds 20 minutes to a patient's burden.</p>
-      <p>Seven ways of deciding were run on every scenario: two central planners that place patients one by one, receiving units that each make their own offers (with and without a check before confirming), units that coordinate in rounds through a shared record, and two exact optimisation models, one that places as many patients as possible and one that first protects the group with the lower placement rate. No method had errors added on purpose. Intervals are 95% bootstrap intervals over scenarios.</p>
+      <p>Nine ways of deciding were run on every scenario: two central planners that place patients one by one; four ways in which receiving units make their own offers (one round, one round with a check before confirming, one round with a fixed share of transport seats each, and repeated rounds with no shared record of transport); units that coordinate in rounds through a shared record; and two exact optimisation models, one that places as many patients as possible and one that first protects the group with the lower placement rate. No method had errors added on purpose. Intervals are 95% bootstrap intervals over scenarios.</p>
 
       <figure class="a-fig">
         <img src="../images/insights/dialysis-unit-closure-replacing-patients.png" alt="Two bar charts by chair scarcity. Left: share of displaced patients placed. Central greedy, coordinated units and the fair optimum are close (about 95, 90 and 66 percent at low, medium and high scarcity); independent units with a gate are lower (85, 70 and 48 percent). Right: gap between the two groups; at high scarcity it is 23 points for the central greedy planner and 4 for the fair optimum." loading="lazy">
@@ -77,20 +78,26 @@
             <tr><td>Central planner, hardest first</td><td>83.6%</td><td>17.5%</td><td>16.0%</td><td>16.9</td><td>30.5</td><td>100%</td></tr>
             <tr><td>Units deciding separately</td><td>70.4%</td><td>30.6%</td><td>29.1%</td><td>11.8</td><td>22.8</td><td>52.2%</td></tr>
             <tr><td>Separately, with a check</td><td>67.6%</td><td>38.7%</td><td>29.1%</td><td>16.4</td><td>22.9</td><td>100%</td></tr>
+            <tr><td>Separately, fixed transport quotas</td><td>66.6%</td><td>51.2%</td><td>24.1%</td><td>28.7</td><td>23.3</td><td>100%</td></tr>
+            <tr><td>Separately, repeated rounds</td><td>85.4%</td><td>17.5%</td><td>13.0%</td><td>8.1</td><td>26.0</td><td>36.4%</td></tr>
             <tr><td>Units coordinating in rounds</td><td>83.0%</td><td>26.0%</td><td>12.2%</td><td>16.0</td><td>26.1</td><td>100%</td></tr>
             <tr><td>Optimum, most placed</td><td>83.6%</td><td>23.9%</td><td>12.5%</td><td>13.8</td><td>25.0</td><td>100%</td></tr>
             <tr><td>Optimum, fairness first</td><td>83.6%</td><td>21.7%</td><td>13.6%</td><td>10.0</td><td>25.0</td><td>100%</td></tr>
           </tbody>
         </table>
       </div>
-      <p>The separate units' smaller group gap is not a good result: both groups were badly served, with about 30% of each left without a place.</p>
+      <p>The one-round separate units' smaller group gap is not a good result: both groups were badly served, with about 30% of each left without a place. Repeated rounds look best on paper only because nearly two thirds of their plans booked transport seats that did not exist. The group gap is worked out in each scenario and then averaged.</p>
 
       <h2>What went wrong, and where</h2>
-      <p>When units decided separately, two things happened. Patients offered places by several units took one, and the other offers lapsed, leaving chairs empty. And each unit booked transport as if the fleet were its own, so 48% of plans overbooked it. The loss grew with scarcity, from 5 points below the optimum when chairs were plentiful to 17 points when they were scarce.</p>
+      <p>When units decided separately, two things happened. Patients offered places by several units took one, and the other offers lapsed, leaving chairs empty. And each unit booked transport as if the fleet were its own, so 48% of plans overbooked it, by about two seats each time. The loss grew with scarcity, from 5 points below the optimum when chairs were plentiful to 17 points when they were scarce.</p>
+      <p>Repeating the rounds solved the first problem but not the second: lapsed chairs were filled, but 64% of plans still overbooked transport. Fixed quotas solved the second by leaving seats idle at one unit while another needed them, so half of the patients who need transport went without a place. Only a shared record of seats fixed both.</p>
       <p>The central planners had the opposite weakness. They placed nearly as many patients as possible, but who missed out depended on the order rule. Placing the hardest-to-place patients first sounds fair, yet under high scarcity it left 41% of independent patients without a place against 22% of transport patients. When chairs were plentiful, every method left a gap of about 15 points, because the binding limit was transport seats, not chairs.</p>
 
+      <h2>How much transport matters</h2>
+      <p>I also varied the share of patients who need transport and the size of the fleet. With half the fleet, every workable method, including both optimisation models, left 40 to 51 points between the two groups: no allocation can close a gap created by missing seats. With one and a half times the fleet, the fairness-first plan kept the gap to 2 to 6 points. Fleet size mattered far more than how many patients needed transport.</p>
+
       <h2>What this means</h2>
-      <p>On this model, separate decisions mainly cost patients, and a final check prevents bad bookings without recovering them. A shared record of scarce resources such as transport, used in rounds or by a central planner, recovers almost all of the loss. And the fairness of a plan is a choice: unless the plan states whose unmet need it is minimising, a reasonable-looking rule can shift the burden onto one group. Here, protecting the worse-off group cost nothing in patients placed.</p>
+      <p>On this model, separate decisions mainly cost patients, and a final check prevents bad bookings without recovering them. A shared record of scarce resources such as transport, used in rounds or by a central planner, recovers almost all of the loss; more rounds or fixed quotas without it do not. And the fairness of a plan is a choice: unless the plan states whose unmet need it is minimising, a reasonable-looking rule can shift the burden onto one group. Here, protecting the worse-off group cost nothing in patients placed.</p>
 
       <h2>Limitations</h2>
       <p>The networks are synthetic. Chair numbers, occupancy, travel limits, the share needing transport and fleet size are illustrative, not taken from any service. Travel is straight-line distance turned into minutes. The two groups are an operational construct and the group gap is not a validated fairness measure. Clinical priority, infection control, staffing rules and patient preference are not modelled, and the unit agents follow rules rather than using language models.</p>
@@ -98,7 +105,7 @@
       <div class="a-links">
         <a class="btn btn-grad" href="https://github.com/MHKhan50/dialysisflow-agentbench" target="_blank" rel="noopener">Code and results on GitHub →</a>
       </div>
-      <p class="a-ref">Background: Farhadi, Ansari and Jara-Moroni (2023), Optimization models for patient and technician scheduling in hemodialysis centers, <i>Health Care Management Science</i> 26(3), 558–582; Reihaneh, Ansari and Farhadi (2023), Patient appointment scheduling at hemodialysis centers: an exact branch and price approach, <i>European Journal of Operational Research</i> 309(1), 35–52; Bertsimas, Farias and Trichakis (2011), The price of fairness, <i>Operations Research</i> 59(1), 17–31.</p>
+      <p class="a-ref">Background: Liu and Mostafavi (2023), An equitable patient reallocation optimization and temporary facility placement model for maximizing critical care system resilience in disasters, <i>Healthcare Analytics</i> 4, 100268; Smith, Zucker and Frasso (2020), Natural disasters in the Americas, dialysis patients, and implications for emergency planning: a systematic review, <i>Preventing Chronic Disease</i> 17, E42; Farhadi, Ansari and Jara-Moroni (2023), Optimization models for patient and technician scheduling in hemodialysis centers, <i>Health Care Management Science</i> 26(3), 558–582; Reihaneh, Ansari and Farhadi (2023), Patient appointment scheduling at hemodialysis centers: an exact branch and price approach, <i>European Journal of Operational Research</i> 309(1), 35–52; Bertsimas, Farias and Trichakis (2011), The price of fairness, <i>Operations Research</i> 59(1), 17–31.</p>
     </div>
   </main>
 
