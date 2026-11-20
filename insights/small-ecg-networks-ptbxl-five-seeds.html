@@ -54,7 +54,7 @@
         <ol>
           <li><b>The residual network is better, by a small but steady margin.</b> Over five seeds it reached macro AUROC 0.925 ± 0.003 against 0.918 ± 0.002 for a plain CNN. Paired on the same test patients, the gap is +0.009 [+0.007, +0.011] and it was ahead in four of five seeds.</li>
           <li><b>One run could have pointed the other way.</b> Single-seed scores overlap (0.920 to 0.928 against 0.916 to 0.921), and on seed 59 the plain CNN won.</li>
-          <li><b>Small is enough.</b> With 195,000 parameters the residual network matches the 0.925 reported for the widely used resnet1d_wang baseline, which has 451,000.</li>
+          <li><b>Small is enough, and well calibrated.</b> With 195,000 parameters, single runs match a recent re-run of the widely used resnet1d_wang baseline (0.925, 451,000 parameters), and the five-seed ensemble (0.932) matches the 0.930 originally reported. Expected calibration error is about 0.03 for every class.</li>
           <li><b>Hypertrophy is the hard class.</b> Its average precision is about 0.67, against 0.82 to 0.92 for the other four.</li>
           <li><b>The model knows some of its mistakes.</b> Keeping only its most confident 80% of ECGs raises macro F1 from 0.757 to 0.784; the most confident half reaches 0.807.</li>
         </ol>
