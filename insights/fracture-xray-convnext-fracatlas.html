@@ -86,7 +86,7 @@
       <p>On a dataset of this size, start from a pretrained convolutional backbone: it is better, more stable between runs and better calibrated than the alternatives we tried. Referral helps, but mostly by removing false alarms; many of the missed leg fractures are made with high confidence and would not be referred. A threshold tuned for leg images, or more leg data, is the next step before such a model could be useful for triage.</p>
 
       <h2>Limitations</h2>
-      <p>FracAtlas has no patient identifiers, so the split is by image, and images of one patient may sit in both training and test data; this can inflate every FracAtlas result, ours included. All images come from three hospitals in one country, with no external test set. Hip-only and shoulder-only groups have two test fractures each. This is research software, not a medical device.</p>
+      <p>FracAtlas has no patient identifiers, so the split is by image, and images of one patient may sit in both training and test data; this can inflate every FracAtlas result, ours included. We did check the most direct form of leakage: 20 test images turned out to be exact copies of training images (one even with the opposite label), but removing them, and other near-copies found by perceptual hashing, changed ConvNeXt's AUROC by at most 0.004. All images come from three hospitals in one country, with no external test set. Hip-only and shoulder-only groups have two test fractures each. This is research software, not a medical device.</p>
 
       <div class="a-links">
         <a class="btn btn-grad" href="https://github.com/MHKhan50/fracatlas-fracture-benchmark" target="_blank" rel="noopener">Code, results and paper on GitHub →</a>
