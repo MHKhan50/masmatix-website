@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HumSet's official split shares 97% of test documents with training, and scores drop by up to 9 points without it | Masmatix Innovations</title>
+  <meta name="description" content="An audit of HumSet 2.0.0 (154,104 humanitarian excerpts in English, French and Spanish) finds that 96.9% of test excerpts come from documents also in training. On a document-grouped split, baseline micro-F1 falls by 0.02 to 0.09, most on fine-grained tasks.">
+  <meta name="author" content="Muzammal Hussain">
+  <link rel="canonical" href="https://masmatixinnovations.co.uk/insights/humset-document-leakage-audit.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="HumSet's official split shares 97% of test documents with training, and scores drop by up to 9 points without it">
+  <meta property="og:description" content="An audit of HumSet 2.0.0 (154,104 humanitarian excerpts in English, French and Spanish) finds that 96.9% of test excerpts come from documents also in training. On a document-grouped split, baseline micro-F1 falls by 0.02 to 0.09, most on fine-grained tasks.">
+  <meta property="og:url" content="https://masmatixinnovations.co.uk/insights/humset-document-leakage-audit.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="Masmatix Innovations home">
+      <img class="mark" src="../images/logo.svg" alt="">
+      <span><b>MASMATIX</b><small>Innovations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#ai">AI &amp; Data</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#process">How we work</a>
+      <a href="../index.html#about">About</a>
+      <a href="./">Insights</a>
+      <a class="btn btn-grad" href="../index.html#contact">Let's talk</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="policy article">
+    <div class="wrap">
+      <a class="back" href="./">← All insights</a>
+      <p class="a-kicker">Data audit · Humanitarian NLP · Multilingual text classification</p>
+      <h1>HumSet's official split shares 97% of test documents with training, and scores drop by up to 9 points without it</h1>
+      <p class="a-sub">An audit of HumSet, a multilingual benchmark for classifying humanitarian report excerpts: how independent are its splits, and what happens to scores when they are made independent?</p>
+      <p class="updated">By Muzammal Hussain · 25 November 2026 · Research update</p>
+
+      <p class="a-lede">Humanitarian analysts read thousands of reports to decide which sectors and needs a crisis affects, and HumSet is the main public benchmark for automating that classification. Before training neural models on it for CrisisLens, we checked how independent its training, validation and test splits really are.</p>
+
+      <div class="a-keys">
+        <p class="a-keys-h">Key findings</p>
+        <ol>
+          <li><b>The splits share documents.</b> 96.9% of test excerpts come from a document that also has excerpts in training.</li>
+          <li><b>Scores drop on a clean split.</b> On a document-grouped split, micro-F1 falls by 0.02 (sectors) to 0.09 (sub-pillars).</li>
+          <li><b>Spanish is hardest</b> on every task, although it has more training data than French.</li>
+          <li><b>Labels are noisy.</b> 774 duplicate texts carry different sector labels.</li>
+        </ol>
+      </div>
+
+      <h2>What we did</h2>
+      <p>HumSet is a public collection of 154,104 excerpts from humanitarian reports, annotated by experts with the DEEP analytical framework in five multi-label tasks, from 11 sectors to 36 fine-grained sub-pillars. We downloaded version 2.0.0 at run time with a manifest of file hashes and audited it: duplicates, label conflicts and, above all, whether excerpts from the same source document appear in more than one split. We then trained a transparent baseline (TF-IDF word and character n-grams with one-vs-rest logistic regression, per-label thresholds chosen on validation) on the official split and on a document-grouped re-split in which no document appears in two splits, with 95% intervals from resampling whole documents.</p>
+
+      <figure class="a-fig">
+        <img src="../images/insights/crisislens-humset-document-leakage.png" alt="Bar chart of micro-F1 for five HumSet tasks on the official split (blue) and a document-grouped split (yellow); every yellow bar is lower, by 0.021 for sectors up to 0.091 for subpillars_1d." loading="lazy">
+        <figcaption>Micro-F1 with 95% intervals on the official split (blue) and the document-grouped split (yellow); red numbers are the drops.</figcaption>
+      </figure>
+
+      <h2>Results</h2>
+      <p>97.1% of validation excerpts and 96.9% of test excerpts come from a document that also has excerpts in training, although identical excerpt text is rare (2.7% and 2.9%). The official split is therefore an excerpt-level split: a model can learn a document's vocabulary and topics from its training excerpts and meet the same document again at test time. Moving to the document-grouped split lowers micro-F1 on every task, by 0.021 on sectors and by 0.074 to 0.091 on the pillar and sub-pillar tasks. Spanish is the hardest language on every task on the grouped split, although it has more training excerpts (27,810) than French (24,990). The data also hold 774 duplicate texts with different sector labels, a floor on the label noise any model faces.</p>
+
+      <h2>What this means</h2>
+      <p>Scores on HumSet's official split describe how a model does on new excerpts from documents it has already seen, not on a new report, which is the situation in humanitarian work. Results should also be reported on a document-grouped split. The next step is to train multilingual encoders (XLM-R) on both splits and see how much of the gap they close.</p>
+
+      <h2>Limitations</h2>
+      <p>One baseline model family so far; neural results follow in v0.2. Document identity comes from the dataset's lead identifiers. This is research software, not a tool for operational humanitarian decisions.</p>
+
+      <div class="a-links">
+        <a class="btn btn-grad" href="https://github.com/MHKhan50/CrisisLens-AgentBench" target="_blank" rel="noopener">Code, data and paper on GitHub →</a>
+      </div>
+      <p class="a-ref">Software: Hussain, M. (2026). CrisisLens-AgentBench v0.1.2. Zenodo. doi:10.5281/zenodo.24429735. Data: HumSet (Fekih et al., Findings of EMNLP 2022).</p>
+    </div>
+  </main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href="../index.html"><img class="mark" src="../images/logo.svg" alt=""><span><b>MASMATIX</b><small>Innovations</small></span></a><p class="f-tag">Software development, AI and digital marketing from Glasgow and Faisalabad.</p><div class="social">
+            <a href="https://www.facebook.com/p/Masmatix-Innovations-100011085391105/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v8h4v-8h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+            <a href="https://x.com/masmatinovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h4.6l4.1 5.8L17.6 3H20l-6.2 7.3L21 21h-4.6l-4.5-6.3L6.4 21H4l6.8-8L4 3zm3.3 1.6 9.9 14.8h1.5L8.8 4.6H7.3z"/></svg></a>
+            <a href="https://www.linkedin.com/company/masmatix-innovations/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h3.6v12H4V9zm1.8-6a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM10 9h3.4v1.7h.1c.5-.9 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-5.9c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6H10V9z"/></svg></a>
+            <a href="https://www.instagram.com/masmatixinnovation/" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+            <a href="https://www.threads.net/@masmatixinnovation" target="_blank" rel="noopener" aria-label="Masmatix Innovations on Threads" title="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 11.1c-.1 0-.2-.1-.3-.1-.2-3.3-2-5.2-5-5.2h-.1c-1.8 0-3.3.8-4.2 2.1l1.7 1.1c.7-1 1.7-1.2 2.5-1.2h.1c1 0 1.8.3 2.3.9.4.4.6 1 .7 1.8-.8-.1-1.7-.2-2.6-.1-2.6.1-4.3 1.7-4.2 3.8.1 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.5-.6 3.3-1.6.6-.7.9-1.7 1.1-2.9.7.4 1.2.9 1.4 1.6.5 1.1.5 2.9-1 4.4-1.3 1.3-2.9 1.9-5.3 1.9-2.6 0-4.6-.9-5.9-2.5C5.5 18 4.9 15.7 4.8 12c.1-3.7.7-6 2-7.6C8.1 2.8 10 2 12.7 2c2.7 0 4.7.9 6 2.5.7.8 1.1 1.8 1.4 2.9l2-.5c-.4-1.4-1-2.6-1.8-3.6C18.6 1.2 16.1 0 12.7 0h-.1C9.2 0 6.7 1.2 5.1 3.3 3.6 5.2 2.8 8 2.8 12c0 4 .8 6.8 2.3 8.7C6.7 22.8 9.2 24 12.6 24h.1c3 0 5.1-.8 6.8-2.5 2.3-2.2 2.2-5 1.4-6.8-.5-1.3-1.6-2.4-3-3.1l-1.3-.5zm-4.9 4.6c-1.1.1-2.3-.4-2.3-1.5 0-.8.6-1.7 2.4-1.8h.6c.7 0 1.3.1 1.9.2-.2 2.6-1.4 3-2.6 3.1z"/></svg></a></div></div>
+      <div><h2 class="fh">Services</h2><ul><li><a href="../index.html#services">Web applications</a></li><li><a href="../index.html#services">Mobile apps</a></li><li><a href="../index.html#services">Digital marketing</a></li></ul></div>
+      <div><h2 class="fh">AI &amp; Data</h2><ul><li><a href="../index.html#ai">Machine learning</a></li><li><a href="../index.html#ai">Data &amp; analytics</a></li><li><a href="../index.html#ai">Automation</a></li></ul></div>
+      <div><h2 class="fh">Company</h2><ul><li><a href="../index.html#about">About us</a></li><li><a href="../index.html#work">Our work</a></li><li><a href="../index.html#systems">Business systems</a></li><li><a href="../index.html#process">How we work</a></li><li><a href="./">Insights</a></li><li><a href="../index.html#contact">Contact</a></li><li><a href="../privacy.html">Privacy policy</a></li></ul></div>
+    </div>
+    <div class="legal">Masmatix Innovations Ltd is a private limited company registered in Scotland, company number SC845700. Registered office: 62 Kerrycroy Avenue, Glasgow, G42 0BQ. © <span id="yr">2026</span> Masmatix Innovations Ltd.</div>
+  </div>
+</footer>
+</body>
+</html>
