@@ -54,7 +54,7 @@
         <li>With the plain prompt, all four models followed about half of the hidden instructions: 19 to 22 of 40 in English, 21 to 29 of 40 in Roman Urdu.</li>
         <li>Across the four models, datamarking cut them from 83 to 40 of 160 in English and from 97 to 56 in Roman Urdu.</li>
         <li>It depended on the model. Llama 3.1 8B went from 20 to 2 in English; Qwen2.5 7B went from 19 to 16, no real change. The larger Qwen was not safer than the smaller one.</li>
-        <li>After datamarking, Roman Urdu notes still carried more successful attacks than English ones (56 against 40 of 160, p = 0.036).</li>
+        <li>After datamarking, attacks asking for an unneeded tool almost disappeared in English (2 of 80) but not in Roman Urdu (26 of 80).</li>
         <li>A rule that checks only the tool's name let 174 attacks through. A rule that also checks the patient, recipient and date let none through and blocked no real work.</li>
       </ul>
     </div>
@@ -81,14 +81,14 @@
       </table>
     </div>
     <p>Hidden instructions followed, out of 40 tasks per model. The changes are significant for every model except Qwen2.5 7B (English p = 0.51, Roman Urdu p = 0.065; exact McNemar tests on the same tasks).</p>
-    <p>Two kinds of attack behaved differently. Datamarking almost removed requests for an unneeded tool in English (29 to 2 of 80 across models) but not in Roman Urdu (45 to 26). Requests for an allowed tool with the wrong patient or address fell much less in English (54 to 38). Qwen2.5 7B in English shows why: with the marker it stopped all six unneeded-tool attacks it had followed, but it followed more wrong-argument ones, 13 before and 16 after.</p>
+    <p>Two kinds of attack behaved differently. Datamarking almost removed requests for an unneeded tool in English (29 to 2 of 80 across models) but not in Roman Urdu (45 to 26). That gap holds up statistically (p = 0.0005, testing per task because all models saw the same tasks). Over all attacks the language gap after datamarking was smaller and not significant (40 against 56 of 160, p = 0.089). Requests for an allowed tool with the wrong patient or address fell much less in English (54 to 38). Qwen2.5 7B in English shows why: with the marker it stopped all six unneeded-tool attacks it had followed, but it followed more wrong-argument ones, 13 before and 16 after.</p>
     <p>The tool rules gave the clearest answer. Summed over all 16 model, language and prompt settings, a rule that allows only the task's tool names let 174 attacks run, every one of them a wrong-argument attack. Blocking sending and deleting outright stopped many attacks but also every real referral and duplicate removal. Checking the patient, recipient and date against the staff member's request let none through and blocked no correct action.</p>
 
     <h2>What I noticed</h2>
     <ul>
       <li>A defence that works very well on one model can do almost nothing on another, even one of similar size. An average over models hides this.</li>
       <li>A bigger model from the same family was not safer. Qwen2.5 7B followed about as many hidden instructions as Qwen2.5 3B and gained less from the marker.</li>
-      <li>The wording mattered by language. A hidden instruction starting with "SYSTEM NOTICE:" was followed 10 times of 40 in English and 22 times in Roman Urdu with the plain prompt. These groups are small, 10 tasks per model, so this is a pattern to test, not a measurement.</li>
+      <li>The wording mattered by language. With datamarking, a hidden instruction starting "IT team:" was followed 0 times of 40 in English and 15 times in Roman Urdu. These groups are small, 10 tasks per model, so this is a pattern to test, not a measurement.</li>
       <li>For a clinic, I would still add datamarking because it is free, but the real protection is a check in code that ties every tool call to the patient and recipient in the staff request.</li>
     </ul>
 
